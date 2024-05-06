@@ -1,25 +1,7 @@
 "use client"
 
-import { Compass, BookOpen } from "lucide-react";
 import NavBarItem from "./navbar-item";
-
-const guestRoutes = [
-    {
-        icon: BookOpen,
-        label: "Dashboard",
-        href: "/dashboard/home",
-    },
-    {
-        icon: BookOpen,
-        label: "Courses",
-        href: "/dashboard/courses",
-    },
-    {
-        icon: Compass,
-        label: "Browse",
-        href: "/dashboard/browse",
-    }
-] // TODO: Add Customers, Analytics and stuffs
+import { guestRoutes } from "./sidebar-routes";
 
 export const NavBarRoutes = () => {
     const routes = guestRoutes;

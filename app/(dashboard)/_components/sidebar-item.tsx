@@ -24,6 +24,8 @@ const SideBarItem = ({
         pathname === href ||
         pathname?.startsWith(`${href}/`);
 
+        //TODO: Try to study screen sizes tailwind for cleaner code
+
     return (
         <Link
             href={href}

@@ -1,7 +1,4 @@
 import { LogoPhone } from "@/components/logo-phone"
-import {
-    Avatar
-} from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -17,6 +14,7 @@ import {
 } from "lucide-react"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
+import { MobileSubscriptionCard } from "./mobile-subscription-card"
 
 export const DashboardNavBar = () => {
     return (
@@ -36,20 +34,7 @@ export const DashboardNavBar = () => {
                     <LogoPhone />
                     <NavBarRoutes />
                     <div className="mt-auto">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Upgrade to Pro</CardTitle>
-                                <CardDescription>
-                                    Unlock all features and get unlimited access to our
-                                    support team.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Button size="sm" className="w-full">
-                                    Upgrade
-                                </Button>
-                            </CardContent>
-                        </Card>
+                        <MobileSubscriptionCard/>
                     </div>
                 </SheetContent>
             </Sheet>
@@ -57,9 +42,7 @@ export const DashboardNavBar = () => {
                 <SearchComponent />
             </div>
             <SignedIn>
-                <Avatar>
-                    <UserButton />
-                </Avatar>
+                <UserButton />
             </SignedIn>
 
         </header>

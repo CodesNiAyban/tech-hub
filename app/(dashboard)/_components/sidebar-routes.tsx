@@ -1,25 +1,7 @@
 "use client"
 
-import { Compass, BookOpen } from "lucide-react";
+import { guestRoutes } from "../_utils/guestRoutes";
 import SideBarItem from "./sidebar-item";
-
-const guestRoutes = [
-    {
-        icon: BookOpen,
-        label: "Dashboard",
-        href: "/dashboard/home",
-    },
-    {
-        icon: BookOpen,
-        label: "Courses",
-        href: "/dashboard/courses",
-    },
-    {
-        icon: Compass,
-        label: "Browse",
-        href: "/dashboard/browse",
-    }
-] // TODO: Add Customers, Analytics and stuffs
 
 export const SidebarRoutes = () => {
     const routes = guestRoutes;
@@ -37,3 +19,5 @@ export const SidebarRoutes = () => {
         </nav>
     );
 }
+export { guestRoutes };
+
