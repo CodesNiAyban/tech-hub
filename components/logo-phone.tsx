@@ -10,7 +10,7 @@ const headingFont = localFont({
 
 export const LogoPhone = () => {
     return (
-        <Link href="/dashboard/home">
+        <Link href="/home">
             <div className="hover:opacity-75 transition items-center gap-x-2 flex justify-center ">
                 <Image
                     src="/logo.svg"

@@ -4,7 +4,7 @@ import {
   Bell
 } from "lucide-react"
 import { SidebarRoutes } from "./sidebar-routes"
-import { SubscriptionCard } from "./subcription-card"
+import { SubscriptionCard } from "./subscription-card"
 export const SideBar = () => {
   return (
     <div className="hidden border-r bg-muted/40 md:block backdrop-blur-sm duration-1000 animate-in slide-in-from-left-12">

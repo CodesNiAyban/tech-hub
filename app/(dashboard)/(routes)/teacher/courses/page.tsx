@@ -18,8 +18,8 @@ const Courses = () => {
                     <p className="text-sm text-muted-foreground">
                         You can start selling as soon as you add a course.
                     </p>
-                    <Button size="sm" variant="outline" className="mt-4" asChild>
-                            <Link href="/dashboard/courses/create">
+                    <Button size="sm" className="mt-4" asChild>
+                            <Link href="/teacher/create">
                                 Add Course
                             </Link>
                         </Button>

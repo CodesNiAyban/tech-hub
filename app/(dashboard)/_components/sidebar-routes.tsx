@@ -1,6 +1,6 @@
 "use client"
 
-import { guestRoutes } from "../_utils/guestRoutes";
+import { guestRoutes } from "./_utils/guestRoutes";
 import SideBarItem from "./sidebar-item";
 
 export const SidebarRoutes = () => {

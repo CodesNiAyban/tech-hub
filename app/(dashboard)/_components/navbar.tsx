@@ -1,20 +1,15 @@
 import { LogoPhone } from "@/components/logo-phone"
+import { ModeToggle } from "@/components/theme-button"
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SignedIn, UserButton } from "@clerk/nextjs"
 import {
     Menu
 } from "lucide-react"
+import { MobileSubscriptionCard } from "./mobile-subscription-card"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
-import { MobileSubscriptionCard } from "./mobile-subscription-card"
+import { TeacherStudentButton } from "./teacher-student-button"
 
 export const DashboardNavBar = () => {
     return (
@@ -34,17 +29,22 @@ export const DashboardNavBar = () => {
                     <LogoPhone />
                     <NavBarRoutes />
                     <div className="mt-auto">
-                        <MobileSubscriptionCard/>
+                        <MobileSubscriptionCard />
                     </div>
                 </SheetContent>
             </Sheet>
-            <div className="w-full flex-1">
-                <SearchComponent />
+            <div className="w-full flex items-center justify-between"> {/* Added flex and justify-between classes */}
+                <div className="flex-1"> {/* Added flex-1 class to make it take remaining space */}
+                    <SearchComponent />
+                </div>
+                <div className="ml-4 mr-2">
+                    <ModeToggle />
+                </div>
+                <TeacherStudentButton />
             </div>
             <SignedIn>
-                <UserButton />
+                <UserButton afterSignOutUrl="/" />
             </SignedIn>
-
         </header>
     );
 }
