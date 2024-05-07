@@ -29,11 +29,20 @@ export const CreateCourse = () => {
         }
     });
 
+    const createTitle = async (values: z.infer<typeof createSchema>) => {
+        const response = await axios.post("/api/courses", values);
+        return response;
+    };
+
     const onSubmit = async (values: z.infer<typeof createSchema>) => {
         try {
-            const response = await axios.post("/api/courses", values);
-            toast.success("Course created!")
-            router.push(`/teacher/courses/${response.data.id}`)
+            const response = createTitle(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Course Title Created!"
+            });
+            router.push(`/teacher/courses/${(await response).data.id}`)
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);
@@ -58,7 +67,6 @@ export const CreateCourse = () => {
                     <CardContent>
                         <div className="grid gap-6">
                             <div className="grid gap-3">
-
                                 <FormField
                                     control={createForm.control}
                                     name="title"
@@ -71,9 +79,7 @@ export const CreateCourse = () => {
                                                 <Input
                                                     disabled={isSubmitting}
                                                     placeholder="e.g Advanced Web Development"
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                    onBlur={field.onBlur}
+                                                    {...field}
                                                 />
                                             </FormControl>
                                             <FormDescription>

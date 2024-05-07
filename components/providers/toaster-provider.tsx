@@ -3,8 +3,10 @@
 import { Toaster } from "react-hot-toast"
 
 export const ToastProvider = () => {
-    return ( 
-        <Toaster/>
-     );
+    return (
+        <Toaster
+            position="bottom-right"
+            reverseOrder={false}
+        />
+    );
 }
- 

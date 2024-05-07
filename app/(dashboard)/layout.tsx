@@ -1,6 +1,6 @@
 import { ThemeProvider } from "next-themes";
-import { DashboardNavBar } from "./_components/navbar";
-import { SideBar } from "./_components/sidebar";
+import { DashboardNavBar } from "./_components/(navbar)/navbar";
+import { SideBar } from "./_components/(sidebar)/sidebar";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { Inter } from "next/font/google";

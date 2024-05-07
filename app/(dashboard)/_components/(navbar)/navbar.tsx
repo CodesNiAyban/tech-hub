@@ -6,7 +6,7 @@ import { SignedIn, UserButton } from "@clerk/nextjs"
 import {
     Menu
 } from "lucide-react"
-import { MobileSubscriptionCard } from "./mobile-subscription-card"
+import { MobileSubscriptionCard } from "../(sidebar)/mobile-subscription-card"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
 import { TeacherStudentButton } from "./teacher-student-button"

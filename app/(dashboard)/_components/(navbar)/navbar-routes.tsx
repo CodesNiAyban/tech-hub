@@ -1,7 +1,7 @@
 "use client"
 
 import NavBarItem from "./navbar-item";
-import { guestRoutes } from "./sidebar-routes";
+import { guestRoutes } from "../(sidebar)/sidebar-routes";
 
 export const NavBarRoutes = () => {
     const routes = guestRoutes;

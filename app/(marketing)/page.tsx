@@ -38,7 +38,7 @@ const MarketingPage = () => {
                         TechHub
                     </strong>
                 </h1>
-                <div className={cn("text-sm md:text-xl mt-4 max-w-xs md:max-w-2xl text-muted-foreground text-center mx-auto pt-1 pb-4",
+                <div className={cn("text-sm md:text-xl mt-4 max-w-xs md:max-w-2xl text-muted-foreground/90 text-center mx-auto pt-1 pb-4",
                     textFont.className
                 )}>
                     Elevate your skills with TechHub. Dive into our curated courses, connect with industry experts, and accelerate your career in tech. Join our community of learners and discover your true potential today!
