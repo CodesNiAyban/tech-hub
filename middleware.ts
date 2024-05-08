@@ -4,12 +4,13 @@ const isProtectedRoute = createRouteMatcher([
   '/courses(.*)',
   '/home(.*)',
   '/browse(.*)',
+  '/teacher(.*)',
 ]);
 
 export default clerkMiddleware((auth, req) => {
   if (!auth().userId && isProtectedRoute(req)) {
 
-    // Add custom logic to run before redirecting
+    // Add custom logic to run before redirecting // Add notification that session expired
 
     return auth().redirectToSignIn();
   }

@@ -1,6 +1,6 @@
 "use client"
 
-import { CreateCourse } from "@/app/(dashboard)/_components/(course)/create-course";
+import { CreateCourse } from "@/app/(dashboard)/_components/(course)/create-course-title";
 
 const CreatePage = () => {
 

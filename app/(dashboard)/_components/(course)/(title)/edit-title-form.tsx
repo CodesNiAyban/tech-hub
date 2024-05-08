@@ -1,54 +1,68 @@
-import { formSchema } from "@/app/(dashboard)/_components/_utils/form-validation";
+"use client"
+
+import { titleSchema } from "@/app/(dashboard)/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 
 interface TitleFormProps {
-    initialData: {
-        title: string;
-    };
+    initialData: Course
     courseId: string;
     formLabel: string
-    onClose: () => void
+    toggleModal: () => void
 }
 
-export const EditCourseForm = ({
+export const EditTitleForm = ({
     initialData,
     courseId,
     formLabel,
-    onClose
+    toggleModal
 }: TitleFormProps) => {
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof titleSchema>>({
+        resolver: zodResolver(titleSchema),
         defaultValues: initialData,
     });
 
-    const { isSubmitting, isValid } = form.formState;
+    const { isValid } = form.formState;
 
-    const editTitle = async (values: z.infer<typeof formSchema>) => {
-        const response = await axios.patch(`/api/courses/${courseId}`, values);
-        return response;
+    const editTitle = async (values: z.infer<typeof titleSchema>) => {
+        setIsSubmitting(true); // Set submission status to true
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        } finally {
+            setIsSubmitting(false); // Reset submission status to false
+            toggleModal()
+        }
     };
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
             const response = editTitle(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Title Created!"
+                success: "Course Title Updated!"
             });
-            router.refresh();
-            onClose();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);
@@ -60,7 +74,7 @@ export const EditCourseForm = ({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className={cn("grid items-start gap-4")}>
+            <form id="edit-course" onSubmit={form.handleSubmit(onSubmit)} className={cn("grid items-start gap-4")}>
                 <div className="grid gap-6">
                     <div className="grid gap-3">
                         <FormField
@@ -73,9 +87,9 @@ export const EditCourseForm = ({
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            disabled={isSubmitting}
-                                            placeholder="e.g Advanced Web Development"
                                             {...field}
+                                            disabled={isSubmitting} // Disable input field while submitting
+                                            placeholder="e.g Advanced Web Development"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -84,10 +98,11 @@ export const EditCourseForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}>
+                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
                     Save
                 </Button>
             </form>
         </Form>
     );
 };
+

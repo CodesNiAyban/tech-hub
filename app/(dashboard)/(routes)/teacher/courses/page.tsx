@@ -19,10 +19,10 @@ const Courses = () => {
                         You can start selling as soon as you add a course.
                     </p>
                     <Button size="sm" className="mt-4" asChild>
-                            <Link href="/teacher/create">
-                                Add Course
-                            </Link>
-                        </Button>
+                        <Link href="/teacher/create">
+                            Add Course
+                        </Link>
+                    </Button>
                 </div>
             </div>
         </>

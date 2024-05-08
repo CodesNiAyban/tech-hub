@@ -37,12 +37,13 @@ export const CreateCourse = () => {
     const onSubmit = async (values: z.infer<typeof createSchema>) => {
         try {
             const response = createTitle(values);
+            router.push(`/teacher/courses/${(await response).data.id}`)
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Title Created!"
+                success: "Course Title Created!",
             });
-            router.push(`/teacher/courses/${(await response).data.id}`)
+
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

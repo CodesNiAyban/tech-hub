@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -21,30 +20,35 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { Pencil } from "lucide-react";
-import { EditCourseForm } from "./edit-course-form";
+import { EditDescriptionForm } from "../(description)/edit-description-form";
+import { useState } from "react";
+import { EditTitleForm } from "./edit-title-form";
+import { Course } from "@prisma/client";
 interface DrawerDialogProps {
-	isOpen: boolean;
-	onClose: () => void;
-	initialData: {
-		title: string;
-	};
+	toggleModal: () => void
+	initialData: Course
 	courseId: string;
 	title: string
 	decscription: string
 	formLabel: string
 }
 
-export const EditCourseDialog = ({
-	isOpen,
-	onClose,
+export const EditTitleDialog = ({
+	toggleModal,
 	initialData,
 	title,
 	courseId,
 	decscription,
 	formLabel
 }: DrawerDialogProps) => {
-	const [open, setOpen] = React.useState(isOpen)
+	const [open, setOpen] = useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)")
+
+	const handleClose = () => {
+		setOpen(false);
+		toggleModal(); // Close the dialog
+	};
+
 
 	if (isDesktop) {
 		return (
@@ -62,7 +66,12 @@ export const EditCourseDialog = ({
 							{decscription}. Click save when you&apos;re done.
 						</DialogDescription>
 					</DialogHeader>
-					<EditCourseForm initialData={initialData} courseId={courseId} formLabel={formLabel} onClose={onClose} />
+					<EditTitleForm
+						initialData={initialData}
+						courseId={courseId}
+						formLabel={formLabel}
+						toggleModal={handleClose}
+					/>
 				</DialogContent>
 			</Dialog>
 		)
@@ -81,7 +90,12 @@ export const EditCourseDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditCourseForm initialData={initialData} courseId={courseId} formLabel={formLabel} onClose={onClose} />
+					<EditTitleForm
+						initialData={initialData}
+						courseId={courseId}
+						formLabel={formLabel}
+						toggleModal={handleClose}
+					/>
 				</div>
 				<DrawerFooter className="pt-2">
 					<DrawerClose asChild>

@@ -9,21 +9,30 @@ import {
 } from "@/components/ui/card"
 import { LayoutDashboard } from "lucide-react"
 import { useState } from "react"
-import { EditCourseDialog } from "./edit-dialog"
+import { EditTitleDialog } from "./(title)/edit-title-dialog"
+import { CourseDescription } from "./(description)/course-description"
+import { CourseTitle } from "./(title)/course-title"
+import { Course } from "@prisma/client"
+import { CourseImage } from "./(image)/course-image"
+import db from "@/lib/db"
 
 interface TitleFormProps {
-    initialData: {
-        title: string;
-    };
+    initialData: Course
     courseId: string;
 }
 
-export const EditCourse = ({
+export const EditCourse = async ({
     initialData,
     courseId
 }: TitleFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
+
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: "asc",
+        }
+    })
 
     return (
         <Card>
@@ -36,27 +45,21 @@ export const EditCourse = ({
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="grid gap-6">
-                    <div className="grid gap-3">
-                        <div className="font-medium flex items-center justify-between">
-                            Course Title
-                            <EditCourseDialog
-                                isOpen={modalOpen}
-                                onClose={toggleModal}
-                                title={"Edit Course Title"}
-                                formLabel={"Title"}
-                                decscription={"This is the title of your Course and stuff"}
-                                initialData={initialData}
-                                courseId={courseId}
-                            />
-                        </div>
-                        <div className="border bg-muted/40 rounded-md p-4">
-                            <div className="font-medium flex items-center justify-between">
-                                {initialData.title}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <CourseTitle
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
+                <CourseDescription
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
+                <CourseImage
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
             </CardContent>
         </Card>
     );

@@ -3,7 +3,7 @@
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formSchema } from "./_utils/form-validation";
+import { titleSchema } from "./_utils/form-validation";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
@@ -22,14 +22,14 @@ export const TitleForm = ({
     const [isEditing, setIsEditing] = useState(false);
     const toggleEdit = () => setIsEditing((current) => !current)
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof titleSchema>>({
+        resolver: zodResolver(titleSchema),
         defaultValues: initialData,
     });
 
     const { isSubmitting, isValid } = form.formState;
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         console.log(values);
     }
 
