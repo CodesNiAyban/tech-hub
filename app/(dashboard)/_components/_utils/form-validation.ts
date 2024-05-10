@@ -28,7 +28,13 @@ export const categoriesSchema = z.object({
 });
 
 export const priceSchema = z.object({
-  price: z.coerce.number(),
+  price: z
+    .coerce
+    .number()
+    .refine((val) => val >= 0, {
+      message: "Price must be non-negative",
+      path: ["price"],
+    }),
 });
 
 export const attachmentSchema = z.object({

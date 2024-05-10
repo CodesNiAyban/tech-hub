@@ -29,6 +29,7 @@ export const EditImageForm = ({
     const editImage = async (values: z.infer<typeof imageSchema>) => {
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -49,7 +50,6 @@ export const EditImageForm = ({
                 error: "An error occured, please try again later.",
                 success: "Course Image Updated!"
             });
-            router.refresh();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

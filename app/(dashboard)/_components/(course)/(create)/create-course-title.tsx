@@ -31,6 +31,7 @@ export const CreateCourse = () => {
 
     const createTitle = async (values: z.infer<typeof createSchema>) => {
         const response = await axios.post("/api/courses", values);
+        router.push(`/teacher/courses/${response.data.id}`)
         return response;
     };
 
@@ -42,8 +43,6 @@ export const CreateCourse = () => {
                 error: "An error occured, please try again later.",
                 success: "Course Title Created!",
             });
-            router.push(`/teacher/courses/${(await response).data.id}`)
-
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

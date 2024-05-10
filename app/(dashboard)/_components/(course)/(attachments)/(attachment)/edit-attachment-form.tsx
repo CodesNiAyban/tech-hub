@@ -26,6 +26,7 @@ export const EditAttachmentForm = ({
     const editAttachment = async (values: z.infer<typeof attachmentSchema>) => {
         try {
             const response = await axios.post(`/api/courses/${courseId}/attachments`, values);
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -46,7 +47,6 @@ export const EditAttachmentForm = ({
                 error: "An error occured, please try again later.",
                 success: "Course Attachment Updated!"
             });
-            router.refresh();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

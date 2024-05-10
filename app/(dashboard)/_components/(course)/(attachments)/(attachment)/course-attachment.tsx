@@ -1,11 +1,9 @@
-import { cn } from "@/lib/utils";
+
 import { EditAttachmentDialog } from "./edit-attachment-dialog";
 import { Attachment, Course } from "@prisma/client";
 import { File, ImageIcon, Loader2, X } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
+import { DeleteAttachmentDialog } from "./delete-attachment-dialog";
 
 interface CourseAttachmentProps {
     initialData: Course & { attachments: Attachment[] };
@@ -19,41 +17,6 @@ export const EditCourseAttachment = ({
     courseId,
 }: CourseAttachmentProps) => {
     const [deletingId, setDeletingId] = useState<string | null>(null)
-
-    const deleteAttachment = async (id: string) => {
-        try {
-            setDeletingId(id);
-            const response = await axios.delete(`/api/courses/${courseId}/attachments/${id}`)
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        } finally {
-            toggleModal()
-        }
-    };
-
-    const onDelete = async (id: string) => {
-        try {
-            const response = deleteAttachment(id);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Attachment removed"
-            });
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        } finally {
-            setDeletingId(null);
-        }
-    }
 
     return (
         <div className="grid gap-6">
@@ -89,11 +52,10 @@ export const EditCourseAttachment = ({
                                         <Loader2 className="h-4 w-4 animate-spin" />
                                     </div>
                                 ) : (
-                                    <button
-                                        onClick={() => onDelete(attachment.id)}
-                                        className="ml-auto hover:opacity-75 transition">
-                                        <X className="h-4 w-4" />
-                                    </button>
+                                    <DeleteAttachmentDialog
+                                        attachmentId={attachment.id}
+                                        courseId={courseId}
+                                    />
                                 )}
                             </div>
                         ))}

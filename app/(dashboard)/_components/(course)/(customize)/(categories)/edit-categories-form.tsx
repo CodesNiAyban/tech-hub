@@ -49,6 +49,7 @@ export const EditCategoriesForm = ({
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}/categories`, values);
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -71,7 +72,6 @@ export const EditCategoriesForm = ({
                 error: "An error occured, please try again later.",
                 success: "Course Categories Updated!"
             });
-            router.refresh();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

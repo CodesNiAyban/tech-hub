@@ -41,6 +41,7 @@ export const EditTitleForm = ({
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -62,7 +63,6 @@ export const EditTitleForm = ({
                 error: "An error occured, please try again later.",
                 success: "Course Title Updated!"
             });
-            router.refresh();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);
