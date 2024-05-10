@@ -1,5 +1,6 @@
 import { Category, Course } from "@prisma/client";
 import { EditCategoriesDialog } from "./edit-categories-dialog";
+import { Badge } from "@/components/ui/badge";
 
 interface CourseCategoriesProps {
     initialData: Course & { categories: Category[] };
@@ -33,11 +34,14 @@ export const CourseCategories = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
-                        {initialData.categories && <p className="text-muted-foreground italic">No categories</p>}
-                        {initialData.categories.map((category) => (
-                            <span key={category.id}>{category.name}</span>
-                        ))}
+                    <div className="font-medium flex">
+                        {initialData.categories && initialData.categories.length > 0 ? (
+                            initialData.categories.map((category) => (
+                                <Badge key={category.id} className="mr-2">{category.name}</Badge>
+                            ))
+                        ) : (
+                            <p className="text-muted-foreground italic">No categories</p>
+                        )}
                     </div>
                 </div>
             </div>
