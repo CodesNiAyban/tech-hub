@@ -15,7 +15,7 @@ export const Logo = () => {
         <p
           className={cn(
             "font-bold", // Use a bold font
-            "text-yellow-500" // Use a yellow color similar to the Pornhub logo
+            "text-yellow-500" 
           )}
         >
           <span className="text-foreground mr-1">Tech</span>

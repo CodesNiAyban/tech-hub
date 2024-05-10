@@ -43,6 +43,11 @@ export const attachmentSchema = z.object({
   })
 })
 
+export const chapterSchema = z.object({
+  title: z.string().min(1),
+})
+
+
 export const createSchema = z.object({
   title: z.string().min(1).max(100),
 })

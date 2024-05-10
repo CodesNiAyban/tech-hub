@@ -21,20 +21,20 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { Pencil, PlusCircle } from "lucide-react";
-import { EditAttachmentForm } from "./edit-attachment-form";
+import { PlusCircle } from "lucide-react";
+import { EditChapterForm } from "./edit-chapter-form";
 import { useState } from "react";
-import { Attachment, Course } from "@prisma/client";
+import { Course } from "@prisma/client";
 interface DrawerDialogProps {
 	toggleModal: () => void
-	initialData: Course & { attachments: Attachment[] };
+	initialData: Course
 	courseId: string;
 	title: string
 	decscription: string
 	formLabel: string
 }
 
-export const EditAttachmentDialog = ({
+export const EditChapterDialog = ({
 	toggleModal,
 	initialData,
 	title,
@@ -57,7 +57,7 @@ export const EditAttachmentDialog = ({
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
 						<PlusCircle className="h-5 w-5 mr-2" />
-						Add an attachment
+						Add a chapter
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
@@ -67,7 +67,7 @@ export const EditAttachmentDialog = ({
 							{decscription}. Click save when you&apos;re done.
 						</DialogDescription>
 					</DialogHeader>
-					<EditAttachmentForm
+					<EditChapterForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
@@ -81,8 +81,9 @@ export const EditAttachmentDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="ghost" className="font-medium">
-					Add an attachment
+				<Button variant="ghost">
+					<PlusCircle className="h-5 w-5 mr-2" />
+					Add a chapter
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
@@ -93,7 +94,7 @@ export const EditAttachmentDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditAttachmentForm
+					<EditChapterForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}

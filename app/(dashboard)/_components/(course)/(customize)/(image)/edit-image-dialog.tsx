@@ -59,7 +59,7 @@ export const EditImageDialog = ({
 						{!initialData.imageUrl ? (
 							<>
 								<PlusCircle className="h-5 w-5 mr-2" />
-								Add an {formLabel}
+								Add an image
 							</>
 						) : (
 							<>

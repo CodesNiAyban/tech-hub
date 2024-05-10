@@ -3,6 +3,7 @@ import { CourseChapters } from "@/app/(dashboard)/_components/(course)/(chapters
 import { CustomizeCourse } from "@/app/(dashboard)/_components/(course)/(customize)/course-customize";
 import { CoursePrice } from "@/app/(dashboard)/_components/(course)/(sell)/course-price";
 import db from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 const CourseIdPage = async ({
@@ -10,11 +11,23 @@ const CourseIdPage = async ({
 }: {
     params: { courseId: string }
 }) => {
+    const { userId } = auth();
+
+    if(!userId) {
+        return redirect("/")
+    }
+    
     const course = await db.course.findUnique({
         where: {
-            id: params.courseId
+            id: params.courseId,
+            userId
         },
         include: {
+            chapters: {
+                orderBy: {
+                    position: "asc"
+                }
+            },
             categories: {
                 orderBy: {
                     name: "desc"
@@ -43,7 +56,8 @@ const CourseIdPage = async ({
         course.description,
         course.imageUrl,
         course.price,
-        course.categories.length > 0
+        course.categories.length > 0,
+        course.chapters.some(chapter => chapter.isPublished),
     ]
 
     const totalFields = requiredFields.length;

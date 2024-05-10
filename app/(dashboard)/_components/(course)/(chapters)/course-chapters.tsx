@@ -4,15 +4,17 @@ import { IconBadge } from "@/components/icon-badge"
 import {
     Card,
     CardContent,
+    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { Category, Course } from "@prisma/client"
+import { Category, Chapter, Course } from "@prisma/client"
 import { ListChecks } from "lucide-react"
 import { useState } from "react"
+import { CourseChapter } from "./(chapter)/course-chapter"
 
 interface TitleFormProps {
-    initialData: Course & { categories: Category[] };
+    initialData: Course & { chapters: Chapter[] };
     courseId: string;
 }
 
@@ -34,8 +36,17 @@ export const CourseChapters = ({
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                TODO: Chapters
+                <CourseChapter
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
             </CardContent>
+            <CardFooter className="justify-center border-t p-4">
+                <p className="text-xs text-muted-foreground">
+                    Drag and drop to reorder the chapters
+                </p>
+            </CardFooter>
         </Card>
     );
 }
