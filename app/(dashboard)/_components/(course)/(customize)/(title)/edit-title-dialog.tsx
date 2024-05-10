@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -20,12 +19,10 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useMediaQuery } from "@uidotdev/usehooks";
-import { Pencil } from "lucide-react";
-import { EditDescriptionForm } from "../(description)/edit-description-form";
-import { useState } from "react";
-import { EditTitleForm } from "./edit-title-form";
 import { Course } from "@prisma/client";
+import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import { EditTitleForm } from "./edit-title-form";
 interface DrawerDialogProps {
 	toggleModal: () => void
 	initialData: Course
@@ -44,13 +41,16 @@ export const EditTitleDialog = ({
 	formLabel
 }: DrawerDialogProps) => {
 	const [open, setOpen] = useState(false);
-	const isDesktop = useMediaQuery("(min-width: 768px)")
+	const [isDesktop, setIsDesktop] = useState(false);
+
+	useEffect(() => {
+		setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+	}, []);
 
 	const handleClose = () => {
 		setOpen(false);
 		toggleModal(); // Close the dialog
 	};
-
 
 	if (isDesktop) {
 		return (

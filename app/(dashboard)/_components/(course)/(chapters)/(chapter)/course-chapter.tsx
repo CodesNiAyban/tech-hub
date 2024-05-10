@@ -29,7 +29,7 @@ export const CourseChapter = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-medium items-center justify-between">
                         {!initialData.chapters.length ? (
                             <p className="text-muted-foreground italic">No chapters yet.</p>
                         ) : (

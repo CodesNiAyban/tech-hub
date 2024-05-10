@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -20,11 +19,10 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useMediaQuery } from "@uidotdev/usehooks";
-import { Pencil, PlusCircle } from "lucide-react";
-import { EditAttachmentForm } from "./edit-attachment-form";
-import { useState } from "react";
 import { Attachment, Course } from "@prisma/client";
+import { PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { EditAttachmentForm } from "./edit-attachment-form";
 interface DrawerDialogProps {
 	toggleModal: () => void
 	initialData: Course & { attachments: Attachment[] };
@@ -43,7 +41,12 @@ export const EditAttachmentDialog = ({
 	formLabel
 }: DrawerDialogProps) => {
 	const [open, setOpen] = useState(false);
-	const isDesktop = useMediaQuery("(min-width: 768px)")
+	const [isDesktop, setIsDesktop] = useState(false);
+
+	useEffect(() => {
+		setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+	}, []);
+
 
 	const handleClose = () => {
 		setOpen(false);
