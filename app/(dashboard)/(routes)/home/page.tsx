@@ -1,9 +1,9 @@
 "use client"
 const MarketingPage = () => {
   return (
-    <>
-    AYBAN
-    </>
+    <div>
+      AYBAN
+    </div>
   )
 }
 

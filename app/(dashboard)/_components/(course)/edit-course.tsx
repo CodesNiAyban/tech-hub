@@ -7,32 +7,30 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
+import { Category, Course } from "@prisma/client"
 import { LayoutDashboard } from "lucide-react"
 import { useState } from "react"
-import { EditTitleDialog } from "./(title)/edit-title-dialog"
 import { CourseDescription } from "./(description)/course-description"
-import { CourseTitle } from "./(title)/course-title"
-import { Course } from "@prisma/client"
 import { CourseImage } from "./(image)/course-image"
-import db from "@/lib/db"
+import { CourseTitle } from "./(title)/course-title"
+import { CourseCategories } from "./(categories)/course-categories"
 
 interface TitleFormProps {
-    initialData: Course
+    initialData: Course & { categories: Category[] };
     courseId: string;
+    categories: {
+        id: string;
+        name: string;
+    }[]
 }
 
-export const EditCourse = async ({
+export const EditCourse = ({
     initialData,
-    courseId
+    courseId,
+    categories
 }: TitleFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
-
-    const categories = await db.category.findMany({
-        orderBy: {
-            name: "asc",
-        }
-    })
 
     return (
         <Card>
@@ -59,6 +57,12 @@ export const EditCourse = async ({
                     initialData={initialData}
                     courseId={courseId}
                     toggleModal={toggleModal}
+                />
+                <CourseCategories
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                    categories={categories}
                 />
             </CardContent>
         </Card>

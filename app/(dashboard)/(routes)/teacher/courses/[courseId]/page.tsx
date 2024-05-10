@@ -10,6 +10,13 @@ const CourseIdPage = async ({
     const course = await db.course.findUnique({
         where: {
             id: params.courseId
+        },
+        include: {
+            categories: {
+                orderBy: {
+                    name: "asc"
+                }
+            }
         }
     })
 
@@ -17,12 +24,18 @@ const CourseIdPage = async ({
         return redirect("/teacher/course"); // TODO: Add toast that course not found
     }
 
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: "asc",
+        }
+    })
+
     const requiredFields = [
         course.title,
         course.description,
         course.imageUrl,
         course.price,
-        course.catergoryId
+        course.categories
     ]
 
     const totalFields = requiredFields.length;
@@ -48,8 +61,9 @@ const CourseIdPage = async ({
                         <EditCourse
                             initialData={course}
                             courseId={course.id}
+                            categories={categories}
                         />
-                    </div>    
+                    </div>
                 </div>
             </div>
         </div>

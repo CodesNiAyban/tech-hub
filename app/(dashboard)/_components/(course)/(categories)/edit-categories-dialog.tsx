@@ -24,20 +24,26 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { Pencil } from "lucide-react";
 import { EditDescriptionForm } from "../(description)/edit-description-form";
 import { useState } from "react";
-import { EditTitleForm } from "./edit-title-form";
-import { Course } from "@prisma/client";
+import { EditCategoriesForm } from "./edit-categories-form";
+import { Category, Course } from "@prisma/client";
+
 interface DrawerDialogProps {
 	toggleModal: () => void
-	initialData: Course
-	courseId: string;
+	initialData: Course & { categories: Category[] };
 	title: string
+	courseId: string;
+	categories: {
+        id: string;
+        name: string;
+    }[]
 	decscription: string
 	formLabel: string
 }
 
-export const EditTitleDialog = ({
+export const EditCategoriesDialog = ({
 	toggleModal,
 	initialData,
+	categories,
 	title,
 	courseId,
 	decscription,
@@ -50,7 +56,6 @@ export const EditTitleDialog = ({
 		setOpen(false);
 		toggleModal(); // Close the dialog
 	};
-
 
 	if (isDesktop) {
 		return (
@@ -68,11 +73,12 @@ export const EditTitleDialog = ({
 							{decscription}. Click save when you&apos;re done.
 						</DialogDescription>
 					</DialogHeader>
-					<EditTitleForm
+					<EditCategoriesForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						categories={categories}
 					/>
 				</DialogContent>
 			</Dialog>
@@ -82,7 +88,7 @@ export const EditTitleDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="outline">{title}</Button>
+				<Button variant="outline"></Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
@@ -92,11 +98,12 @@ export const EditTitleDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditTitleForm
+					<EditCategoriesForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						categories={categories}
 					/>
 				</div>
 				<DrawerFooter className="pt-2">

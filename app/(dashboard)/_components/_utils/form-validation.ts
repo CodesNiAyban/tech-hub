@@ -20,6 +20,13 @@ export const imageSchema = z.object({
   })
 })
 
+export const categoriesSchema = z.object({
+  categories: z
+    .array(z.string().min(1))
+    .min(1)
+    .nonempty("Please select at least one framework."),
+});
+
 export const createSchema = z.object({
   title: z.string().min(1).max(100),
 })

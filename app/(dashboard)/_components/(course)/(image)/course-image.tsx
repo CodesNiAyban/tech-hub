@@ -16,7 +16,7 @@ export const CourseImage = ({
     courseId,
 }: CourseImageProps) => {
     return (
-        <div className="grid gap-6 pt-9">
+        <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
                 <div className="font-medium flex items-center justify-between">
                     Course Image

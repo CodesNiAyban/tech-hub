@@ -26,7 +26,7 @@ export const CourseTitle = ({
                         toggleModal={toggleModal}
                     />
                 </div>
-                <div className="border bg-muted/40 rounded-md p-4">
+                <div className="border bg-muted/40 rounded-md p-2 px-3">
                     <div className="font-medium flex items-center justify-between">
                         {initialData.title}
                     </div>

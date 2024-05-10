@@ -2,8 +2,10 @@ import { LogoPhone } from "@/components/logo-phone"
 import { ModeToggle } from "@/components/theme-button"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SignedIn, UserButton } from "@clerk/nextjs"
+import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import {
+    Link,
+    Loader2,
     Menu
 } from "lucide-react"
 import { MobileSubscriptionCard } from "../(sidebar)/mobile-subscription-card"
@@ -42,9 +44,23 @@ export const DashboardNavBar = () => {
                 </div>
                 <TeacherStudentButton />
             </div>
-            <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-            </SignedIn>
+            <ClerkLoading>
+                <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
+            </ClerkLoading>
+            <ClerkLoaded>
+                <SignedOut>
+                    <Button size="sm" variant="outline" asChild>
+                        <Link href="/sign-in">
+                            Login
+                        </Link>
+                    </Button>
+                </SignedOut>
+                <SignedIn>
+                    <UserButton
+                    // afterSignOutUrl="/"
+                    />
+                </SignedIn>
+            </ClerkLoaded>
         </header>
     );
 }
