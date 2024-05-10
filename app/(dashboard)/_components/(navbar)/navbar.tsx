@@ -15,13 +15,13 @@ import { TeacherStudentButton } from "./teacher-student-button"
 
 export const DashboardNavBar = () => {
     return (
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 backdrop-blur-sm duration-1000 animate-in slide-in-from-top-12">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] xl:px-6 backdrop-blur-sm duration-1000 animate-in slide-in-from-top-12">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button
                         variant="outline"
                         size="icon"
-                        className="shrink-0 md:hidden"
+                        className="shrink-0 xl:hidden"
                     >
                         <Menu className="h-5 w-5" />
                         <span className="sr-only">Toggle navigation menu</span>
