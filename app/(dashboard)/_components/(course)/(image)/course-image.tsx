@@ -21,7 +21,7 @@ export const CourseImage = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Image
                     <EditImageDialog
-                        title={"Edit Course Image"}
+                        title={"Replace image"}
                         formLabel={"Image"}
                         decscription={"Edit or add a image for you course, this is optional."}
                         initialData={initialData}

@@ -19,7 +19,7 @@ export const CourseDescription = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Description
                     <EditDescriptionDialog
-                        title={"Edit Course Description"}
+                        title={"Edit description"}
                         formLabel={"Description"}
                         decscription={"Edit or add a description for you course, this is optional."}
                         initialData={initialData}

@@ -24,7 +24,7 @@ export const CourseCategories = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Categories
                     <EditCategoriesDialog
-                        title={"Edit Course Categories"}
+                        title={"Edit categories"}
                         formLabel={"Categories"}
                         decscription={"Edit or add a categories for you course, this is optional."}
                         categories={categories}

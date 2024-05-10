@@ -35,7 +35,7 @@ const CourseIdPage = async ({
         course.description,
         course.imageUrl,
         course.price,
-        course.categories
+        course.categories.length > 0
     ]
 
     const totalFields = requiredFields.length;
@@ -56,6 +56,15 @@ const CourseIdPage = async ({
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+                <div>
+                    <div className="flexcenter gap-x-2">
+                        <EditCourse
+                            initialData={course}
+                            courseId={course.id}
+                            categories={categories}
+                        />
+                    </div>
+                </div>
                 <div>
                     <div className="flexcenter gap-x-2">
                         <EditCourse

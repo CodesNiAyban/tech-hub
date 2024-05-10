@@ -57,7 +57,7 @@ export const EditDescriptionDialog = ({
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
 						<Pencil className="h-5 w-5 mr-2" />
-						Edit {formLabel}
+						{title}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
@@ -81,7 +81,10 @@ export const EditDescriptionDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="outline">{title}</Button>
+				<Button variant="ghost">
+					<Pencil className="h-5 w-5 mr-2" />
+					{title}
+				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">

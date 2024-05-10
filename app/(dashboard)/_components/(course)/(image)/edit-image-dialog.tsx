@@ -56,7 +56,6 @@ export const EditImageDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-
 						{!initialData.imageUrl ? (
 							<>
 								<PlusCircle className="h-5 w-5 mr-2" />
@@ -65,7 +64,7 @@ export const EditImageDialog = ({
 						) : (
 							<>
 								<Pencil className="h-5 w-5 mr-2" />
-								Replace {formLabel}
+								{title}
 							</>
 						)}
 					</Button>
@@ -91,7 +90,19 @@ export const EditImageDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="outline">{title}</Button>
+				<Button variant="ghost" className="font-medium">
+					{!initialData.imageUrl ? (
+						<>
+							<PlusCircle className="h-5 w-5 mr-2" />
+							Add an {formLabel}
+						</>
+					) : (
+						<>
+							<Pencil className="h-5 w-5 mr-2" />
+							Replace {formLabel}
+						</>
+					)}
+				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
