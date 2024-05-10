@@ -18,32 +18,23 @@ const MarketingLayout = ({
     children: React.ReactNode;
 }) => {
     return (
-        <ClerkProvider
-            appearance={{
-                layout: {
-                    logoImageUrl: "/logo.svg"
-                },
-                baseTheme: dark
-            }}
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
         >
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-            >
-                <div className="grid min-h-screen w-full 2xl:grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
-                    <SideBar />
-                    <div className="flex flex-col">
-                        <DashboardNavBar />
-                        <main className="flex flex-1 flex-col gap-4 p-4 xl:gap-6 xl:p-6">
-                            <ToastProvider />
-                            {children}
-                        </main>
-                    </div>
+            <div className="grid min-h-screen w-full 2xl:grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
+                <SideBar />
+                <div className="flex flex-col">
+                    <DashboardNavBar />
+                    <main className="flex flex-1 flex-col gap-4 p-4 xl:gap-6 xl:p-6">
+                        <ToastProvider />
+                        {children}
+                    </main>
                 </div>
-            </ThemeProvider>
-        </ClerkProvider>
+            </div>
+        </ThemeProvider>
     )
 }
 

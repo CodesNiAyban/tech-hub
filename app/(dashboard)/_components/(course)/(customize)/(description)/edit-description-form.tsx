@@ -43,7 +43,6 @@ export const EditDescriptionForm = ({
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
-            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -65,6 +64,7 @@ export const EditDescriptionForm = ({
                 error: "An error occured, please try again later.",
                 success: "Course Description Updated!"
             });
+            router.refresh();
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

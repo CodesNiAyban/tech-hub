@@ -1,3 +1,4 @@
+import { CourseAttachment } from "@/app/(dashboard)/_components/(course)/(attachments)/course-attachments";
 import { CourseChapters } from "@/app/(dashboard)/_components/(course)/(chapters)/course-chapters";
 import { CustomizeCourse } from "@/app/(dashboard)/_components/(course)/(customize)/course-customize";
 import { CoursePrice } from "@/app/(dashboard)/_components/(course)/(sell)/course-price";
@@ -16,10 +17,15 @@ const CourseIdPage = async ({
         include: {
             categories: {
                 orderBy: {
-                    name: "asc"
+                    name: "desc"
+                }
+            },
+            attachments: {
+                orderBy: {
+                    createdAt: "desc"
                 }
             }
-        }
+        },
     })
 
     if (!course) {
@@ -72,12 +78,14 @@ const CourseIdPage = async ({
                         <CourseChapters
                             initialData={course}
                             courseId={course.id}
-                            categories={categories}
                         />
                         <CoursePrice
                             initialData={course}
                             courseId={course.id}
-                            categories={categories}
+                        />
+                        <CourseAttachment
+                            initialData={course}
+                            courseId={course.id}
                         />
                     </div>
                 </div>

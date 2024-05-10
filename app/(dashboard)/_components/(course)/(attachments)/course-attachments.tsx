@@ -7,16 +7,17 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { Category, Course } from "@prisma/client"
-import { ListChecks } from "lucide-react"
+import { Attachment, Course } from "@prisma/client"
+import { File } from "lucide-react"
 import { useState } from "react"
+import { EditCourseAttachment } from "./(attachment)/course-attachment"
 
 interface TitleFormProps {
-    initialData: Course & { categories: Category[] };
+    initialData: Course & { attachments: Attachment[] };
     courseId: string;
 }
 
-export const CourseChapters = ({
+export const CourseAttachment = ({
     initialData,
     courseId,
 }: TitleFormProps) => {
@@ -28,13 +29,17 @@ export const CourseChapters = ({
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">
-                        <IconBadge icon={ListChecks} size={"default"} variant={"default"} />
-                        Course Chapters
+                        <IconBadge icon={File} size={"default"} variant={"default"} />
+                        Resources and Attachments
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                TODO: Chapters
+                <EditCourseAttachment
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
             </CardContent>
         </Card>
     );

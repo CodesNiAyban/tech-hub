@@ -15,22 +15,17 @@ import { EditCoursePrice } from "./(pricing)/course-price"
 interface TitleFormProps {
     initialData: Course & { categories: Category[] };
     courseId: string;
-    categories: {
-        id: string;
-        name: string;
-    }[]
 }
 
 export const CoursePrice = ({
     initialData,
     courseId,
-    categories
 }: TitleFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
 
     return (
-        <Card>
+        <Card className="mb-6">
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">

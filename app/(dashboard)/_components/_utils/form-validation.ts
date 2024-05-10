@@ -31,6 +31,12 @@ export const priceSchema = z.object({
   price: z.coerce.number(),
 });
 
+export const attachmentSchema = z.object({
+  url: z.string().min(1, {
+    message: "Attachment is required",
+  })
+})
+
 export const createSchema = z.object({
   title: z.string().min(1).max(100),
 })

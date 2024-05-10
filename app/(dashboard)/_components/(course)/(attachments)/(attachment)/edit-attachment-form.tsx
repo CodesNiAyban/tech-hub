@@ -1,34 +1,31 @@
 "use client"
 
 import { FileUpload } from "@/components/file-upload";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { imageSchema } from "../../../_utils/form-validation";
+import { attachmentSchema } from "../../../_utils/form-validation";
 
-interface EditImageProps {
+interface EditAttachmentProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditImageForm = ({
+export const EditAttachmentForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: EditImageProps) => {
+}: EditAttachmentProps) => {
     const router = useRouter();
 
-    const editImage = async (values: z.infer<typeof imageSchema>) => {
+    const editAttachment = async (values: z.infer<typeof attachmentSchema>) => {
         try {
-            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            const response = await axios.post(`/api/courses/${courseId}/attachments`, values);
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -41,13 +38,13 @@ export const EditImageForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof imageSchema>) => {
+    const onSubmit = async (values: z.infer<typeof attachmentSchema>) => {
         try {
-            const response = editImage(values);
+            const response = editAttachment(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Image Updated!"
+                success: "Course Attachment Updated!"
             });
             router.refresh();
         } catch (error) {
@@ -62,15 +59,15 @@ export const EditImageForm = ({
     return (
         <div>
             <FileUpload
-                endpoint="courseImage"
+                endpoint="courseAttachments"
                 onChange={(url) => {
                     if (url) {
-                        onSubmit({ imageUrl: url })
+                        onSubmit({ url: url })
                     }
                 }}
             />
             <div className="text-xs text-muted-foreground mt-4">
-                16:9 aspect ratio recommended
+                Add anything your students might need to complete the course
             </div>
         </div>
     );
