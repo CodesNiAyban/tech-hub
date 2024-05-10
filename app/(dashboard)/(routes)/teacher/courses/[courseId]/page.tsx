@@ -1,4 +1,6 @@
-import { EditCourse } from "@/app/(dashboard)/_components/(course)/edit-course";
+import { CourseChapters } from "@/app/(dashboard)/_components/(course)/(chapters)/course-chapters";
+import { CustomizeCourse } from "@/app/(dashboard)/_components/(course)/(customize)/course-customize";
+import { CoursePrice } from "@/app/(dashboard)/_components/(course)/(sell)/course-price";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 
@@ -55,10 +57,10 @@ const CourseIdPage = async ({
                     </span>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-10">
                 <div>
                     <div className="flexcenter gap-x-2">
-                        <EditCourse
+                        <CustomizeCourse
                             initialData={course}
                             courseId={course.id}
                             categories={categories}
@@ -67,7 +69,12 @@ const CourseIdPage = async ({
                 </div>
                 <div>
                     <div className="flexcenter gap-x-2">
-                        <EditCourse
+                        <CourseChapters
+                            initialData={course}
+                            courseId={course.id}
+                            categories={categories}
+                        />
+                        <CoursePrice
                             initialData={course}
                             courseId={course.id}
                             categories={categories}

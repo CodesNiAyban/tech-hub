@@ -24,7 +24,7 @@ interface TitleFormProps {
     }[]
 }
 
-export const EditCourse = ({
+export const CustomizeCourse = ({
     initialData,
     courseId,
     categories

@@ -27,6 +27,10 @@ export const categoriesSchema = z.object({
     .nonempty("Please select at least one framework."),
 });
 
+export const priceSchema = z.object({
+  price: z.coerce.number(),
+});
+
 export const createSchema = z.object({
   title: z.string().min(1).max(100),
 })

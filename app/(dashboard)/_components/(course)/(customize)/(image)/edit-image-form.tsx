@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { imageSchema } from "../../_utils/form-validation";
+import { imageSchema } from "../../../_utils/form-validation";
 
 interface EditImageProps {
     initialData: Course
