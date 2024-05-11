@@ -15,7 +15,7 @@ import { TeacherStudentButton } from "./teacher-student-button"
 
 export const DashboardNavBar = () => {
     return (
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] xl:px-6 backdrop-blur-sm duration-1000 animate-in slide-in-from-top-12">
+        <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] xl:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-md">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button
@@ -35,11 +35,11 @@ export const DashboardNavBar = () => {
                     </div>
                 </SheetContent>
             </Sheet>
-            <div className="w-full flex items-center justify-between"> {/* Added flex and justify-between classes */}
-                <div className="flex-1"> {/* Added flex-1 class to make it take remaining space */}
+            <div className="w-full flex items-center justify-between bg-transparent"> {/* Added flex and justify-between classes */}
+                <div className="flex-1 bg-transparent"> {/* Added flex-1 class to make it take remaining space */}
                     <SearchComponent />
                 </div>
-                <div className="ml-4 mr-2">
+                <div className="ml-4 mr-2 bg-transparent">
                     <ModeToggle />
                 </div>
                 <TeacherStudentButton />

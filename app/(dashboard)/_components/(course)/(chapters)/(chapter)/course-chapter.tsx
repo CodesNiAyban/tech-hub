@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { EditChapterDialog } from "./edit-chapter-dialog";
 import { Chapter, Course } from "@prisma/client";
 import { ChaptersList } from "./chapters-list";
+import toast from "react-hot-toast";
 
 interface CourseChapterProps {
     initialData: Course & { chapters: Chapter[] };
@@ -14,8 +15,19 @@ export const CourseChapter = ({
     initialData,
     courseId,
 }: CourseChapterProps) => {
+    const onReorder = async (updateData: { id: string; position: number }[]) => {
+        try {
+
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        }
+    }
     return (
-        <div className="grid gap-6 pt-6">
+        <div className="grid gap-6">
             <div className="grid gap-3">
                 <div className="font-medium flex items-center justify-between">
                     Course Chapter

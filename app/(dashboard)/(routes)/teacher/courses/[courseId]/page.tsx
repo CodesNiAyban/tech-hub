@@ -77,7 +77,7 @@ const CourseIdPage = async ({
                     </span>
                 </div>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-10">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
                 <div>
                     <div className="flexcenter gap-x-2">
                         <CustomizeCourse

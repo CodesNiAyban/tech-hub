@@ -27,7 +27,7 @@ export const CourseTitle = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="text-sm flex items-center justify-between">
                         {initialData.title}
                     </div>
                 </div>
