@@ -70,7 +70,7 @@ const CourseIdPage = async ({
 
     const isComplete = requiredFields.every(Boolean);
     return (
-        <div className="lg:mt-[20px] md:mt-[16px] sm:mt-[16px]">
+        <div className="lg:mt-[60px] md:mt-[56px] sm:mt-[56px]">
             {!course.isPublished && (
                 <Banner
                     variant="warning"

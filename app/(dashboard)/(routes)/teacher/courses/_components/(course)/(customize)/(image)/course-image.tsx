@@ -22,7 +22,7 @@ export const CourseImage = ({
                     Course Image
                     <EditImageDialog
                         title={initialData.imageUrl ? "Replace Image" : "Add an Image"}
-                        formLabel={"Course Image"}
+                        formLabel={"Image"}
                         description={"Set the image for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
