@@ -20,7 +20,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Chapter, Course } from "@prisma/client";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditChapterDescriptionForm } from "./edit-chapter-description-form";
 
@@ -30,7 +30,7 @@ interface DrawerDialogProps {
 	chapterId: string;
 	toggleModal: () => void
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -39,7 +39,7 @@ export const EditChapterDescriptionDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description,
 	formLabel,
 	chapterId,
 }: DrawerDialogProps) => {
@@ -60,15 +60,24 @@ export const EditChapterDescriptionDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						<Pencil className="h-5 w-5 mr-2" />
-						{title}
+						{!initialData.description ? (
+							<>
+								<PlusCircle className="h-5 w-5 mr-2" />
+								{title}
+							</>
+						) : (
+							<>
+								<Pencil className="h-5 w-5 mr-2" />
+								{title}
+							</>
+						)}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditChapterDescriptionForm
@@ -87,15 +96,24 @@ export const EditChapterDescriptionDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost" className="font-medium">
-					<Pencil className="h-5 w-5 mr-2" />
-					{title}
+					{!initialData.description ? (
+						<>
+							<PlusCircle className="h-5 w-5 mr-2" />
+							{title}
+						</>
+					) : (
+						<>
+							<Pencil className="h-5 w-5 mr-2" />
+							{title}
+						</>
+					)}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

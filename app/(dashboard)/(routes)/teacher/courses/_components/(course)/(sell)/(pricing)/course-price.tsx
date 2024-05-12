@@ -20,9 +20,9 @@ export const EditCoursePrice = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Price
                     <EditPriceDialog
-                        title={"Edit price"}
-                        formLabel={"Price"}
-                        decscription={"Edit or add a price for you course, this is optional."}
+                        title={initialData.price ? "Edit Price" : "Set Price"}
+                        formLabel={"New Course Price"}
+                        description={"Set the price for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

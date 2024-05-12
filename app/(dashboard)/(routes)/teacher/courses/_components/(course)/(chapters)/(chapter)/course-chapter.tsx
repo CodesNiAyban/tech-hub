@@ -65,9 +65,9 @@ export const CourseChapter = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Chapter
                     <EditChapterDialog
-                        title={"Create chapter"}
-                        formLabel={"Chapter"}
-                        decscription={"Edit or add a chapter for you course"}
+                        title={"Add a Chapter"}
+                        formLabel={"New Course Chapter"}
+                        description={"Add a new chapter for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

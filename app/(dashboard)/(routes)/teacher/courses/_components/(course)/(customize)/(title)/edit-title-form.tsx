@@ -79,7 +79,7 @@ export const EditTitleForm = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
-                                        New {formLabel}
+                                        {formLabel}
                                     </FormLabel>
                                     <FormControl>
                                         <Input

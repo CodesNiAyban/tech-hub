@@ -7,23 +7,22 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { LayoutDashboard } from "lucide-react"
+import { Eye, LayoutDashboard } from "lucide-react"
 import { useState } from "react"
-import { ChapterTitle } from "./(title)/chapter-title"
-import { ChapterDescription } from "./(description)/chapter-description"
+import { ChapterAccess } from "./chapter-access"
 import { Chapter } from "@prisma/client"
 
-interface TitleFormProps {
+interface AccessFormProps {
     initialData: Chapter
     courseId: string;
     chapterId: string;
 }
 
-export const CustomizeChapter = ({
+export const AccessSettings = ({
     initialData,
     courseId,
     chapterId
-}: TitleFormProps) => {
+}: AccessFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
 
@@ -32,19 +31,13 @@ export const CustomizeChapter = ({
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">
-                        <IconBadge icon={LayoutDashboard} size={"default"} variant={"default"} />
-                        Customize your Chapter
+                        <IconBadge icon={Eye} size={"default"} variant={"default"} />
+                        Access Settings
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <ChapterTitle
-                    initialData={initialData}
-                    courseId={courseId}
-                    toggleModal={toggleModal}
-                    chapterId={chapterId}
-                />
-                <ChapterDescription
+                <ChapterAccess
                     initialData={initialData}
                     courseId={courseId}
                     toggleModal={toggleModal}

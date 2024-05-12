@@ -20,9 +20,9 @@ export const ChapterTitle = ({
                 <div className="font-medium flex items-center justify-between">
                     Chapter Title
                     <EditChapterTitleDialog
-                        title={"Edit Chapter"}
-                        formLabel={"Title"}
-                        decscription={"Edit or add a title for you course, this is optional."}
+                        title={"Edit Title"}
+                        formLabel={"New Chapter Title"}
+                        description={"Set the title for this chapter. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

@@ -20,15 +20,15 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Course } from "@prisma/client";
-import { Pencil, PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle, Replace } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditImageForm } from "./edit-image-form";
-interface DrawerDialogProps {
+interface EditImageDialogProps {
 	toggleModal: () => void
 	initialData: Course
 	courseId: string;
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -37,16 +37,16 @@ export const EditImageDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description,
 	formLabel
-}: DrawerDialogProps) => {
+}: EditImageDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
 	useEffect(() => {
 		setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
 	}, []);
-	
+
 	const handleClose = () => {
 		setOpen(false);
 		toggleModal(); // Close the dialog
@@ -61,12 +61,12 @@ export const EditImageDialog = ({
 						{!initialData.imageUrl ? (
 							<>
 								<PlusCircle className="h-5 w-5 mr-2" />
-								Add an image
+								Add an {formLabel}
 							</>
 						) : (
 							<>
-								<Pencil className="h-5 w-5 mr-2" />
-								{title}
+								<Replace className="h-5 w-5 mr-2" />
+								Replace {formLabel}
 							</>
 						)}
 					</Button>
@@ -75,7 +75,7 @@ export const EditImageDialog = ({
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditImageForm
@@ -100,7 +100,7 @@ export const EditImageDialog = ({
 						</>
 					) : (
 						<>
-							<Pencil className="h-5 w-5 mr-2" />
+							<Replace className="h-5 w-5 mr-2" />
 							Replace {formLabel}
 						</>
 					)}
@@ -110,7 +110,7 @@ export const EditImageDialog = ({
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

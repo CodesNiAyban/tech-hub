@@ -63,7 +63,7 @@ export const EditChapterForm = ({
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Chapter Updated!"
+                success: "Course Chapter Created"
             });
         } catch (error) {
             console.log(error)
@@ -81,7 +81,7 @@ export const EditChapterForm = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
-                                        New {formLabel}
+                                        {formLabel}
                                     </FormLabel>
                                     <FormControl>
                                         <Input

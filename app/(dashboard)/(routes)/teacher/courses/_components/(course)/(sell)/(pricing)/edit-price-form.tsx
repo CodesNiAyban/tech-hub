@@ -40,7 +40,7 @@ export const EditPriceForm = ({
     const { isValid } = form.formState;
 
     const editPrice = async (values: z.infer<typeof priceSchema>) => {
-        setIsSubmitting(true); // Set submission status to true
+        setIsSubmitting(true);
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
@@ -52,7 +52,7 @@ export const EditPriceForm = ({
                 toast.error("An error occurred. Please try again later.");
             }
         } finally {
-            setIsSubmitting(false); // Reset submission status to false
+            setIsSubmitting(false); 
             toggleModal()
         }
     };
@@ -81,12 +81,12 @@ export const EditPriceForm = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
-                                        New {formLabel}
+                                        {formLabel}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            disabled={isSubmitting} // Disable input field while submitting
+                                            disabled={isSubmitting}
                                             placeholder="Set a price to your course"
                                             type="number"
                                             step="0.01"

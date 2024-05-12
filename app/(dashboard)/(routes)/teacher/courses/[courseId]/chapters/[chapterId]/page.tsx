@@ -3,7 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CustomizeChapter } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/chapter-customize";
+import { CustomizeChapter } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(customize)/chapter-customize";
+import { AccessSettings } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(access)/access-settings";
 
 const ChapterIdPage = async ({
     params
@@ -75,10 +76,14 @@ const ChapterIdPage = async ({
                             courseId={params.courseId}
                             chapterId={params.chapterId}
                         />
+                        <AccessSettings
+                            initialData={chapter}
+                            courseId={params.courseId}
+                            chapterId={params.chapterId}
+                        />
                     </div>
                 </div>
             </div>
-
         </div>
     );
 }

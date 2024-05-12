@@ -20,15 +20,15 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Course } from "@prisma/client";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditDescriptionForm } from "./edit-description-form";
-interface DrawerDialogProps {
+interface EditDescriptionProps {
 	toggleModal: () => void
 	initialData: Course
 	courseId: string;
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -37,9 +37,9 @@ export const EditDescriptionDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description,
 	formLabel
-}: DrawerDialogProps) => {
+}: EditDescriptionProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -57,15 +57,24 @@ export const EditDescriptionDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						<Pencil className="h-5 w-5 mr-2" />
-						{title}
+						{!initialData.description ? (
+							<>
+								<PlusCircle className="h-5 w-5 mr-2" />
+								Add Description
+							</>
+						) : (
+							<>
+								<Pencil className="h-5 w-5 mr-2" />
+								{title}
+							</>
+						)}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditDescriptionForm
@@ -83,15 +92,24 @@ export const EditDescriptionDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost">
-					<Pencil className="h-5 w-5 mr-2" />
-					{title}
+					{!initialData.description ? (
+						<>
+							<PlusCircle className="h-5 w-5 mr-2" />
+							Add Description
+						</>
+					) : (
+						<>
+							<Pencil className="h-5 w-5 mr-2" />
+							{title}
+						</>
+					)}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

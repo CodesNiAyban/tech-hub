@@ -19,27 +19,30 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Attachment, Course } from "@prisma/client";
-import { PlusCircle } from "lucide-react";
+import { Chapter } from "@prisma/client";
+import { Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditAttachmentForm } from "./edit-attachment-form";
-interface EditAttachmentDialogProps {
-	toggleModal: () => void
-	initialData: Course & { attachments: Attachment[] };
+import { EditChapterAccessForm } from "./edit-chapter-access-form";
+
+interface DrawerDialogProps {
+	initialData: Chapter;
 	courseId: string;
+	chapterId: string;
+	toggleModal: () => void
 	title: string
 	description: string
 	formLabel: string
 }
 
-export const EditAttachmentDialog = ({
+export const EditChapterAccessDialog = ({
 	toggleModal,
 	initialData,
 	title,
 	courseId,
 	description,
-	formLabel
-}: EditAttachmentDialogProps) => {
+	formLabel,
+	chapterId,
+}: DrawerDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -47,19 +50,17 @@ export const EditAttachmentDialog = ({
 		setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
 	}, []);
 
-
 	const handleClose = () => {
 		setOpen(false);
-		toggleModal(); 
+		toggleModal(); // Close the dialog
 	};
-
 
 	if (isDesktop) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						<PlusCircle className="h-5 w-5 mr-2" />
+						<Settings2 className="h-5 w-5 mr-2" />
 						{title}
 					</Button>
 				</DialogTrigger>
@@ -70,11 +71,12 @@ export const EditAttachmentDialog = ({
 							{description}
 						</DialogDescription>
 					</DialogHeader>
-					<EditAttachmentForm
+					<EditChapterAccessForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</DialogContent>
 			</Dialog>
@@ -85,6 +87,7 @@ export const EditAttachmentDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost" className="font-medium">
+					<Settings2 className="h-5 w-5 mr-2" />
 					{title}
 				</Button>
 			</DrawerTrigger>
@@ -96,11 +99,12 @@ export const EditAttachmentDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditAttachmentForm
+					<EditChapterAccessForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</div>
 				<DrawerFooter className="pt-2">

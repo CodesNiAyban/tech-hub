@@ -19,9 +19,9 @@ export const CourseDescription = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Description
                     <EditDescriptionDialog
-                        title={"Edit description"}
-                        formLabel={"Description"}
-                        decscription={"Edit or add a description for you course, this is optional."}
+                        title={initialData.description ? "Edit Description" : "Add Description"}
+                        formLabel={"New Course Description"}
+                        description={"Set the description for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

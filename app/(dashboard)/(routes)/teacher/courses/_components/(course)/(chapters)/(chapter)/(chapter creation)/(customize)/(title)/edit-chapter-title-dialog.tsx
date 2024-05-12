@@ -23,13 +23,13 @@ import { Chapter, Course } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditChapterTitleForm } from "./edit-chapter-title-form";
-interface DrawerDialogProps {
+interface EditChapterTitleDialogProps {
 	initialData: Chapter
 	courseId: string;
 	chapterId: string;
 	toggleModal: () => void
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -38,10 +38,10 @@ export const EditChapterTitleDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description,
 	formLabel,
 	chapterId,
-}: DrawerDialogProps) => {
+}: EditChapterTitleDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -67,7 +67,7 @@ export const EditChapterTitleDialog = ({
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditChapterTitleForm
@@ -94,7 +94,7 @@ export const EditChapterTitleDialog = ({
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

@@ -1,47 +1,45 @@
 "use client"
 
-import { Editor } from "@/components/editor";
+import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Chapter, Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { descriptionSchema } from "../../../../../_utils/form-validation";
-import { Chapter } from "@prisma/client";
 
-interface EditChapterDescriptionProps {
-    initialData: Chapter;
-    courseId: string;
-    chapterId: string;
-    toggleModal: () => void
+interface ChapterTitleFormProps {
+    initialData: Chapter
+	courseId: string;
+	chapterId: string;
+	toggleModal: () => void
     formLabel: string
 }
 
-export const EditChapterDescriptionForm = ({
+export const EditChapterTitleForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal,
-    chapterId
-}: EditChapterDescriptionProps) => {
+    chapterId,
+}: ChapterTitleFormProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof descriptionSchema>>({
-        resolver: zodResolver(descriptionSchema),
-        defaultValues: {
-            description: initialData?.description || ""
-        },
+    const form = useForm<z.infer<typeof titleSchema>>({
+        resolver: zodResolver(titleSchema),
+        defaultValues: initialData,
     });
 
     const { isValid } = form.formState;
 
-    const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
+    const editChapterTitle = async (values: z.infer<typeof titleSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
@@ -59,13 +57,13 @@ export const EditChapterDescriptionForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof descriptionSchema>) => {
+    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            const response = editDescription(values);
+            const response = editChapterTitle(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Chapter Description Updated!"
+                success: "Chapter Title Updated!"
             });
         } catch (error) {
             console.log(error)
@@ -79,15 +77,17 @@ export const EditChapterDescriptionForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="title"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
-                                        New {formLabel}
+                                        {formLabel}
                                     </FormLabel>
                                     <FormControl>
-                                        <Editor
+                                        <Input
                                             {...field}
+                                            disabled={isSubmitting} // Disable input field while submitting
+                                            placeholder="e.g Introduction to the course"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -103,6 +103,4 @@ export const EditChapterDescriptionForm = ({
         </Form>
     );
 };
-
-
 

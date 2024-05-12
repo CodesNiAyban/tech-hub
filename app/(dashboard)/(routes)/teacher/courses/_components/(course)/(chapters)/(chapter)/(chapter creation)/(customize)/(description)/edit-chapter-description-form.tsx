@@ -1,8 +1,8 @@
 "use client"
 
+import { Editor } from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -11,22 +11,24 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { descriptionSchema } from "../../../_utils/form-validation";
-import { Course } from "@prisma/client";
+import { descriptionSchema } from "../../../../../../_utils/form-validation";
+import { Chapter } from "@prisma/client";
 
-interface EditDescriptionProps {
-    initialData: Course
+interface EditChapterDescriptionProps {
+    initialData: Chapter;
     courseId: string;
-    formLabel: string
+    chapterId: string;
     toggleModal: () => void
+    formLabel: string
 }
 
-export const EditDescriptionForm = ({
+export const EditChapterDescriptionForm = ({
     initialData,
     courseId,
     formLabel,
-    toggleModal
-}: EditDescriptionProps) => {
+    toggleModal,
+    chapterId
+}: EditChapterDescriptionProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
@@ -42,7 +44,7 @@ export const EditDescriptionForm = ({
     const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
-            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
             router.refresh();
             return response;
         } catch (error) {
@@ -63,7 +65,7 @@ export const EditDescriptionForm = ({
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Description Updated!"
+                success: "Chapter Description Updated!"
             });
         } catch (error) {
             console.log(error)
@@ -84,11 +86,8 @@ export const EditDescriptionForm = ({
                                         {formLabel}
                                     </FormLabel>
                                     <FormControl>
-                                        <Textarea
+                                        <Editor
                                             {...field}
-                                            disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g. 'This course is about..."
-                                            className="resize-none"
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -20,15 +20,15 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Course } from "@prisma/client";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditPriceForm } from "./edit-price-form";
-interface DrawerDialogProps {
+interface EditPriceDialogProps {
 	toggleModal: () => void
 	initialData: Course
 	courseId: string;
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -37,9 +37,9 @@ export const EditPriceDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description: description,
 	formLabel
-}: DrawerDialogProps) => {
+}: EditPriceDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -58,15 +58,24 @@ export const EditPriceDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						<Pencil className="h-5 w-5 mr-2" />
-						{title}
+						{!initialData.price ? (
+							<>
+								<PlusCircle className="h-5 w-5 mr-2" />
+								Set Price
+							</>
+						) : (
+							<>
+								<Pencil className="h-5 w-5 mr-2" />
+								{title}
+							</>
+						)}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditPriceForm
@@ -84,15 +93,24 @@ export const EditPriceDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost">
-					<Pencil className="h-5 w-5 mr-2" />
-					{title}
+					{!initialData.price ? (
+						<>
+							<PlusCircle className="h-5 w-5 mr-2" />
+							Set Price
+						</>
+					) : (
+						<>
+							<Pencil className="h-5 w-5 mr-2" />
+							{title}
+						</>
+					)}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

@@ -1,45 +1,48 @@
 "use client"
 
-import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { Editor } from "@/components/editor";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Chapter, Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
+import { Chapter } from "@prisma/client";
+import { accessSchema } from "../../../../../_utils/form-validation";
+import { Checkbox } from "@/components/ui/checkbox";
 
-interface ChapterTitleFormProps {
-    initialData: Chapter
-	courseId: string;
-	chapterId: string;
-	toggleModal: () => void
+interface EditChapterAccessProps {
+    initialData: Chapter;
+    courseId: string;
+    chapterId: string;
+    toggleModal: () => void
     formLabel: string
 }
 
-export const EditChapterTitleForm = ({
+export const EditChapterAccessForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal,
-    chapterId,
-}: ChapterTitleFormProps) => {
+    chapterId
+}: EditChapterAccessProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof titleSchema>>({
-        resolver: zodResolver(titleSchema),
-        defaultValues: initialData,
+    const form = useForm<z.infer<typeof accessSchema>>({
+        resolver: zodResolver(accessSchema),
+        defaultValues: {
+            isFree: Boolean(initialData.isFree)
+        },
     });
 
     const { isValid } = form.formState;
 
-    const editChapterTitle = async (values: z.infer<typeof titleSchema>) => {
+    const editAccess = async (values: z.infer<typeof accessSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
@@ -57,13 +60,13 @@ export const EditChapterTitleForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
+    const onSubmit = async (values: z.infer<typeof accessSchema>) => {
         try {
-            const response = editChapterTitle(values);
+            const response = editAccess(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Chapter Title Updated!"
+                success: "Chapter Access Updated!"
             });
         } catch (error) {
             console.log(error)
@@ -77,20 +80,22 @@ export const EditChapterTitleForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="isFree"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-medium flex items-center justify-between">
-                                        New {formLabel}
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g Introduction to the course"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                <FormItem className="flex flex-row items-center space-x-3 rounded-md border p-4">
+                                    <div className="flex items-center space-x-3">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <div className="space-y-1">
+                                            <FormDescription>
+                                                Check this box if you want to make this chapter free for preview
+                                            </FormDescription>
+                                        </div>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -103,4 +108,6 @@ export const EditChapterTitleForm = ({
         </Form>
     );
 };
+
+
 

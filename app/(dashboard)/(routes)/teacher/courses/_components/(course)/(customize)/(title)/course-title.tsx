@@ -19,8 +19,8 @@ export const CourseTitle = ({
                     Course Title
                     <EditTitleDialog
                         title={"Edit Title"}
-                        formLabel={"Title"}
-                        decscription={"Edit or add a title for you course, this is optional."}
+                        formLabel={"New Course Title"}
+                        description={"Set the title for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

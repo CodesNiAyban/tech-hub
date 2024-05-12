@@ -17,14 +17,14 @@ export const ChapterDescription = ({
     chapterId,
 }: ChapterDescriptionProps) => {
     return (
-        <div className="grid gap-6">
+        <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
                 <div className="font-medium flex items-center justify-between">
                     Chapter Description
                     <EditChapterDescriptionDialog
-                        title={"Edit Chapter"}
-                        formLabel={"Description"}
-                        decscription={"Edit or add a title for you course, this is optional."}
+                        title={initialData.description ? "Edit Description" : "Add Description"}
+                        formLabel={"New Chapter Description"}
+                        description={"Set the description for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

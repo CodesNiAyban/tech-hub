@@ -23,12 +23,12 @@ import { Course } from "@prisma/client";
 import { PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditChapterForm } from "./edit-chapter-form";
-interface DrawerDialogProps {
+interface EditChapterDialogProps {
 	toggleModal: () => void
 	initialData: Course
 	courseId: string;
 	title: string
-	decscription: string
+	description: string
 	formLabel: string
 }
 
@@ -37,9 +37,9 @@ export const EditChapterDialog = ({
 	initialData,
 	title,
 	courseId,
-	decscription,
+	description,
 	formLabel
-}: DrawerDialogProps) => {
+}: EditChapterDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -59,14 +59,14 @@ export const EditChapterDialog = ({
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
 						<PlusCircle className="h-5 w-5 mr-2" />
-						Add a chapter
+						{title}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>
-							{decscription}. Click save when you&apos;re done.
+							{description}
 						</DialogDescription>
 					</DialogHeader>
 					<EditChapterForm
@@ -92,7 +92,7 @@ export const EditChapterDialog = ({
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{formLabel}</DrawerTitle>
 					<DrawerDescription>
-						{decscription}. Click save when you&apos;re done.
+						{description}
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >

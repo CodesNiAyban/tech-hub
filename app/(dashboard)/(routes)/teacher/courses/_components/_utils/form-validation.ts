@@ -47,6 +47,9 @@ export const chapterSchema = z.object({
   title: z.string().min(1),
 })
 
+export const accessSchema = z.object({
+  isFree: z.boolean().default(false),
+})
 
 export const createSchema = z.object({
   title: z.string().min(1).max(100),

@@ -21,9 +21,9 @@ export const CourseImage = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Image
                     <EditImageDialog
-                        title={"Replace image"}
-                        formLabel={"Image"}
-                        decscription={"Edit or add a image for you course, this is optional."}
+                        title={initialData.imageUrl ? "Replace Image" : "Add an Image"}
+                        formLabel={"Course Image"}
+                        description={"Set the image for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

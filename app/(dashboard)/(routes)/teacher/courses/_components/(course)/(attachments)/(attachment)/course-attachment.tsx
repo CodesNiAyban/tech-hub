@@ -24,9 +24,9 @@ export const EditCourseAttachment = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Attachments
                     <EditAttachmentDialog
-                        title={"Replace attachment"}
-                        formLabel={"Attachment"}
-                        decscription={"Edit or add a attachment for you course, this is optional."}
+                        title={"Add an Attachment"}
+                        formLabel={"New Course Attachment"}
+                        description={"Add a new attachment for this course. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

@@ -45,7 +45,7 @@ export const EditAttachmentForm = ({
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Attachment Updated!"
+                success: "Attachment Added!"
             });
         } catch (error) {
            console.log(error)
