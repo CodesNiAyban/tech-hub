@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { EditPriceDialog } from "./edit-price-dialog";
+import { EditPriceDialog } from "./set-price-dialog";
 import { Course } from "@prisma/client";
 import { formatPrice } from "@/lib/format"
 

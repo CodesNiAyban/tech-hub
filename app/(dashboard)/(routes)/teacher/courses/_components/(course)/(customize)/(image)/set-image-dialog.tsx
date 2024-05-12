@@ -19,30 +19,27 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Chapter } from "@prisma/client";
-import { Settings2 } from "lucide-react";
+import { Course } from "@prisma/client";
+import { Pencil, PlusCircle, Replace } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditChapterAccessForm } from "./edit-chapter-access-form";
-
-interface DrawerDialogProps {
-	initialData: Chapter;
-	courseId: string;
-	chapterId: string;
+import { EditImageForm } from "./set-image-form";
+interface EditImageDialogProps {
 	toggleModal: () => void
+	initialData: Course
+	courseId: string;
 	title: string
 	description: string
 	formLabel: string
 }
 
-export const EditChapterAccessDialog = ({
+export const EditImageDialog = ({
 	toggleModal,
 	initialData,
 	title,
 	courseId,
 	description,
-	formLabel,
-	chapterId,
-}: DrawerDialogProps) => {
+	formLabel
+}: EditImageDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -55,13 +52,23 @@ export const EditChapterAccessDialog = ({
 		toggleModal(); // Close the dialog
 	};
 
+
 	if (isDesktop) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						<Settings2 className="h-5 w-5 mr-2" />
-						{title}
+						{!initialData.imageUrl ? (
+							<>
+								<PlusCircle className="h-5 w-5 mr-2" />
+								Add an {formLabel}
+							</>
+						) : (
+							<>
+								<Replace className="h-5 w-5 mr-2" />
+								Replace {formLabel}
+							</>
+						)}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
@@ -71,12 +78,11 @@ export const EditChapterAccessDialog = ({
 							{description}
 						</DialogDescription>
 					</DialogHeader>
-					<EditChapterAccessForm
+					<EditImageForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
-						chapterId={chapterId}
 					/>
 				</DialogContent>
 			</Dialog>
@@ -87,8 +93,17 @@ export const EditChapterAccessDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost" className="font-medium">
-					<Settings2 className="h-5 w-5 mr-2" />
-					{title}
+					{!initialData.imageUrl ? (
+						<>
+							<PlusCircle className="h-5 w-5 mr-2" />
+							Add an {formLabel}
+						</>
+					) : (
+						<>
+							<Replace className="h-5 w-5 mr-2" />
+							Replace {formLabel}
+						</>
+					)}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
@@ -99,12 +114,11 @@ export const EditChapterAccessDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditChapterAccessForm
+					<EditImageForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
-						chapterId={chapterId}
 					/>
 				</div>
 				<DrawerFooter className="pt-2">

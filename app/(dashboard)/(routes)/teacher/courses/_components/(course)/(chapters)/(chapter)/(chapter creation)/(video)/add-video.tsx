@@ -4,24 +4,25 @@ import { IconBadge } from "@/components/icon-badge"
 import {
     Card,
     CardContent,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { Category, Chapter, Course } from "@prisma/client"
-import { ListChecks } from "lucide-react"
+import { Chapter, MuxData } from "@prisma/client"
+import { Video } from "lucide-react"
 import { useState } from "react"
-import { CourseChapter } from "./(chapter)/course-chapter"
+import { ChapterVideo } from "./chapter-video"
 
-interface ChapterFormProps {
-    initialData: Course & { chapters: Chapter[] };
+interface ChapterVideoFormProps {
+    initialData: Chapter & { muxData?: MuxData | null }
     courseId: string;
+    chapterId: string;
 }
 
-export const CourseChapters = ({
+export const AddVideo = ({
     initialData,
     courseId,
-}: ChapterFormProps) => {
+    chapterId
+}: ChapterVideoFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
 
@@ -30,23 +31,19 @@ export const CourseChapters = ({
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">
-                        <IconBadge icon={ListChecks} size={"default"} variant={"default"} />
-                        Course Chapters
+                        <IconBadge icon={Video} size={"default"} variant={"default"} />
+                        Add a Video
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <CourseChapter
+                <ChapterVideo
                     initialData={initialData}
                     courseId={courseId}
                     toggleModal={toggleModal}
+                    chapterId={chapterId}
                 />
             </CardContent>
-            <CardFooter className="justify-center border-t p-4">
-                <p className="text-xs text-muted-foreground">
-                    Drag and drop to reorder the chapters
-                </p>
-            </CardFooter>
         </Card>
     );
 }

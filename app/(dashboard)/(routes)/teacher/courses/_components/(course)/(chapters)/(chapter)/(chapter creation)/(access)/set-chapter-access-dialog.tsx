@@ -19,27 +19,30 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Course } from "@prisma/client";
-import { Pencil, PlusCircle } from "lucide-react";
+import { Chapter } from "@prisma/client";
+import { Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditPriceForm } from "./edit-price-form";
-interface EditPriceDialogProps {
-	toggleModal: () => void
-	initialData: Course
+import { EditChapterAccessForm } from "./set-chapter-access-form";
+
+interface DrawerDialogProps {
+	initialData: Chapter;
 	courseId: string;
+	chapterId: string;
+	toggleModal: () => void
 	title: string
 	description: string
 	formLabel: string
 }
 
-export const EditPriceDialog = ({
+export const EditChapterAccessDialog = ({
 	toggleModal,
 	initialData,
 	title,
 	courseId,
-	description: description,
-	formLabel
-}: EditPriceDialogProps) => {
+	description,
+	formLabel,
+	chapterId,
+}: DrawerDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -52,23 +55,13 @@ export const EditPriceDialog = ({
 		toggleModal(); // Close the dialog
 	};
 
-
 	if (isDesktop) {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						{!initialData.price ? (
-							<>
-								<PlusCircle className="h-5 w-5 mr-2" />
-								Set Price
-							</>
-						) : (
-							<>
-								<Pencil className="h-5 w-5 mr-2" />
-								{title}
-							</>
-						)}
+						<Settings2 className="h-5 w-5 mr-2" />
+						{title}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
@@ -78,11 +71,12 @@ export const EditPriceDialog = ({
 							{description}
 						</DialogDescription>
 					</DialogHeader>
-					<EditPriceForm
+					<EditChapterAccessForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</DialogContent>
 			</Dialog>
@@ -92,18 +86,9 @@ export const EditPriceDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="ghost">
-					{!initialData.price ? (
-						<>
-							<PlusCircle className="h-5 w-5 mr-2" />
-							Set Price
-						</>
-					) : (
-						<>
-							<Pencil className="h-5 w-5 mr-2" />
-							{title}
-						</>
-					)}
+				<Button variant="ghost" className="font-medium">
+					<Settings2 className="h-5 w-5 mr-2" />
+					{title}
 				</Button>
 			</DrawerTrigger>
 			<DrawerContent>
@@ -114,11 +99,12 @@ export const EditPriceDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditPriceForm
+					<EditChapterAccessForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</div>
 				<DrawerFooter className="pt-2">

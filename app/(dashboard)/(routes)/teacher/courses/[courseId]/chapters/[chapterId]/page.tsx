@@ -5,6 +5,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CustomizeChapter } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(customize)/chapter-customize";
 import { AccessSettings } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(access)/access-settings";
+import { AddVideo } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(video)/add-video";
 
 const ChapterIdPage = async ({
     params
@@ -77,6 +78,15 @@ const ChapterIdPage = async ({
                             chapterId={params.chapterId}
                         />
                         <AccessSettings
+                            initialData={chapter}
+                            courseId={params.courseId}
+                            chapterId={params.chapterId}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div className="flexcenter gap-x-2">
+                        <AddVideo
                             initialData={chapter}
                             courseId={params.courseId}
                             chapterId={params.chapterId}

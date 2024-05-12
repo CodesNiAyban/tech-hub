@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { EditImageDialog } from "./edit-image-dialog";
+import { EditImageDialog } from "./set-image-dialog";
 import { Course } from "@prisma/client";
 import { ImageIcon } from "lucide-react";
 import Image from "next/image"

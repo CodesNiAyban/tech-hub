@@ -1,5 +1,5 @@
 import { Chapter, Course } from "@prisma/client";
-import { EditChapterAccessDialog } from "./edit-chapter-access-dialog";
+import { EditChapterAccessDialog } from "./set-chapter-access-dialog";
 import { cn } from "@/lib/utils";
 import { Preview } from "@/components/preview";
 

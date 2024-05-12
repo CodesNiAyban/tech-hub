@@ -20,10 +20,10 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Course } from "@prisma/client";
-import { Pencil, PlusCircle, Replace } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditImageForm } from "./edit-image-form";
-interface EditImageDialogProps {
+import { EditPriceForm } from "./set-price-form";
+interface EditPriceDialogProps {
 	toggleModal: () => void
 	initialData: Course
 	courseId: string;
@@ -32,14 +32,14 @@ interface EditImageDialogProps {
 	formLabel: string
 }
 
-export const EditImageDialog = ({
+export const EditPriceDialog = ({
 	toggleModal,
 	initialData,
 	title,
 	courseId,
-	description,
+	description: description,
 	formLabel
-}: EditImageDialogProps) => {
+}: EditPriceDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
 
@@ -58,15 +58,15 @@ export const EditImageDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						{!initialData.imageUrl ? (
+						{!initialData.price ? (
 							<>
 								<PlusCircle className="h-5 w-5 mr-2" />
-								Add an {formLabel}
+								Set Price
 							</>
 						) : (
 							<>
-								<Replace className="h-5 w-5 mr-2" />
-								Replace {formLabel}
+								<Pencil className="h-5 w-5 mr-2" />
+								{title}
 							</>
 						)}
 					</Button>
@@ -78,7 +78,7 @@ export const EditImageDialog = ({
 							{description}
 						</DialogDescription>
 					</DialogHeader>
-					<EditImageForm
+					<EditPriceForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
@@ -92,16 +92,16 @@ export const EditImageDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="ghost" className="font-medium">
-					{!initialData.imageUrl ? (
+				<Button variant="ghost">
+					{!initialData.price ? (
 						<>
 							<PlusCircle className="h-5 w-5 mr-2" />
-							Add an {formLabel}
+							Set Price
 						</>
 					) : (
 						<>
-							<Replace className="h-5 w-5 mr-2" />
-							Replace {formLabel}
+							<Pencil className="h-5 w-5 mr-2" />
+							{title}
 						</>
 					)}
 				</Button>
@@ -114,7 +114,7 @@ export const EditImageDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditImageForm
+					<EditPriceForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}

@@ -51,7 +51,12 @@ export const accessSchema = z.object({
   isFree: z.boolean().default(false),
 })
 
+export const videoSchema = z.object({
+  videoUrl: z.string().min(1),
+})
+
 export const createSchema = z.object({
   title: z.string().min(1).max(100),
 })
+
 
