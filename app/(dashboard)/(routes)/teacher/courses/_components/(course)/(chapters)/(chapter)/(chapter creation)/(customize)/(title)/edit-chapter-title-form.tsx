@@ -6,10 +6,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Chapter, Course } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
@@ -36,8 +36,6 @@ export const EditChapterTitleForm = ({
         resolver: zodResolver(titleSchema),
         defaultValues: initialData,
     });
-
-    const { isValid } = form.formState;
 
     const editChapterTitle = async (values: z.infer<typeof titleSchema>) => {
         setIsSubmitting(true); // Set submission status to true
@@ -96,7 +94,7 @@ export const EditChapterTitleForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
+                <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}
                     Save
                 </Button>
             </form>

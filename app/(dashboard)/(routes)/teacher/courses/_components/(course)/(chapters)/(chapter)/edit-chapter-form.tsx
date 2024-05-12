@@ -37,8 +37,6 @@ export const EditChapterForm = ({
         },
     });
 
-    const { isValid } = form.formState;
-
     const editChapter = async (values: z.infer<typeof chapterSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
@@ -96,7 +94,7 @@ export const EditChapterForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
+                <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}
                     Create
                 </Button>
             </form>

@@ -3,17 +3,16 @@
 import { categoriesSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import MultiSelectFormField from "@/components/ui/multi-select";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import MultiSelectFormField from "@/components/ui/multi-select";
 
 interface CategoriesFormProps {
     initialData: Course & { categories: Category[] };
@@ -42,8 +41,6 @@ export const EditCategoriesForm = ({
             categories: initialData.categories.map((category) => category.id),
         },
     });
-
-    const { isValid } = form.formState;
 
     const editCategories = async (values: z.infer<typeof categoriesSchema>) => {
         setIsSubmitting(true); // Set submission status to true
@@ -109,7 +106,7 @@ export const EditCategoriesForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
+                <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}
                     Save
                 </Button>
             </form>

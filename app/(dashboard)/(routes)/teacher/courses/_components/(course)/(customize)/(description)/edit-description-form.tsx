@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,7 +13,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { descriptionSchema } from "../../../_utils/form-validation";
-import { Course } from "@prisma/client";
 
 interface EditDescriptionProps {
     initialData: Course
@@ -36,8 +36,6 @@ export const EditDescriptionForm = ({
             description: initialData?.description || ""
         },
     });
-
-    const { isValid } = form.formState;
 
     const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
         setIsSubmitting(true); // Set submission status to true
@@ -97,7 +95,7 @@ export const EditDescriptionForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
+                <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}
                     Save
                 </Button>
             </form>

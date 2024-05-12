@@ -37,8 +37,6 @@ export const EditPriceForm = ({
         },
     });
 
-    const { isValid } = form.formState;
-
     const editPrice = async (values: z.infer<typeof priceSchema>) => {
         setIsSubmitting(true);
         try {
@@ -52,7 +50,7 @@ export const EditPriceForm = ({
                 toast.error("An error occurred. Please try again later.");
             }
         } finally {
-            setIsSubmitting(false); 
+            setIsSubmitting(false);
             toggleModal()
         }
     };
@@ -98,7 +96,7 @@ export const EditPriceForm = ({
                         />
                     </div>
                 </div>
-                <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
+                <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}
                     Save
                 </Button>
             </form>

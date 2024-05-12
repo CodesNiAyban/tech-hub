@@ -8,6 +8,14 @@ export const titleSchema = z.object({
   }),
 });
 
+export const createSchema = z.object({
+  title: z.string().min(1, {
+    message: "Title is required",
+  }).max(100, {
+    message: "Title cannot exceed 100 characters",
+  }),
+});
+
 export const descriptionSchema = z.object({
   description: z.string().min(1, {
     message: "Description is required",

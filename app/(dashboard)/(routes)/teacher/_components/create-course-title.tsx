@@ -52,7 +52,7 @@ export const CreateCourse = () => {
         }
     }
 
-    const { isSubmitting, isValid } = createForm.formState;
+    const { isSubmitting } = createForm.formState;
 
     return (
         <Card>
@@ -98,7 +98,7 @@ export const CreateCourse = () => {
                                 Cancel
                             </Link>
                         </Button>
-                        <Button type="submit" disabled={!isValid || isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting}>
                             Continue
                         </Button>
                     </CardFooter>
