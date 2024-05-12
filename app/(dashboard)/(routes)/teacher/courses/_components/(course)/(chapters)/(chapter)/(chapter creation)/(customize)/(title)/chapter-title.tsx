@@ -30,7 +30,7 @@ export const ChapterTitle = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="text-sm flex items-center justify-between">
+                    <div className="font-medium text-sm items-center justify-between">
                         {initialData.title}
                     </div>
                 </div>

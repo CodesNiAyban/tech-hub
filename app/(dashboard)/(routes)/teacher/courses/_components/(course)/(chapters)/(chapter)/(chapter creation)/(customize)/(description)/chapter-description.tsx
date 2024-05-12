@@ -24,7 +24,7 @@ export const ChapterDescription = ({
                     <EditChapterDescriptionDialog
                         title={initialData.description ? "Edit Description" : "Add Description"}
                         formLabel={"New Chapter Description"}
-                        description={"Set the description for this course. Click 'Save' when you're finished."}
+                        description={"Set the description for this chapter. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}
@@ -34,7 +34,7 @@ export const ChapterDescription = ({
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
                     <div className="font-medium flex items-center justify-between">
                         <div className={cn("text-sm ",
-                            !initialData.description && "text-sm text-muted-foreground italic"
+                            !initialData.description && "font-medium text-sm text-muted-foreground italic"
                         )}>
                             {!initialData.description && "No description"}
                             {initialData.description && (

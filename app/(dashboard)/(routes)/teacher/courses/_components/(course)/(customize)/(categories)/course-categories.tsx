@@ -40,7 +40,7 @@ export const CourseCategories = ({
                                 <Badge key={category.id} className="mr-2">{category.name}</Badge>
                             ))
                         ) : (
-                            <p className="text-muted-foreground italic">No categories</p>
+                            <p className="font-medium text-sm text-muted-foreground italic">Set the categories</p>
                         )}
                     </div>
                 </div>

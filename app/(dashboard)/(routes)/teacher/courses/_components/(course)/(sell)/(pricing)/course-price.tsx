@@ -29,13 +29,13 @@ export const EditCoursePrice = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-sm flex items-center justify-between">
+                    <div className="font-medium flex items-center justify-between">
                         <p className={cn("text-sm",
-                            !initialData.price && "text-muted-foreground italic text-sm"
+                            !initialData.price && "font-medium text-sm text-muted-foreground italic"
                         )}>
                             {initialData.price
                                 ? formatPrice(initialData.price)
-                                : "No Price"}
+                                : "Set the Price"}
                         </p>
                     </div>
                 </div>

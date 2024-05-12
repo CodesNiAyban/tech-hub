@@ -79,9 +79,9 @@ export const CourseChapter = ({
                             <Loader2 className="animate-spin h-6 w-6 text-primary" />
                         </div>
                     )}
-                    <div className="font-medium items-center justify-between">
+                    <div className="font-medium text-sm items-center justify-between">
                         {!initialData.chapters.length ? (
-                            <p className="text-muted-foreground italic">No chapters yet.</p>
+                            <p className="font-medium text-sm text-muted-foreground italic">Add a chapter</p>
                         ) : (
                             <ChaptersList
                                 onEdit={onEdit}

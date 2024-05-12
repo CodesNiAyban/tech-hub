@@ -30,9 +30,9 @@ export const CourseDescription = ({
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
                     <div className="font-medium flex items-center justify-between">
                         <p className={cn("text-sm ",
-                            !initialData.description && "text-sm text-muted-foreground italic"
+                            !initialData.description && "font-medium text-sm text-muted-foreground italic"
                         )}>
-                            {initialData.description || "No description"}
+                            {initialData.description || "Enter a Description"}
                         </p>
                     </div>
                 </div>

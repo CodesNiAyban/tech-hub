@@ -24,7 +24,7 @@ export const ChapterAccess = ({
                     <EditChapterAccessDialog
                         title={"Set Access"}
                         formLabel={"Set Chapter Access"}
-                        description={"Set the access for this course. Click 'Save' when you're finished."}
+                        description={"Set the access for this chapter. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}
@@ -34,7 +34,7 @@ export const ChapterAccess = ({
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
                     <div className="font-medium flex items-center justify-between">
                         <p className={cn("text-sm",
-                            !initialData.isFree && "text-sm text-muted-foreground italic"
+                            !initialData.isFree && "font-medium text-sm text-muted-foreground italic"
                         )}>
                             {initialData.isFree ? (
                                 <>This chapter is free for preview</>

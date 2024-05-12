@@ -25,7 +25,7 @@ export const ChapterVideo = ({
                     <EditVideoDialog
                         title={initialData.videoUrl ? "Replace Video" : "Add Video"}
                         formLabel={"Video"}
-                        description={"Set the video for this course. Click 'Save' when you're finished."}
+                        description={"Set the video for this chapter. Click 'Save' when you're finished."}
                         initialData={initialData}
                         courseId={courseId}
                         toggleModal={toggleModal}

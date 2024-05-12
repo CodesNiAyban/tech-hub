@@ -33,10 +33,9 @@ export const EditCourseAttachment = ({
                     />
                 </div>
                 {initialData.attachments.length === 0 && (
-                    <p className="text-muted-foreground italic">No attachments yet.</p>
+                    <p className="font-medium text-sm text-muted-foreground italic">Add attachments</p>
                 )}
-
-                {initialData.attachments.length >= 0 ? (
+                {initialData.attachments.length >= 0 && (
                     <div className="space-y-2">
                         {initialData.attachments.map((attachment) => (
                             <div
@@ -60,8 +59,6 @@ export const EditCourseAttachment = ({
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <p className="text-muted-foreground italic">No attachments yet.</p>
                 )}
             </div>
         </div >
