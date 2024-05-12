@@ -33,7 +33,9 @@ export const EditCourseAttachment = ({
                     />
                 </div>
                 {initialData.attachments.length === 0 && (
-                    <p className="font-medium text-sm text-muted-foreground italic">Add attachments</p>
+                    <div className="border bg-muted/40 rounded-md p-2 px-3">
+                        <p className="font-medium text-sm text-muted-foreground italic">Add attachments</p>
+                    </div>
                 )}
                 {initialData.attachments.length >= 0 && (
                     <div className="space-y-2">

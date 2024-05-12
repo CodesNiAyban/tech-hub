@@ -73,8 +73,13 @@ body,
   font-size: 16px !important;
 }
 
-.ql-editor{
-  min-height:200px !important;
+body .ql-editor {
+  min-height: 200px !important;
+  overflow: auto !important;
+  height: 100%;
+  width: 100%;
+  max-height: 250px !important;
+  min-width: 100%;
 }
 
 .ql-toolbar.ql-snow {
