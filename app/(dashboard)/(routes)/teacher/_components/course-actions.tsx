@@ -2,32 +2,31 @@
 
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
+import { useConffettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface ChapterActionsProps {
+interface CourseActionsProps {
     isComplete: boolean;
     courseId: string;
-    chapterId: string;
     isPublished: boolean;
 }
 
-export const ChapterActions = ({
+export const CourseActions = ({
     isComplete,
     courseId,
-    chapterId,
     isPublished,
-}: ChapterActionsProps) => {
+}: CourseActionsProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const confetti = useConffettiStore();
 
-
-    const publishChapter = async () => {
+    const publishCourse = async () => {
         try {
-            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
+            const response = await axios.patch(`/api/courses/${courseId}/publish`);
             router.refresh();
             return response;
         } catch (error) {
@@ -39,9 +38,9 @@ export const ChapterActions = ({
         }
     }
 
-    const unpublishChapter = async () => {
+    const unpublishCourse = async () => {
         try {
-            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
+            const response = await axios.patch(`/api/courses/${courseId}/unpublish`);
             router.refresh();
             return response;
         } catch (error) {
@@ -57,19 +56,20 @@ export const ChapterActions = ({
         try {
             setIsLoading(true);
             if (isPublished) {
-                const response = unpublishChapter()
+                const response = unpublishCourse()
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
-                    success: "Chapter unpublished"
+                    success: "Course unpublished"
                 });
             } else {
-                const response = publishChapter()
+                const response = publishCourse()
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
-                    success: "Chapter published"
+                    success: "Course published"
                 });
+                confetti.onOpen();
             }
         } catch (error) {
             console.log(error)
@@ -78,11 +78,11 @@ export const ChapterActions = ({
         }
     }
 
-    const deleteChapter = async () => {
+    const deleteCourse = async () => {
         try {
-            const response = await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
+            const response = await axios.delete(`/api/courses/${courseId}`)
             router.refresh();
-            router.push(`/teacher/courses/${courseId}`)
+            router.push(`/teacher/courses`)
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -96,11 +96,11 @@ export const ChapterActions = ({
     const onDelete = async () => {
         try {
             setIsLoading(true);
-            const response = deleteChapter();
+            const response = deleteCourse();
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Chapter deleted"
+                success: "Course deleted"
             });
         } catch (error) {
             console.log(error)

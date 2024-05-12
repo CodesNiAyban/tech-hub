@@ -62,14 +62,14 @@ export const EditCategoriesDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium">
-						{!initialData.description ? (
+						{initialData.categories.length > 0 ? (
 							<>
-								<PlusCircle className="h-5 w-5 mr-2" />
-								Set Categories
+								<Pencil className="h-5 w-5 mr-2" />
+								{title}
 							</>
 						) : (
 							<>
-								<Pencil className="h-5 w-5 mr-2" />
+								<PlusCircle className="h-5 w-5 mr-2" />
 								{title}
 							</>
 						)}
@@ -98,14 +98,14 @@ export const EditCategoriesDialog = ({
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="ghost">
-					{!initialData.description ? (
+					{initialData.categories.length > 0 ? (
 						<>
-							<PlusCircle className="h-5 w-5 mr-2" />
-							Set Categories
+							<Pencil className="h-5 w-5 mr-2" />
+							{title}
 						</>
 					) : (
 						<>
-							<Pencil className="h-5 w-5 mr-2" />
+							<PlusCircle className="h-5 w-5 mr-2" />
 							{title}
 						</>
 					)}

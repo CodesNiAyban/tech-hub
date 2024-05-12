@@ -41,7 +41,7 @@ const ChapterIdPage = async ({
     const requiredFields = [
         chapter.title,
         chapter.description,
-        chapter.videoUrl
+        chapter.videoUrl,
     ];
 
     const totalFields = requiredFields.length;
@@ -81,7 +81,7 @@ const ChapterIdPage = async ({
                         </span>
                     </div>
                     <ChapterActions
-                        disabled={isComplete}
+                        isComplete={isComplete}
                         courseId={params.courseId}
                         chapterId={params.chapterId}
                         isPublished={chapter.isPublished}

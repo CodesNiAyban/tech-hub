@@ -24,7 +24,7 @@ export const CourseCategories = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Categories
                     <EditCategoriesDialog
-                        title={initialData.categories ? "Edit Categories" : "Add Categories"}
+                        title={initialData.categories.length > 0 ? "Edit Categories" : "Add Categories" }
                         formLabel={"New Course Categories"}
                         description={"Set the categories for this course. Click 'Save' when you're finished."}
                         categories={categories}

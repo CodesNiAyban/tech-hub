@@ -6,6 +6,8 @@ import { CustomizeCourse } from "../_components/(course)/(customize)/course-cust
 import { CourseChapters } from "../_components/(course)/(chapters)/course-chapters";
 import { CoursePrice } from "../_components/(course)/(sell)/course-price";
 import { CourseAttachment } from "../_components/(course)/(attachments)/course-attachments";
+import { Banner } from "@/components/banner";
+import { CourseActions } from "../../_components/course-actions";
 
 const CourseIdPage = async ({
     params
@@ -66,42 +68,56 @@ const CourseIdPage = async ({
 
     const completionText = `(${completedFields}/${totalFields})`
 
+    const isComplete = requiredFields.every(Boolean);
     return (
-        <div className="p-6">
-            <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-y-2">
-                    <h1 className="text-2xl font-medium">
-                        Course Setup
-                    </h1>
-                    <span className="text-sm root:text-slate-700">
-                        Complete all fields {completionText}
-                    </span>
-                </div>
-            </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
-                <div>
-                    <div className="flexcenter gap-x-2">
-                        <CustomizeCourse
-                            initialData={course}
-                            courseId={course.id}
-                            categories={categories}
-                        />
+        <div className="lg:mt-[20px] md:mt-[16px] sm:mt-[16px]">
+            {!course.isPublished && (
+                <Banner
+                    variant="warning"
+                    label="This course is not published and will not be visible to the students"
+                />
+            )}
+            <div className="p-6">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-y-2">
+                        <h1 className="text-2xl font-medium">
+                            Course Setup
+                        </h1>
+                        <span className="text-sm root:text-slate-700">
+                            Complete all fields {completionText}
+                        </span>
                     </div>
+                    <CourseActions
+                        isComplete={isComplete}
+                        courseId={params.courseId}
+                        isPublished={course.isPublished}
+                    />
                 </div>
-                <div>
-                    <div className="flexcenter gap-x-2">
-                        <CourseChapters
-                            initialData={course}
-                            courseId={course.id}
-                        />
-                        <CoursePrice
-                            initialData={course}
-                            courseId={course.id}
-                        />
-                        <CourseAttachment
-                            initialData={course}
-                            courseId={course.id}
-                        />
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <div className="flexcenter gap-x-2">
+                            <CustomizeCourse
+                                initialData={course}
+                                courseId={course.id}
+                                categories={categories}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="flexcenter gap-x-2">
+                            <CourseChapters
+                                initialData={course}
+                                courseId={course.id}
+                            />
+                            <CoursePrice
+                                initialData={course}
+                                courseId={course.id}
+                            />
+                            <CourseAttachment
+                                initialData={course}
+                                courseId={course.id}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
