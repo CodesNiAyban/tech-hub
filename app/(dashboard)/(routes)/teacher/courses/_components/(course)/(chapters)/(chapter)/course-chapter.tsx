@@ -3,6 +3,10 @@ import { EditChapterDialog } from "./edit-chapter-dialog";
 import { Chapter, Course } from "@prisma/client";
 import { ChaptersList } from "./chapters-list";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface CourseChapterProps {
     initialData: Course & { chapters: Chapter[] };
@@ -15,17 +19,46 @@ export const CourseChapter = ({
     initialData,
     courseId,
 }: CourseChapterProps) => {
-    const onReorder = async (updateData: { id: string; position: number }[]) => {
-        try {
+    const [isUpdating, setIsUpdating] = useState(false)
+    const router = useRouter();
+    const reorderChapter = async (updateData: { id: string; position: number }[]) => {
 
+        try {
+            setIsUpdating(true)
+            const response = await axios.put(`/api/courses/${courseId}/chapters/reorder`,
+                {
+                    list: updateData
+                });
+            return response;
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);
             } else {
                 toast.error("An error occurred. Please try again later.");
             }
+        } finally {
+            setIsUpdating(false)
+        }
+    };
+
+    const onReorder = async (updateData: { id: string; position: number }[]) => {
+        try {
+            const response = reorderChapter(updateData);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Chapters successfully reordered"
+            });
+
+        } catch (error) {
+            console.log(error)
         }
     }
+
+    const onEdit = async (id: string) => {
+        router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+    }
+
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
@@ -40,14 +73,19 @@ export const CourseChapter = ({
                         toggleModal={toggleModal}
                     />
                 </div>
-                <div className="border bg-muted/40 rounded-md p-2 px-3">
+                <div className="relative border bg-muted/40 rounded-md p-2 px-3">
+                    {isUpdating && (
+                        <div className="absolute h-full w-full top-0 right-0 rounded-md flex items-center justify-center z-50 bg-opacity-75 backdrop-filter backdrop-blur-sm">
+                            <Loader2 className="animate-spin h-6 w-6 text-primary" />
+                        </div>
+                    )}
                     <div className="font-medium items-center justify-between">
                         {!initialData.chapters.length ? (
                             <p className="text-muted-foreground italic">No chapters yet.</p>
                         ) : (
                             <ChaptersList
-                                onEdit={() => { }}
-                                onReorder={() => { }}
+                                onEdit={onEdit}
+                                onReorder={onReorder}
                                 items={initialData.chapters || []}
                             />
                         )}

@@ -4,8 +4,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
-import { DashboardNavBar } from "./_components/(navbar)/navbar";
 import { SideBar } from "./_components/(sidebar)/sidebar";
+import DashboardNavBar from "./_components/(navbar)/navbar";
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {

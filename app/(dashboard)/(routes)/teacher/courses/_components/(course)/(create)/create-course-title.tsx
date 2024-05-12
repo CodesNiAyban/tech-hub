@@ -1,6 +1,6 @@
 "use client"
 
-import { createSchema } from "@/app/(dashboard)/_components/_utils/form-validation"
+import { createSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation"
 import { Button } from "@/components/ui/button"
 import {
     Card,

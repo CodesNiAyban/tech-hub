@@ -1,5 +1,6 @@
 "use client"
 
+import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,41 +9,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { chapterSchema } from "../../../_utils/form-validation";
 
-interface EditChapterProps {
+interface TitleFormProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditChapterForm = ({
+export const EditTitleForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: EditChapterProps) => {
+}: TitleFormProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof chapterSchema>>({
-        resolver: zodResolver(chapterSchema),
-        defaultValues: {
-            title: "",
-        },
+    const form = useForm<z.infer<typeof titleSchema>>({
+        resolver: zodResolver(titleSchema),
+        defaultValues: initialData,
     });
 
     const { isValid } = form.formState;
 
-    const editChapter = async (values: z.infer<typeof chapterSchema>) => {
+    const editTitle = async (values: z.infer<typeof titleSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
-            const response = await axios.post(`/api/courses/${courseId}/chapters`, values);
+            const response = await axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
             return response;
         } catch (error) {
@@ -57,20 +55,16 @@ export const EditChapterForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof chapterSchema>) => {
+    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            const response = editChapter(values);
+            const response = editTitle(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Chapter Updated!"
+                success: "Course Title Updated!"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
         }
     }
 
@@ -89,9 +83,9 @@ export const EditChapterForm = ({
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g. 'Introduction to the course'"
                                             {...field}
+                                            disabled={isSubmitting} // Disable input field while submitting
+                                            placeholder="e.g Advanced Web Development"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -101,12 +95,10 @@ export const EditChapterForm = ({
                     </div>
                 </div>
                 <Button type="submit" disabled={!isValid || isSubmitting}> {/* Disable button while submitting */}
-                    Create
+                    Save
                 </Button>
             </form>
         </Form>
     );
 };
-
-
 

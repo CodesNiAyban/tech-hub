@@ -1,43 +1,45 @@
 "use client"
 
-import { titleSchema } from "@/app/(dashboard)/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
+import { descriptionSchema } from "../../../_utils/form-validation";
+import { Course } from "@prisma/client";
 
-interface TitleFormProps {
+interface EditDescriptionProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditTitleForm = ({
+export const EditDescriptionForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: TitleFormProps) => {
+}: EditDescriptionProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof titleSchema>>({
-        resolver: zodResolver(titleSchema),
-        defaultValues: initialData,
+    const form = useForm<z.infer<typeof descriptionSchema>>({
+        resolver: zodResolver(descriptionSchema),
+        defaultValues: {
+            description: initialData?.description || ""
+        },
     });
 
     const { isValid } = form.formState;
 
-    const editTitle = async (values: z.infer<typeof titleSchema>) => {
+    const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
@@ -55,20 +57,16 @@ export const EditTitleForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
+    const onSubmit = async (values: z.infer<typeof descriptionSchema>) => {
         try {
-            const response = editTitle(values);
+            const response = editDescription(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Title Updated!"
+                success: "Course Description Updated!"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
         }
     }
 
@@ -79,17 +77,18 @@ export const EditTitleForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
                                         New {formLabel}
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
+                                        <Textarea
                                             {...field}
                                             disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g Advanced Web Development"
+                                            placeholder="e.g. 'This course is about..."
+                                            className="resize-none"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -105,4 +104,6 @@ export const EditTitleForm = ({
         </Form>
     );
 };
+
+
 

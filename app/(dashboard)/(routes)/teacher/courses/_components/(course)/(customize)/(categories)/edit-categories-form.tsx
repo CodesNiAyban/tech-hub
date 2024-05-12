@@ -1,6 +1,6 @@
 "use client"
 
-import { categoriesSchema } from "@/app/(dashboard)/_components/_utils/form-validation";
+import { categoriesSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -73,11 +73,7 @@ export const EditCategoriesForm = ({
                 success: "Course Categories Updated!"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
         }
     }
 

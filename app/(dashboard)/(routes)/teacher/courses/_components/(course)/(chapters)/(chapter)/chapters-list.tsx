@@ -1,16 +1,16 @@
 "use client"
 
-import { Chapter } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
     DragDropContext,
-    Droppable,
     Draggable,
     DropResult,
-} from "@hello-pangea/dnd"
-import { cn } from "@/lib/utils";
-import { FilePenLine, GripVertical } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+    Droppable,
+} from "@hello-pangea/dnd";
+import { Chapter } from "@prisma/client";
+import { GripVertical, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ChapterListProps {
     items: Chapter[];
@@ -106,10 +106,12 @@ export const ChaptersList = ({
                                                     {chapter.isPublished ? "Published" :
                                                         "Draft"}
                                                 </Badge>
-                                                <FilePenLine
-                                                    className="h-4 w-4 cursor-pointer hover:opacity-75 transition"
-                                                    onClick={() => onEdit(chapter.id)}
-                                                />
+                                                <div className="border rounded-full p-1">
+                                                    <Pencil
+                                                        className="h-4 w-4 cursor-pointer hover:opacity-75 transition"
+                                                        onClick={() => onEdit(chapter.id)}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     )}

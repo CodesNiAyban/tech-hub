@@ -1,10 +1,11 @@
-import { CourseAttachment } from "@/app/(dashboard)/_components/(course)/(attachments)/course-attachments";
-import { CourseChapters } from "@/app/(dashboard)/_components/(course)/(chapters)/course-chapters";
-import { CustomizeCourse } from "@/app/(dashboard)/_components/(course)/(customize)/course-customize";
-import { CoursePrice } from "@/app/(dashboard)/_components/(course)/(sell)/course-price";
+
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { CustomizeCourse } from "../_components/(course)/(customize)/course-customize";
+import { CourseChapters } from "../_components/(course)/(chapters)/course-chapters";
+import { CoursePrice } from "../_components/(course)/(sell)/course-price";
+import { CourseAttachment } from "../_components/(course)/(attachments)/course-attachments";
 
 const CourseIdPage = async ({
     params
@@ -13,10 +14,10 @@ const CourseIdPage = async ({
 }) => {
     const { userId } = auth();
 
-    if(!userId) {
+    if (!userId) {
         return redirect("/")
     }
-    
+
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,

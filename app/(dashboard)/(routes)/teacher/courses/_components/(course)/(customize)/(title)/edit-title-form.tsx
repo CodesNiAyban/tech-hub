@@ -1,5 +1,6 @@
 "use client"
 
+import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,38 +9,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { priceSchema } from "../../../_utils/form-validation";
 
-interface EditPriceProps {
+interface TitleFormProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditPriceForm = ({
+export const EditTitleForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: EditPriceProps) => {
+}: TitleFormProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof priceSchema>>({
-        resolver: zodResolver(priceSchema),
-        defaultValues: {
-            price: initialData?.price || undefined,
-        },
+    const form = useForm<z.infer<typeof titleSchema>>({
+        resolver: zodResolver(titleSchema),
+        defaultValues: initialData,
     });
 
     const { isValid } = form.formState;
 
-    const editPrice = async (values: z.infer<typeof priceSchema>) => {
+    const editTitle = async (values: z.infer<typeof titleSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
@@ -57,20 +55,16 @@ export const EditPriceForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof priceSchema>) => {
+    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            const response = editPrice(values);
+            const response = editTitle(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Price Updated!"
+                success: "Course Title Updated!"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
         }
     }
 
@@ -81,7 +75,7 @@ export const EditPriceForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="price"
+                            name="title"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
@@ -91,9 +85,7 @@ export const EditPriceForm = ({
                                         <Input
                                             {...field}
                                             disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="Set a price to your course"
-                                            type="number"
-                                            step="0.01"
+                                            placeholder="e.g Advanced Web Development"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -109,6 +101,4 @@ export const EditPriceForm = ({
         </Form>
     );
 };
-
-
 

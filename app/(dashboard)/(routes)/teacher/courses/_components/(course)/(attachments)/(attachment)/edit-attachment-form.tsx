@@ -48,11 +48,7 @@ export const EditAttachmentForm = ({
                 success: "Course Attachment Updated!"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+           console.log(error)
         }
     }
 
