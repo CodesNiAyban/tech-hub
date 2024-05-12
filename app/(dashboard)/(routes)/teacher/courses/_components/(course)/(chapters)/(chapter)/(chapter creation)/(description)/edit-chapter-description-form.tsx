@@ -1,46 +1,50 @@
 "use client"
 
-import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { Editor } from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
+import { descriptionSchema } from "../../../../../_utils/form-validation";
+import { Chapter } from "@prisma/client";
 
-interface TitleFormProps {
-    initialData: Course
+interface EditChapterDescriptionProps {
+    initialData: Chapter;
     courseId: string;
-    formLabel: string
+    chapterId: string;
     toggleModal: () => void
+    formLabel: string
 }
 
-export const EditTitleForm = ({
+export const EditChapterDescriptionForm = ({
     initialData,
     courseId,
     formLabel,
-    toggleModal
-}: TitleFormProps) => {
+    toggleModal,
+    chapterId
+}: EditChapterDescriptionProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof titleSchema>>({
-        resolver: zodResolver(titleSchema),
-        defaultValues: initialData,
+    const form = useForm<z.infer<typeof descriptionSchema>>({
+        resolver: zodResolver(descriptionSchema),
+        defaultValues: {
+            description: initialData?.description || ""
+        },
     });
 
     const { isValid } = form.formState;
 
-    const editTitle = async (values: z.infer<typeof titleSchema>) => {
+    const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
         setIsSubmitting(true); // Set submission status to true
         try {
-            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
             router.refresh();
             return response;
         } catch (error) {
@@ -55,13 +59,13 @@ export const EditTitleForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
+    const onSubmit = async (values: z.infer<typeof descriptionSchema>) => {
         try {
-            const response = editTitle(values);
+            const response = editDescription(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Course Title Updated!"
+                success: "Chapter Description Updated!"
             });
         } catch (error) {
             console.log(error)
@@ -75,17 +79,15 @@ export const EditTitleForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
                                         New {formLabel}
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
+                                        <Editor
                                             {...field}
-                                            disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g Advanced Web Development"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -101,4 +103,6 @@ export const EditTitleForm = ({
         </Form>
     );
 };
+
+
 

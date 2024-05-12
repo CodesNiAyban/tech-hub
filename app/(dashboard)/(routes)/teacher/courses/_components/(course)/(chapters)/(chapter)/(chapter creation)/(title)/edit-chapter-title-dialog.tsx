@@ -19,26 +19,28 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Course } from "@prisma/client";
+import { Chapter, Course } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EditTitleForm } from "./edit-title-form";
+import { EditChapterTitleForm } from "./edit-chapter-title-form";
 interface DrawerDialogProps {
-	toggleModal: () => void
-	initialData: Course
+	initialData: Chapter
 	courseId: string;
+	chapterId: string;
+	toggleModal: () => void
 	title: string
 	decscription: string
 	formLabel: string
 }
 
-export const EditTitleDialog = ({
+export const EditChapterTitleDialog = ({
 	toggleModal,
 	initialData,
 	title,
 	courseId,
 	decscription,
-	formLabel
+	formLabel,
+	chapterId,
 }: DrawerDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [isDesktop, setIsDesktop] = useState(false);
@@ -68,11 +70,12 @@ export const EditTitleDialog = ({
 							{decscription}. Click save when you&apos;re done.
 						</DialogDescription>
 					</DialogHeader>
-					<EditTitleForm
+					<EditChapterTitleForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</DialogContent>
 			</Dialog>
@@ -95,11 +98,12 @@ export const EditTitleDialog = ({
 					</DrawerDescription>
 				</DrawerHeader>
 				<div className="px-4" >
-					<EditTitleForm
+					<EditChapterTitleForm
 						initialData={initialData}
 						courseId={courseId}
 						formLabel={formLabel}
 						toggleModal={handleClose}
+						chapterId={chapterId}
 					/>
 				</div>
 				<DrawerFooter className="pt-2">

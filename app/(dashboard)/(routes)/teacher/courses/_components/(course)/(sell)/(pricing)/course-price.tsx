@@ -29,7 +29,7 @@ export const EditCoursePrice = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-sm flex items-center justify-between">
                         <p className={cn("text-sm",
                             !initialData.price && "text-muted-foreground italic text-sm"
                         )}>

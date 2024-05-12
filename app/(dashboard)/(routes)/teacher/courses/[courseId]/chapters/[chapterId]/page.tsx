@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CustomizeChapter } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/chapter-customize";
 
 const ChapterIdPage = async ({
     params
@@ -66,6 +67,18 @@ const ChapterIdPage = async ({
                     </span>
                 </div>
             </div>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <div className="flexcenter gap-x-2">
+                        <CustomizeChapter
+                            initialData={chapter}
+                            courseId={params.courseId}
+                            chapterId={params.chapterId}
+                        />
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 }

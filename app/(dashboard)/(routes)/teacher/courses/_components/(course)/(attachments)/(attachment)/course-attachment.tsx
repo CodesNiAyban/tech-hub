@@ -41,7 +41,7 @@ export const EditCourseAttachment = ({
                         {initialData.attachments.map((attachment) => (
                             <div
                                 key={attachment.id}
-                                className="flex items-center p-3 w-full rounded-md bg-muted/40 border-muted-foreground"
+                                className="flex items-center w-full bg-muted/40 rounded-md p-2 px-3 border"
                             >
                                 <File className="h-4 w-4 mr-2 flex-shrink-0" />
                                 <p className="text-xs line-clamp-1">
