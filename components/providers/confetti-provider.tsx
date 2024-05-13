@@ -2,7 +2,7 @@
 
 import ReactConfetti from "react-confetti";
 
-import { useConffettiStore as useConffettiStore } from "@/hooks/use-confetti-store";
+import { useConffettiStore } from "@/hooks/use-confetti-store";
 
 export const ConfettiProvider = () => {
     const confetti = useConffettiStore();
@@ -12,7 +12,7 @@ export const ConfettiProvider = () => {
     return (
         <ReactConfetti
             className="pointer-events-none z-[100]"
-            numberOfPieces={500}
+            numberOfPieces={600}
             recycle={false}
             onConfettiComplete={() => {
                 confetti.onClose

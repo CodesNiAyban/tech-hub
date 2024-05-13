@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { SideBar } from "./_components/(sidebar)/sidebar";
 import DashboardNavBar from "./_components/(navbar)/navbar";
+import { ConfettiProvider } from "@/components/providers/confetti-provider";
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ const MarketingLayout = ({
                 <div className="relative flex flex-col w-full">
                     <DashboardNavBar />
                     <main className="flex flex-1 flex-col absolute inset-0 overflow-y-auto">
+                        <ConfettiProvider />
                         <ToastProvider />
                         {children}
                     </main>

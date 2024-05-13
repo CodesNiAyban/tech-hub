@@ -63,7 +63,7 @@ export const CourseChapter = ({
         <div className="grid gap-6">
             <div className="grid gap-3">
                 <div className="font-medium flex items-center justify-between">
-                    Course Chapter
+                    Course Chapters
                     <EditChapterDialog
                         title={"Add a Chapter"}
                         formLabel={"New Course Chapter"}
@@ -73,7 +73,7 @@ export const CourseChapter = ({
                         toggleModal={toggleModal}
                     />
                 </div>
-                <div className="relative border bg-muted/40 rounded-md p-2 px-3">
+                <div className="relative border root:bg-slate-100 dark:bg-muted/40 rounded-md p-4">
                     {isUpdating && (
                         <div className="absolute h-full w-full top-0 right-0 rounded-md flex items-center justify-center z-50 bg-opacity-75 backdrop-filter backdrop-blur-sm">
                             <Loader2 className="animate-spin h-6 w-6 text-primary" />

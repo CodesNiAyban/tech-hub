@@ -1,5 +1,3 @@
-"use client"
-
 import { createSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation"
 import { Button } from "@/components/ui/button"
 import {
@@ -94,7 +92,7 @@ export const CreateCourse = () => {
                     </CardContent>
                     <CardFooter className="flex justify-between">
                         <Button variant="outline" asChild>
-                            <Link href="/home">
+                            <Link href="/teacher/courses">
                                 Cancel
                             </Link>
                         </Button>

@@ -75,16 +75,18 @@ export const ChaptersList = ({
                                 >
                                     {(provided) => (
                                         <div className={cn(
-                                            "flex items-center gap-x-2 border-transparent bg-zinc-100 text-zinc-900 hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80 mb-4 text-sm rounded-md",
-                                            chapter.isPublished && "border-transparent bg-zinc-900 text-zinc-50 hover:bg-zinc-900/80 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/80 rounded-md"
+                                            "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm",
+                                            chapter.isPublished &&
+                                            "bg-sky-100 border-sky-200 text-sky-700"
                                         )}
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                         >
                                             <div
                                                 className={cn(
-                                                    "px-2 py-2 border-r border-transparent bg-zinc-500 text-zinc-900 hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80 rounded-l-md transition",
-                                                    chapter.isPublished && "border-transparent bg-zinc-900 text-zinc-50 hover:bg-zinc-900/80 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/80"
+                                                    "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition",
+                                                    chapter.isPublished &&
+                                                    "border-r-sky-200 hover:bg-sky-200"
                                                 )}
                                                 {...provided.dragHandleProps}
                                             >
@@ -95,14 +97,13 @@ export const ChaptersList = ({
                                             {chapter.title}
                                             <div className="ml-auto pr-2 flex items-center gap-x-2">
                                                 {chapter.isFree && (
-                                                    <Badge>
+                                                    <Badge variant="default">
                                                         Free
                                                     </Badge>
                                                 )}
                                                 <Badge
-                                                    className={cn("bg-zinc-500",
-                                                        chapter.isPublished && "bg-zinc-900"
-                                                    )}>
+                                                    variant={chapter.isPublished ? "success" : "muted"}
+                                                >
                                                     {chapter.isPublished ? "Published" :
                                                         "Draft"}
                                                 </Badge>

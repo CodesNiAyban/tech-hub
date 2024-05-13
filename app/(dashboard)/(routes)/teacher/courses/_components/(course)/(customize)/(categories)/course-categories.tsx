@@ -24,7 +24,7 @@ export const CourseCategories = ({
                 <div className="font-medium flex items-center justify-between">
                     Course Categories
                     <EditCategoriesDialog
-                        title={initialData.categories.length > 0 ? "Edit Categories" : "Add Categories" }
+                        title={initialData.categories.length > 0 ? "Edit Categories" : "Add Categories"}
                         formLabel={"New Course Categories"}
                         description={"Set the categories for this course. Click 'Save' when you're finished."}
                         categories={categories}
@@ -37,7 +37,7 @@ export const CourseCategories = ({
                     <div className="font-medium flex">
                         {initialData.categories && initialData.categories.length > 0 ? (
                             initialData.categories.map((category) => (
-                                <Badge key={category.id} className="mr-2">{category.name}</Badge>
+                                <Badge key={category.id} variant="default" className="mr-2">{category.name}</Badge>
                             ))
                         ) : (
                             <p className="font-medium text-sm text-muted-foreground italic">Set the categories</p>

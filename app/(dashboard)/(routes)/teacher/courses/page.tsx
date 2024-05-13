@@ -6,8 +6,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
 
-
-
 const Courses = async () => {
     const { userId } = auth();
 
@@ -26,17 +24,14 @@ const Courses = async () => {
 
     return (
         <>
-            <div className="flex items-center m-4 mt-[80px]">
-                <h1 className="text-lg font-semibold md:text-2xl">Courses</h1>
-            </div>
-
-            {courses ? (
-                <div className="p-6">
+            {!courses ? (
+                <div className="p-6 items-center m-4 mt-[80px]">
+                    <h1 className="text-lg font-semibold md:text-2xl">Courses</h1>
                     <DataTable columns={columns} data={courses} />
                 </div>
             ) : (
                 <div
-                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm m-4 p-10" x-chunk="dashboard-02-chunk-1"
+                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm m-4 p-10 mt-20" x-chunk="dashboard-02-chunk-1"
                 >
                     <div className="flex flex-col items-center gap-1 text-center">
                         <h3 className="text-2xl font-bold tracking-tight">
