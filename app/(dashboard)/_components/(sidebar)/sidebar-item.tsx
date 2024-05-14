@@ -33,7 +33,7 @@ const SideBarItem = ({
                 isActive && "flex items-center gap-3 rounded-lg bg-muted px-3 py-3 text-primary transition-all hover:text-primary",
             )}
         >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-6 w-6" />
             {label}
         </Link>
     );

@@ -1,9 +1,11 @@
-import { AlertTriangleIcon, CheckCircleIcon } from "lucide-react";
+"use client"
+import { AlertTriangleIcon, CheckCircleIcon, X } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const bannerVariants = cva(
-    "border text-center p-4 text-sm flex items-center w-full",
+    "border text-center p-4 text-sm flex items-center w-full rounded-md",
     {
         variants: {
             variant: {
@@ -30,11 +32,22 @@ export const Banner = ({
     label,
     variant,
 }: BannerProps) => {
+    const [isVisible, setIsVisible] = useState(true);
+
+    if (!isVisible) {
+        return null;
+    }
+
     const Icon = iconMap[variant || "warning"]
     return (
         <div className={cn(bannerVariants({ variant }))}>
-            <Icon className="h-4 w-4 mr-2 text-destructive" />
-            {label}
+            <div className="flex items-center">
+                <Icon className="h-4 w-4 mr-2 text-destructive" />
+                {label}
+            </div>
+            <button className="ml-auto" onClick={() => setIsVisible(false)}>
+                <X className="h-4 w-4 text-destructive" />
+            </button>
         </div>
     )
 }

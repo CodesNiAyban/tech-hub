@@ -18,7 +18,7 @@ async function main() {
 
         console.log("success")
     } catch (error) {
-        console.log("Error seeding the database categoriess" , error)
+        console.log("Error seeding the database categories" , error)
     } finally {
         await database.$disconnect();
     }

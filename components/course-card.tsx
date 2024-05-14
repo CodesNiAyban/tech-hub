@@ -40,12 +40,12 @@ export const CourseCard = ({
                     />
                 </div>
                 <div className="flex flex-col pt-2">
-                    <div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
+                    <div className="text-lg md:text-base font-medium group-hover:text-primary transition line-clamp-2">
                         {title}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-1">
                         {categories.map((category) => (
-                            <Badge key={category.id} variant="success" className="text-xs bg-gray-200 rounded-full px-2 py-1">
+                            <Badge key={category.id} variant="success" className="text-xs rounded-full px-2 py-1">
                                 {category.name}
                             </Badge>
                         ))}
@@ -60,25 +60,20 @@ export const CourseCard = ({
                     </div>
                     <div>
                         {progress !== null ? (
-                            <>
-
-                            </>
+                            <div className="mt-2">
+                                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
+                                </div>
+                                <div className="mt-1 text-xs text-gray-600">
+                                    {progress}% complete
+                                </div>
+                            </div>
                         ) : (
-                            <p className="text-md md:text-sm font-md text-slate-50">
+                            <p className="text-md md:text-sm font-md dark:text-slate-50 root:text-black">
                                 {formatPrice(price)}
                             </p>
                         )}
                     </div>
-                    {progress !== null && (
-                        <div className="mt-2">
-                            <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
-                            </div>
-                            <div className="mt-1 text-xs text-gray-600">
-                                {progress}% complete
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
         </Link>

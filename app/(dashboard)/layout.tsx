@@ -25,11 +25,11 @@ const MarketingLayout = ({
             enableSystem
             disableTransitionOnChange
         >
-            <div className="grid min-h-screen w-full 2xl:grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
+            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] xl:grid-cols-[280px_1fr]">
                 <SideBar />
                 <div className="relative flex flex-col w-full">
                     <DashboardNavBar />
-                    <main className="flex flex-1 flex-col absolute inset-0 overflow-y-auto">
+                    <main className="flex flex-1 flex-col absolute inset-0 gap-4 p-4 overflow-y-auto xl:gap-6 xl:p-6">
                         <ConfettiProvider />
                         <ToastProvider />
                         {children}

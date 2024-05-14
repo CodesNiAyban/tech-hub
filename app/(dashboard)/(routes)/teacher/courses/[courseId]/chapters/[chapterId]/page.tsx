@@ -52,7 +52,7 @@ const ChapterIdPage = async ({
     const isComplete = requiredFields.every(Boolean);
 
     return (
-        <div className="lg:mt-[60px] md:mt-[56px] sm:mt-[56px]">
+        <div className="mt-16 sm:mt-16 md:mt-[56px] lg:mt-[60px]">
             {!chapter.isPublished && (
                 <Banner
                     variant="warning"

@@ -15,13 +15,13 @@ import { TeacherStudentButton } from "./teacher-student-button"
 
 export const DashboardNavBar = () => {
     return (
-        <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] xl:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-sm">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-sm">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button
                         variant="outline"
                         size="icon"
-                        className="shrink-0 xl:hidden"
+                        className="shrink-0 md:hidden"
                     >
                         <Menu className="h-5 w-5" />
                         <span className="sr-only">Toggle navigation menu</span>
@@ -35,14 +35,12 @@ export const DashboardNavBar = () => {
                     </div>
                 </SheetContent>
             </Sheet>
-            <div className="w-full flex items-center justify-between bg-transparent"> {/* Added flex and justify-between classes */}
+            <div className="w-full flex items-center gap-x-3 justify-between bg-transparent"> {/* Added flex and justify-between classes */}
                 <div className="flex-1 bg-transparent"> {/* Added flex-1 class to make it take remaining space */}
                     <SearchComponent />
                 </div>
-                <div className="ml-4 mr-2 bg-transparent">
-                    <ModeToggle />
-                </div>
                 <TeacherStudentButton />
+                <ModeToggle />
             </div>
             <ClerkLoading>
                 <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />

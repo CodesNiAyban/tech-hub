@@ -33,11 +33,10 @@ const Browse = async ({
 
     return (
         <>
-            <div className="mt-16 flex-1 flex flex-col p-6">
+            <div className="mt-10 flex-1 flex flex-col p-3">
                 <Categories
                     items={categories}
                 />
-
                 <CoursesList
                     items={courses}
                 />

@@ -33,7 +33,7 @@ export const ChapterVideo = ({
                     />
                 </div>
                 {!initialData.videoUrl ? (
-                    <div className="flex items-center justify-center border h-60 bg-muted/40 rounded-md p-2 px-3">
+                    <div className="flex items-center justify-center border h-80 bg-muted/40 rounded-md p-2 px-3">
                         <Video className="h-10 w-10 text-muted-foreground" />
                     </div>
                 ) : (
