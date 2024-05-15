@@ -18,7 +18,7 @@ export const Logo = () => {
             "text-yellow-500" 
           )}
         >
-          <span className="text-foreground mr-1">Tech</span>
+          <span className="text-foreground mr-[0.5px]">Tech</span>
           <span className="bg-primary text-black rounded-md px-1 py-1">
             Hub
           </span>
