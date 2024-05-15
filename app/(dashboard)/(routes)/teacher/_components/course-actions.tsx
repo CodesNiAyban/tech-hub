@@ -2,7 +2,7 @@
 
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
-import { useConffettiStore } from "@/hooks/use-confetti-store";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ export const CourseActions = ({
 }: CourseActionsProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-    const confetti = useConffettiStore();
+    const confetti = useConfettiStore();
 
     const publishCourse = async () => {
         try {

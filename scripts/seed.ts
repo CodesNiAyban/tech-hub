@@ -1,27 +1,31 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('@prisma/client');
 
-const database = new PrismaClient();
+const prisma = new PrismaClient();
 
 async function main() {
-    try {
-        await database.category.createMany({
-            data: [
-                { name: "NextJS"},
-                { name: "Svelete"},
-                { name: "JavaScript"},
-                { name: "Rust"},
-                { name: "Python"},
-                { name: "C++"},
-                { name: "Java"},
-            ]
-        })
-
-        console.log("success")
-    } catch (error) {
-        console.log("Error seeding the database categories" , error)
-    } finally {
-        await database.$disconnect();
-    }
+    await prisma.Category.createMany({
+        data: [
+            { name: 'React' },
+            { name: 'Angular' },
+            { name: 'Vue' },
+            { name: 'Svelte' },
+            { name: 'Next.js' },
+            { name: 'Nuxt.js' },
+            { name: 'Gatsby' },
+            { name: 'Ember.js' },
+            { name: 'Backbone.js' },
+            { name: 'Meteor' },
+            // Add more categories as needed
+        ],
+    });
+    console.log('Seeding complete');
 }
 
-main();
+main()
+    .catch(e => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

@@ -9,10 +9,22 @@ import {
     Menu
 } from "lucide-react"
 import { TeacherStudentButton } from "./teacher-student-button"
+import CourseMobileSidebar from "../(sidebar)/course-mobile-sidebar"
+import { Chapter, Course, UserProgress } from "@prisma/client"
 
-export const CourseNavBar = () => {
+interface CourseNavbarProps {
+    course: Course & {
+        chapters: (Chapter & {
+            userProgress: UserProgress[] | null;
+        })[];
+    };
+    progressCount: number;
+}
+
+export const CourseNavbar = ({ course, progressCount }: CourseNavbarProps) => {
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-sm">
+            <CourseMobileSidebar course={course} progressCount={progressCount} />
             <TeacherStudentButton />
             <ModeToggle />
             <ClerkLoading>

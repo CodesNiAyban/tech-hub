@@ -9,12 +9,12 @@ export const TeacherStudentButton = () => {
     const pathname = usePathname();
 
     const isTeacherPage = pathname?.startsWith("/teacher");
-    const isPlayerPage = pathname?.includes("/chapter");
+    const isCoursePage = pathname?.includes("/course");
     
 
     return (
         <div className="flex gap-x-2 ml-auto">
-            {isTeacherPage || isPlayerPage ? (
+            {isTeacherPage || isCoursePage ? (
                 <Button size="sm" asChild>
                     <Link href="/home">
                         <LogOut className="h-4 w-4 mr-2" />
