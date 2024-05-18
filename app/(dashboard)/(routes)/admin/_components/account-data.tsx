@@ -3,12 +3,12 @@
 import { setRole } from '@/actions/set-role';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { User } from '@clerk/nextjs/server';
 import { SortAsc, SortDesc } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { User } from './_utils/types';
 
 type AccountDataTableProps = {
     users: User[];
@@ -33,7 +33,7 @@ const AccountDataTable: React.FC<AccountDataTableProps> = ({ users }) => {
         setOffset(data.selected * itemsPerPage);
     };
 
-    const formattedLastActiveAt = (timestamp: string) => {
+    const formattedLastActiveAt = (timestamp: number) => {
         const date = new Date(timestamp);
         return date.toLocaleString(); // Adjust date format as needed
     };
@@ -117,7 +117,7 @@ const AccountDataTable: React.FC<AccountDataTableProps> = ({ users }) => {
                                 {user.emailAddresses.find((email) => email.id === user.primaryEmailAddressId)
                                     ?.emailAddress || ""}
                             </TableCell>
-                            <TableCell>{user.publicMetadata.role}</TableCell>
+                            <TableCell>{user.publicMetadata.role as string}</TableCell>
                             <TableCell>
                                 <Image
                                     src={user.imageUrl}
@@ -128,7 +128,7 @@ const AccountDataTable: React.FC<AccountDataTableProps> = ({ users }) => {
                                 />
                             </TableCell>
                             <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-                            <TableCell>{formattedLastActiveAt(user.lastActiveAt ? user.lastActiveAt : "")}</TableCell>
+                            <TableCell>{formattedLastActiveAt(user.lastActiveAt ? user.lastActiveAt : 0)}</TableCell>
                             <TableCell className="text-right">
                                 <div className="flex space-x-2">
                                     <div>

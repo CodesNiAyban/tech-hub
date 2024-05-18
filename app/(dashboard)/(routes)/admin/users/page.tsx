@@ -1,36 +1,39 @@
-// AccountData.tsx
-import { clerkClient } from "@clerk/nextjs/server";
+import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { checkRole } from "@/lib/role";
-import { AccountDataParams, User } from "../_components/_utils/types";
-import AccountDataTable from "../_components/account-data";
+import { columns } from "../_components/columns";
+import { DataTable } from "../_components/data-table";
 
-const AccountData = async ({ searchParams }: AccountDataParams) => {
-  // Uncomment the following lines if you want to check the role and redirect if not admin
-  // if (!checkRole("admin")) {
-  //   redirect("/");
-  // }
+const Courses = async () => {
+	const { userId } = auth();
 
-  const query = searchParams?.search || "";
+	if (!userId) {
+		return redirect("/")
+	}
 
-  try {
-    const getUsers = await clerkClient.users.getUserList({ query });
-    const users: User[] = JSON.parse(JSON.stringify(getUsers.data));
+	const getUsers = await clerkClient.users.getUserList();
+	const users: User[] = JSON.parse(JSON.stringify(getUsers.data));
 
-    if (!Array.isArray(users)) {
-      console.error("Fetched users is not an array:", users);
-      throw new Error("Fetched users is not an array");
-    }
+	return (
+		<>
+			{users ? (
+				<div className="items-center m-4 mt-16">
+					<h1 className="text-lg font-semibold md:text-2xl">Users</h1>
+					<DataTable columns={columns} data={users} />
+				</div>
+			) : (
+				<div
+					className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm m-4 p-10 mt-16" x-chunk="dashboard-02-chunk-1"
+				>
+					<div className="flex flex-col items-center gap-1 text-center">
+						<h3 className="text-2xl font-bold tracking-tight">
+							Bruh no users? Impossible
+						</h3>
+					</div>
+				</div>
+			)}
+		</>
+	)
+}
 
-    return (
-      <div className="container mx-auto mt-10 p-4">
-        <AccountDataTable users={users} />
-      </div>
-    );
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return <div>Error fetching users</div>;
-  }
-};
+export default Courses;
 
-export default AccountData;
