@@ -20,7 +20,7 @@ const SideBarItem = ({
     const Icon = icon;
 
     const isActive =
-        (pathname === "/dashboard" && href === "/dashboard") ||
+        (pathname === "/" && href === "/") ||
         pathname === href ||
         pathname?.startsWith(`${href}/`);
 

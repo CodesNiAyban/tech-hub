@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import {
-    Link,
     Loader2,
     Menu
 } from "lucide-react"
@@ -12,6 +11,7 @@ import { MobileSubscriptionCard } from "../(sidebar)/mobile-subscription-card"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
 import { TeacherStudentButton } from "./teacher-student-button"
+import Link from "next/link"
 
 export const DashboardNavBar = () => {
     return (
@@ -41,11 +41,9 @@ export const DashboardNavBar = () => {
                 </div>
                 <TeacherStudentButton />
                 <ModeToggle />
-            </div>
-            <ClerkLoading>
-                <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
-            </ClerkLoading>
-            <ClerkLoaded>
+                <ClerkLoading>
+                    <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
+                </ClerkLoading>
                 <SignedOut>
                     <Button size="sm" variant="outline" asChild>
                         <Link href="/sign-in">
@@ -53,12 +51,14 @@ export const DashboardNavBar = () => {
                         </Link>
                     </Button>
                 </SignedOut>
-                <SignedIn>
-                    <UserButton
-                    // afterSignOutUrl="/"
-                    />
-                </SignedIn>
-            </ClerkLoaded>
+                <ClerkLoaded>
+                    <SignedIn>
+                        <UserButton
+                        // afterSignOutUrl="/"
+                        />
+                    </SignedIn>
+                </ClerkLoaded>
+            </div>
         </header>
     );
 }

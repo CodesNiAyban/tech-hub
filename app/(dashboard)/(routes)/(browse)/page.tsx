@@ -1,9 +1,8 @@
-import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { Categories } from "./_components/categories";
 import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
+import db from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { Categories } from "./_components/categories";
 
 interface BrowseProps {
     searchParams: {
@@ -17,9 +16,9 @@ const Browse = async ({
 }: BrowseProps) => {
     const { userId } = auth();
 
-    if (!userId) {
-        return redirect("/")
-    }
+    // if (!userId) {
+    //     return redirect("/sign-in")
+    // }
     const categories = await db.category.findMany({
         orderBy: {
             name: "asc"
@@ -27,7 +26,7 @@ const Browse = async ({
     });
 
     const courses = await getCourses({
-        userId,
+        userId: userId || "",
         ...searchParams,
     })
 

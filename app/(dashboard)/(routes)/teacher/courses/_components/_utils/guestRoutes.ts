@@ -1,4 +1,4 @@
-import { BookOpen, Compass, Home } from "lucide-react";
+import { BarChartBig, BookOpen, Compass, Home, Users } from "lucide-react";
 
 export const guestRoutes = [
     {
@@ -14,6 +14,16 @@ export const guestRoutes = [
     {
         icon: Compass,
         label: "Browse",
-        href: "/browse",
-    }
+        href: "/",
+    },
+    {
+        icon: BarChartBig,
+        label: "Analytics",
+        href: "/teacher/analytics",
+    },
+    {
+        icon: Users,
+        label: "Users",
+        href: "/admin/users",
+    },
 ] // TODO: Add Customers, Analytics and stuffs

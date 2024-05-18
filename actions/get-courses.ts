@@ -1,7 +1,7 @@
 import { Category, Course } from "@prisma/client";
 
 import { getProgress } from "@/actions/get-progress";
-import { Categories } from "@/app/(dashboard)/(routes)/browse/_components/categories";
+import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
 
 type CourseWithProgressWithCategory = Course & {
@@ -11,7 +11,7 @@ type CourseWithProgressWithCategory = Course & {
 };
 
 type GetCourses = {
-    userId: string;
+    userId?: string;
     title?: string;
     categoryId?: string; // Maybe this will be a culprit in array category search
 };
@@ -38,7 +38,7 @@ export const getCourses = async ({
                 categories: {
                     select: {
                         id: true,
-                        name: true 
+                        name: true
                     }
                 },
                 chapters: {
@@ -52,6 +52,9 @@ export const getCourses = async ({
                 purchases: {
                     where: {
                         userId,
+                    },
+                    select: {
+                        id: true, // Include only the fields that actually exist
                     }
                 }
             },
@@ -60,26 +63,32 @@ export const getCourses = async ({
             }
         });
 
+        if (userId) {
+            const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
+                courses.map(async course => {
+                    if (course.purchases.length === 0) {
+                        return {
+                            ...course,
+                            progress: null,
+                        }
+                    }
 
-        const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
-            courses.map(async course => {
-                if (course.purchases.length === 0) {
+                    const progressPercentage = await getProgress(userId, course.id);
+
                     return {
                         ...course,
-                        progress: null,
-                    }
-                }
+                        progress: progressPercentage,
+                    };
+                })
+            );
 
-                const progressPercentage = await getProgress(userId, course.id);
-
-                return {
-                    ...course,
-                    progress: progressPercentage,
-                };
-            })
-        );
-
-        return coursesWithProgress;
+            return coursesWithProgress;
+        } else {
+            return courses.map(course => ({
+                ...course,
+                progress: null,
+            }));
+        }
     } catch (error) {
         console.log("[GET_COURSES]: ", error);
         return [];

@@ -12,6 +12,7 @@ body,
 
 @layer base {
   :root {
+    --gradient: linear-gradient(to top left,#091E3A,#2F80ED,#2D9EE0);
     --background: 0 0% 98.04%;
     --foreground: 33 70% 3%;
     --muted: 33 0% 93.08%;
