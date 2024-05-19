@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,7 +39,9 @@ export default function RootLayout({
     >
       <html lang="en">
         <body className={inter.className}>
-          {children}
+          <main className="flex h-screen w-full items-center justify-center">
+            {children}
+          </main>
         </body>
       </html>
     </ClerkProvider>
