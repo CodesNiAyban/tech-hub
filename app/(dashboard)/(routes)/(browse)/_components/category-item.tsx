@@ -1,21 +1,21 @@
-" use client"
+"use client";
 
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
-import { IconType } from "react-icons"
+import Image from "next/image";
+import { Category } from "@prisma/client";
+
 interface CategoryItemProps {
     label: string;
     value?: string;
-    icon?: IconType;
+    iconSrc?: string;
 }
 
-
-// TODO: Change color
 export const CategoryItem = ({
     label,
     value,
-    icon: Icon,
+    iconSrc,
 }: CategoryItemProps) => {
     const pathname = usePathname();
     const router = useRouter();
@@ -44,11 +44,12 @@ export const CategoryItem = ({
             className={cn(
                 "py-2 px-3 text-sm border rounded-full flex items-center gap-x-1 hover:border-primary hover:bg-primary/20 transition",
                 isSelected && "border-primary bg-primary text-primary-800"
-            )}>
-            {Icon && <Icon size={15} />}
+            )}
+        >
+            {iconSrc && <Image src={iconSrc} alt={label} width={20} height={20} />}
             <div className="truncate ml-2">
                 {label}
             </div>
         </button>
-    )
-}
+    );
+};

@@ -1,23 +1,24 @@
-"use client"
+"use client";
 
 import { Category } from "@prisma/client";
-import { FaJava, FaPython, FaReact } from 'react-icons/fa';
-import { IconType } from "react-icons";
-import { SiC, SiJavascript, SiRust, SiSvelte } from 'react-icons/si';
 import { CategoryItem } from "./category-item";
 
-const iconMap: Record<Category["name"], IconType> = {
-    "NextJS": FaReact,
-    "Svelete": SiSvelte,
-    "JavaScript": SiJavascript,
-    "Rust": SiRust,
-    "Python": FaPython,
-    "C++": SiC,
-    "Java": FaJava,
-}
+// Map category names to SVG file paths
+const iconMap: Record<string, string> = {
+    "React": "react.svg",
+    "Angular": "angular.svg",
+    "Vue": "vue.svg",
+    "Svelte": "svelte.svg",
+    "Next.js": "/next.jpeg",
+    "Nuxt.js": "nuxt.svg",
+    "Gatsby": "gatsby.svg",
+    "Ember.js": "ember.svg",
+    "Backbone.js": "backbone.svg",
+    "Meteor": "meteor.svg",
+};
 
 interface CategoriesProps {
-    items: Category[]
+    items: Category[];
 }
 
 export const Categories = ({
@@ -29,11 +30,10 @@ export const Categories = ({
                 <CategoryItem
                     key={item.id}
                     label={item.name}
-                    icon={iconMap[item.name]}
+                    iconSrc={iconMap[item.name]}
                     value={item.id}
                 />
             ))}
-
         </div>
     );
-}
+};
