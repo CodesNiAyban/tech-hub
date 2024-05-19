@@ -1,15 +1,12 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { formatPrice } from "@/lib/format"
-import { cn } from "@/lib/utils"
 import { User } from "@clerk/nextjs/server"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Info, MoreHorizontal, Pencil } from "lucide-react"
-import Link from "next/link"
+import { ArrowUpDown, Info, MoreHorizontal } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -131,9 +128,9 @@ export const columns: ColumnDef<User>[] = [
                         </DropdownMenuTrigger>
                     </Button>
                     <DropdownMenuContent align="end">
-                        <Link href={`/teacher/courses/${id}`}>
+                        <Link href={`/admin/users/info/${id}`}>
                             <DropdownMenuItem>
-                                <Info className="h-4 w-4 mr-2" />
+                                <Info className="h-4 w-4 mr-2" /> {/* Add info page */}
                                 Info
                             </DropdownMenuItem>
                         </Link>

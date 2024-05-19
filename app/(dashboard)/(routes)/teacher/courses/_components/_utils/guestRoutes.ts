@@ -7,23 +7,8 @@ export const guestRoutes = [
         href: "/home",
     },
     {
-        icon: BookOpen,
-        label: "Courses",
-        href: "/teacher/courses",
-    },
-    {
         icon: Compass,
         label: "Browse",
         href: "/",
-    },
-    {
-        icon: BarChartBig,
-        label: "Analytics",
-        href: "/teacher/analytics",
-    },
-    {
-        icon: Users,
-        label: "Users",
-        href: "/admin/users",
     },
 ] // TODO: Add Customers, Analytics and stuffs

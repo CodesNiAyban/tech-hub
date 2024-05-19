@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { isAdmin } from "@/lib/admin";
 import { useAuth } from "@clerk/nextjs";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
@@ -14,18 +13,18 @@ export const TeacherStudentButton = () => {
 
     const isTeacherPage = pathname?.startsWith("/teacher");
     const isPlayerPage = pathname?.includes("/chapter");
-
+    const isAdmin = pathname?.includes("/admin");
 
     return (
         <div className="flex gap-x-2 ml-auto">
-            {isTeacherPage || isPlayerPage ? (
+            {isTeacherPage || isPlayerPage || isAdmin ? (
                 <Button size="sm" asChild>
                     <Link href="/home">
                         <LogOut className="h-4 w-4 mr-2" />
                         Exit
                     </Link>
                 </Button>
-            ) : isAdmin(userId || "") ? (
+            ) : userId ? (
                 <Button size="sm" asChild>
                     <Link href="/teacher/courses">
                         Teacher Mode
