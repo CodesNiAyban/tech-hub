@@ -90,13 +90,12 @@ export async function POST(
       },
     });
 
-    await db.purchase.create({
-      data: {
-        userId: user.id,
-        courseId: course.id,
-      },
-    });
- 
+    // await db.purchase.create({
+    //   data: {
+    //     userId: user.id,
+    //     courseId: course.id,
+    //   },
+    // });
 
     return NextResponse.json({ url: session.url });
   } catch (error) {

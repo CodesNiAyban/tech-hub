@@ -17,7 +17,7 @@ export async function POST(req: Request) {
             process.env.STRIPE_WEBHOOK_SECRET!
         );
     } catch (error: any) {
-        return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+        return new NextResponse(`⚠️ Webhook Error: ${error.message}`, { status: 400 });
     }
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session?.metadata?.userId;
@@ -43,3 +43,5 @@ export async function POST(req: Request) {
     }
     return new NextResponse(null, { status: 200 });
 }
+
+
