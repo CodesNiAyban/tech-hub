@@ -29,6 +29,9 @@ export const CoursesList = ({
                             price={item.price!}
                             progress={item.progress!}
                             categories={item.categories!}
+                            userId={item.userId}
+                            description={item.description}
+                            createdAt={item.createdAt}
                         />
                     ))}
                 </div>
