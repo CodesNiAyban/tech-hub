@@ -62,7 +62,6 @@ export async function POST(req: Request) {
                         status: 400,
                     });
                 }
-                const subscription = event.data.object;
 
                 if (type === "basic") {
                     await db.stripeCustomer.update({
@@ -72,7 +71,6 @@ export async function POST(req: Request) {
                         data: {
                             status: "ACTIVE",
                             subscription: "BASIC",
-                            stripeCustomerId: subscription.customer as string,
                         },
                     })
                 } else if (type === "pro") {
@@ -82,11 +80,21 @@ export async function POST(req: Request) {
                         },
                         data: {
                             status: "ACTIVE",
-                            subscription: "BASIC",
-                            stripeCustomerId: subscription.customer as string,
+                            subscription: "PRO",
                         },
                     })
                 }
+                break;
+            case "customer.subscription.deleted":
+                await db.stripeCustomer.update({
+                    where: {
+                        userId: userId,
+                    },
+                    data: {
+                        status: "INACTIVE",
+                        subscription: null,
+                    },
+                })
                 break;
             default:
                 return new NextResponse(
