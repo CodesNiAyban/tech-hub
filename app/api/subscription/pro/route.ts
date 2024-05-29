@@ -54,6 +54,7 @@ export async function POST() {
             subscription_data: {
                 metadata: {
                     userId: user.id,
+                    type: "pro",
                 },
             }
         });

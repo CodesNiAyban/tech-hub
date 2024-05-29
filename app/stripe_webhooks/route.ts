@@ -27,20 +27,24 @@ export async function POST(req: Request) {
     try {
         switch (event.type) {
             case "checkout.session.completed":
-                if (!userId || !courseId || !type) {
+                if (!type || !userId) {
                     return new NextResponse(`Webhook Error: Missing Metadata`, {
                         status: 400,
                     });
                 }
                 if (type === "course") {
+                    if (!courseId) {
+                        return new NextResponse(`Webhook Error: Missing Metadata`, {
+                            status: 400,
+                        });
+                    }
                     await db.purchase.create({
                         data: {
                             courseId: courseId,
                             userId: userId,
                         },
                     });
-                }
-                if (type === "lifetime") {
+                } else if (type === "lifetime") {
                     await db.stripeCustomer.update({
                         where: {
                             userId: userId,
@@ -53,7 +57,7 @@ export async function POST(req: Request) {
                 }
                 break;
             case "customer.subscription.created":
-                if (!userId || !courseId || !type) {
+                if (!userId || !type) {
                     return new NextResponse(`Webhook Error: Missing Metadata`, {
                         status: 400,
                     });

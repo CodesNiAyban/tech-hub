@@ -53,6 +53,7 @@ export async function POST() {
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
             metadata: {
                 userId: user.id,
+                type: "lifetime",
             },
         });
 

@@ -1,7 +1,6 @@
 import Stripe from "stripe";
 
 import { NextResponse } from "next/server";
-
 import { stripe } from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
 import db from "@/lib/db";
@@ -91,15 +90,9 @@ export async function POST(
       metadata: {
         courseId: course.id,
         userId: user.id,
+        type: "course"
       },
     });
-
-    // await db.purchase.create({
-    //   data: {
-    //     userId: user.id,
-    //     courseId: course.id,
-    //   },
-    // });
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
