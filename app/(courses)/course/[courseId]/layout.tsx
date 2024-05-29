@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/db";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
 import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/theme-provider";
 
 
 const CourseLayout = async ({

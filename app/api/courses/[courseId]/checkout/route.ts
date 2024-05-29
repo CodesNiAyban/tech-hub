@@ -77,8 +77,12 @@ export async function POST(
       });
     }
 
+    if (stripeCustomer.stripeCustomerId === null) {
+      return new NextResponse("No stripe ID", { status: 400 });
+    }
+
     const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomer.stripeCustomerId,
+      customer: stripeCustomer.stripeCustomerId ,
       line_items,
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}?success=1`,

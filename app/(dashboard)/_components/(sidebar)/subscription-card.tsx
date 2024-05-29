@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export const SubscriptionCard = () => {
     return (
@@ -12,8 +13,10 @@ export const SubscriptionCard = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full">
-                    Upgrade
+                <Button size="sm" className="w-full" asChild>
+                    <Link href="/pricing">
+                        Upgrade
+                    </Link>
                 </Button>
             </CardContent>
         </Card>

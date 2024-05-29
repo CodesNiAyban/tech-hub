@@ -140,4 +140,5 @@ enum SubscriptionType {
   null
   BASIC
   PRO
+  LIFETIME
 }
