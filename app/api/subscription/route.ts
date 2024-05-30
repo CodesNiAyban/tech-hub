@@ -1,10 +1,9 @@
-import Stripe from "stripe";
 
 import { NextResponse } from "next/server";
 
+import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
-import db from "@/lib/db";
 
 export async function POST() {
     try {
@@ -49,7 +48,7 @@ export async function POST() {
                 }
             ],
             mode: "subscription",
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}?success=true`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
             subscription_data: {
                 metadata: {

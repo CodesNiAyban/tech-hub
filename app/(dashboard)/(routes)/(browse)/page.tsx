@@ -3,6 +3,7 @@ import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "./_components/categories";
+import { SubscriptionSuccess } from "./_components/subscription-success";
 
 interface BrowseProps {
     searchParams: {
@@ -16,9 +17,6 @@ const Browse = async ({
 }: BrowseProps) => {
     const { userId } = auth();
 
-    // if (!userId) {
-    //     return redirect("/sign-in")
-    // }
     const categories = await db.category.findMany({
         orderBy: {
             name: "asc"
@@ -30,9 +28,17 @@ const Browse = async ({
         ...searchParams,
     })
 
+    const user = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId || "",
+        },
+    });
+
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
+
+                {user?.subscription !== null && <SubscriptionSuccess user={user} />}
                 <Categories
                     items={categories}
                 />

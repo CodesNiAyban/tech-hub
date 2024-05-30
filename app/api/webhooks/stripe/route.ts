@@ -1,8 +1,8 @@
-import Stripe from "stripe";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
 import db from "@/lib/db";
+import { stripe } from "@/lib/stripe";
+import { cookies, headers } from "next/headers";
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -19,70 +19,96 @@ export async function POST(req: Request) {
     } catch (error: any) {
         return new NextResponse(`⚠️ Webhook Error: ${error.message}`, { status: 400 });
     }
-    const session = event.data.object as Stripe.Checkout.Session;
-    const userId = session?.metadata?.userId;
-    const courseId = session?.metadata?.courseId;
-    const type = session?.metadata?.type;
 
     try {
+        let subscription;
+
         switch (event.type) {
             case "checkout.session.completed":
-                if (!userId || !courseId || !type) {
-                    return new NextResponse(`Webhook Error: Missing Metadata`, {
-                        status: 400,
-                    });
-                }
-                if (type === "course") {
-                    await db.purchase.create({
-                        data: {
-                            courseId: courseId,
-                            userId: userId,
-                        },
-                    });
-                }
-                if (type === "lifetime") {
-                    await db.stripeCustomer.update({
-                        where: {
-                            userId: userId,
-                        },
-                        data: {
-                            status: "ACTIVE",
-                            subscription: "LIFETIME"
-                        }
-                    })
+                const session = event.data.object as Stripe.Checkout.Session;
+                if (session.mode === "payment") {
+                    if (session.metadata && session.metadata.type === "course") {
+                        await db.purchase.create({
+                            data: {
+                                courseId: session.metadata.courseId,
+                                userId: session.metadata.userId,
+                            },
+                        });
+                    } else if (session.metadata && session.metadata.type === "lifetime") {
+                        await db.stripeCustomer.update({
+                            where: {
+                                userId: session.metadata.userId,
+                            },
+                            data: {
+                                status: "ACTIVE",
+                                subscription: "LIFETIME"
+                            }
+                        });
+                    }
                 }
                 break;
             case "customer.subscription.created":
-                if (!userId || !courseId || !type) {
-                    return new NextResponse(`Webhook Error: Missing Metadata`, {
-                        status: 400,
+                subscription = event.data.object as Stripe.Subscription;
+
+                if (subscription.metadata.type === "basic") {
+                    await db.stripeCustomer.update({
+                        where: {
+                            userId: subscription.metadata.userId,
+                        },
+                        data: {
+                            status: "ACTIVE",
+                            subscription: "BASIC",
+                        },
+                    });
+                } else if (subscription.metadata.type === "pro") {
+                    await db.stripeCustomer.update({
+                        where: {
+                            userId: subscription.metadata.userId,
+                        },
+                        data: {
+                            status: "ACTIVE",
+                            subscription: "PRO",
+                        },
                     });
                 }
-                const subscription = event.data.object;
+                break;
+            case "customer.subscription.updated":
+                subscription = event.data.object as Stripe.Subscription;
 
-                if (type === "basic") {
+                if (subscription.metadata.type === "basic") {
                     await db.stripeCustomer.update({
                         where: {
-                            userId: userId,
+                            userId: subscription.metadata.userId,
                         },
                         data: {
                             status: "ACTIVE",
                             subscription: "BASIC",
-                            stripeCustomerId: subscription.customer as string,
                         },
-                    })
-                } else if (type === "pro") {
+                    });
+                } else if (subscription.metadata.type === "pro") {
                     await db.stripeCustomer.update({
                         where: {
-                            userId: userId,
+                            userId: subscription.metadata.userId,
                         },
                         data: {
                             status: "ACTIVE",
-                            subscription: "BASIC",
-                            stripeCustomerId: subscription.customer as string,
+                            subscription: "PRO",
                         },
-                    })
+                    });
                 }
+                break;
+            case "customer.subscription.deleted":
+                subscription = event.data.object as Stripe.Subscription;
+
+                await db.stripeCustomer.update({
+                    where: {
+                        userId: subscription.metadata.userId,
+                    },
+                    data: {
+                        status: "INACTIVE",
+                        subscription: null,
+                    },
+                });
                 break;
             default:
                 return new NextResponse(
@@ -90,12 +116,10 @@ export async function POST(req: Request) {
                     { status: 200 }
                 );
         }
+        cookies().set("AYBANNNNN", "true");
         return new NextResponse("Success", { status: 200 });
     } catch (error: any) {
-        console.log(error)
+        console.log(error);
         return new NextResponse("Failed", { status: 500 });
-
     }
 }
-
-

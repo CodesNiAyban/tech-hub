@@ -5,13 +5,29 @@ import {
 } from "lucide-react"
 import { SidebarRoutes } from "./sidebar-routes"
 import { SubscriptionCard } from "./subscription-card"
-export const SideBar = () => {
+import db from "@/lib/db"
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
+export const SideBar = async () => {
+  const { userId } = auth();
+
+  let userSubscription;
+  if (userId) {
+    userSubscription = await db.stripeCustomer.findUnique({
+      where: {
+        userId: userId,
+      }
+    });
+  }
+
   return (
     <div className="hidden border-r bg-muted/40 md:block backdrop-blur-sm duration-1000 animate-in slide-in-from-left-12">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Logo />
-          <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+          {userSubscription?.subscription?.toString() !== "null" && <Badge variant="outline">{userSubscription?.subscription}</Badge>}
+          <Button variant="outline" size="icon" className="h-8 w-8 ml-auto">
             <Bell className="h-4 w-4" />
             <span className="sr-only">Toggle notifications</span>
           </Button>
@@ -19,9 +35,11 @@ export const SideBar = () => {
         <div className="flex-1">
           <SidebarRoutes />
         </div>
-        <div className="mt-auto p-4">
-          <SubscriptionCard />
-        </div>
+        {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription?.toString() === null) &&
+          <div className="mt-auto p-4">
+            <SubscriptionCard />
+          </div>
+        }
       </div>
     </div>
   )
