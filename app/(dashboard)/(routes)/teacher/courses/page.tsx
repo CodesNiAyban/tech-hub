@@ -5,6 +5,7 @@ import { columns } from "./_components/columns";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import { CreateCourseDialog } from "../_components/create-course";
 
 const Courses = async () => {
     const { userId } = auth();
@@ -40,11 +41,7 @@ const Courses = async () => {
                         <p className="text-sm text-muted-foreground">
                             You can start selling as soon as you add a course.
                         </p>
-                        <Button size="sm" className="mt-4" asChild>
-                            <Link href="/teacher/create">
-                                Add Course
-                            </Link>
-                        </Button>
+                        <CreateCourseDialog />
                     </div>
                 </div>
             )}

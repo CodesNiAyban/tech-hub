@@ -55,13 +55,13 @@ model Attachment {
 }
 
 model Chapter {
-  id          String  @id @default(uuid())
-  title       String
-  description String? @db.Text
-  videoUrl    String? @db.Text
-  position    Int
-  isPublished Boolean @default(false)
-  isFree      Boolean @default(false)
+  id           String            @id @default(uuid())
+  title        String
+  description  String?           @db.Text
+  videoUrl     String?           @db.Text
+  position     Int
+  isPublished  Boolean           @default(false)
+  subscription SubscriptionType? @default(null)
 
   muxData MuxData?
 
@@ -123,8 +123,8 @@ model StripeCustomer {
   userId           String  @unique
   stripeCustomerId String? @unique
 
-  status       subscriptionStatus?
-  subscription SubscriptionType?  @default(null)
+  status       subscriptionStatus @default(INACTIVE)
+  subscription SubscriptionType?   @default(null)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

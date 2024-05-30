@@ -33,6 +33,29 @@ export const CourseSidebar = async ({
         }
     });
 
+    const user = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId || "",
+        },
+    });
+
+    const chapter = await db.chapter.findUnique({
+        where: {
+            id: course.id,
+        }
+    })
+
+    const isLocked = (() => {
+        if (purchase) return false;
+        if (user) {
+            if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
+            if (chapter?.subscription === "BASIC" && user.subscription === "BASIC") return false;
+        }
+        if (chapter?.subscription === null) return false;
+        return true;
+    })();
+
+
     return (
         <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
             <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -52,7 +75,7 @@ export const CourseSidebar = async ({
                         label={chapter.title}
                         isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
                         courseId={course.id}
-                        isLocked={!chapter.isFree && !purchase}
+                        isLocked={isLocked}
                     />
                 ))}
             </div>

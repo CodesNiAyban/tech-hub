@@ -60,7 +60,7 @@ export const chapterSchema = z.object({
 });
 
 export const accessSchema = z.object({
-  isFree: z.boolean().default(false),
+  subscription: z.string().min(1),
 });
 
 export const videoSchema = z.object({

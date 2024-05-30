@@ -84,8 +84,8 @@ export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
                 </CardHeader>
                 <CardContent>
                     <p className="text-lg mb-4 flex items-center justify-center">
-                        <CheckCircle2 size={24} className="mr-2 flex"/>Your subscription has been activated.
-                        </p>
+                        <CheckCircle2 size={24} className="mr-2 flex text-green-600" />Your subscription has been activated.
+                    </p>
                     {subscriptionDetails}
                 </CardContent>
                 <Button onClick={handleConfirm} className="mt-1">Let&apos;s Go</Button>

@@ -45,7 +45,7 @@ export const DashboardNavBar = async () => {
                 <SheetContent side="left" className="flex flex-col">
                     <LogoPhone />
                     <NavBarRoutes />
-                    {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription?.toString() === null) &&
+                    {(userSubscription?.subscription?.toString() === "BASIC" || !userSubscription?.subscription) &&
                         <div className="mt-auto">
                             <MobileSubscriptionCard />
                         </div>

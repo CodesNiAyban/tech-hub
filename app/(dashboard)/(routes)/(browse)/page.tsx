@@ -38,7 +38,7 @@ const Browse = async ({
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
 
-                {user?.subscription !== null && <SubscriptionSuccess user={user} />}
+                {user?.subscription && <SubscriptionSuccess user={user} />}
                 <Categories
                     items={categories}
                 />

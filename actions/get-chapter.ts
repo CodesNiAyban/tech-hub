@@ -55,7 +55,7 @@ export const getChapter = async ({
             });
         }
 
-        if (chapter.isFree || purchase) {
+        if (chapter.subscription || purchase) {
             muxData = await db.muxData.findUnique({
                 where: {
                     chapterId: chapterId,

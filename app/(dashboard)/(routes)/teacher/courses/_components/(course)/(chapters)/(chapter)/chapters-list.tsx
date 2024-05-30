@@ -96,7 +96,7 @@ export const ChaptersList = ({
                                             </div>
                                             {chapter.title}
                                             <div className="ml-auto pr-2 flex items-center gap-x-2">
-                                                {chapter.isFree && (
+                                                {chapter.subscription === null && (
                                                     <Badge variant="default">
                                                         Free
                                                     </Badge>

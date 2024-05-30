@@ -8,15 +8,15 @@ import { useRouter } from "next/navigation";
 import { Loader2, Lock } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useConfettiStore  } from "@/hooks/use-confetti-store";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 
 interface VideoPlayerProps {
     playbackId: string;
     courseId: string;
     chapterId: string;
     nextChapterId?: string;
-    isLocked: boolean;
-    completeOnEnd: boolean;
+    isLocked: boolean | null;
+    completeOnEnd: boolean | undefined;
     title: string;
 }
 

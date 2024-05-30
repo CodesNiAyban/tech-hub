@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { Banner } from "@/components/banner";
 import { auth } from "@clerk/nextjs/server";
+import db from "@/lib/db";
 
 const ChapterIdPage = async ({
     params,
@@ -42,8 +43,24 @@ const ChapterIdPage = async ({
         return redirect("/");
     }
 
-    const isLocked = !chapter.isFree && !purchase;
-    const completeOnEnd = !!purchase && !userProgress?.isCompleted;
+    const user = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId || "",
+        },
+    });
+
+    const isLocked = (() => {
+        if (purchase) return false;
+        if (user) {
+            if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
+            if (chapter.subscription === "BASIC" && user.subscription === "BASIC") return false;
+        }
+        if (chapter.subscription === null) return false;
+        return true;
+    })();
+
+    const completeOnEnd = !!isLocked && userProgress?.isCompleted;
+
 
     return (
         <div>
@@ -71,17 +88,17 @@ const ChapterIdPage = async ({
                 <div>
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
-                        {purchase ? (
+                        {isLocked ? (
+                            <CourseEnrollButton
+                                courseId={params.courseId}
+                                price={course.price!}
+                            />
+                        ) : (
                             <CourseProgressButton
                                 chapterId={params.chapterId}
                                 courseId={params.courseId}
                                 nextChapterId={nextChapter?.id}
                                 isCompleted={!!userProgress?.isCompleted}
-                            />
-                        ) : (
-                            <CourseEnrollButton
-                                courseId={params.courseId}
-                                price={course.price!}
                             />
                         )}
                     </div>
