@@ -37,7 +37,7 @@ export const CoursesList = ({
                 </div>
             ) : (
                 <div
-                    className="flex flex-1 flex-col items-center justify-center rounded-lg border border-dashed shadow-sm mb-20" // Added margin-bottom to move the box higher
+                    className="flex flex-1 flex-col items-center justify-center rounded-lg h-screen w-full border border-dashed shadow-sm p-80" // Changed h-full to h-screen
                     x-chunk="dashboard-02-chunk-1"
                 >
                     <div className="flex flex-col items-center gap-1 text-center">

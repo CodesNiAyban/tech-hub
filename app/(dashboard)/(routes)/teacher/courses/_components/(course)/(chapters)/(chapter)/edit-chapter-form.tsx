@@ -37,27 +37,10 @@ export const EditChapterForm = ({
         },
     });
 
-    const editChapter = async (values: z.infer<typeof chapterSchema>) => {
-        setIsSubmitting(true); // Set submission status to true
-        try {
-            const response = await axios.post(`/api/courses/${courseId}/chapters`, values);
-            router.refresh();
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        } finally {
-            setIsSubmitting(false); // Reset submission status to false
-            toggleModal()
-        }
-    };
-
     const onSubmit = async (values: z.infer<typeof chapterSchema>) => {
         try {
-            const response = editChapter(values);
+            const response = axios.post(`/api/courses/${courseId}/chapters`, values);
+            router.refresh();
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",

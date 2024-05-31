@@ -11,9 +11,4 @@ export const teacherRoutes = [
         label: "Analytics",
         href: "/teacher/analytics",
     },
-    {
-        icon: Users,
-        label: "Users",
-        href: "/admin/users",
-    },
 ] // TODO: Add Customers, Analytics and stuffs

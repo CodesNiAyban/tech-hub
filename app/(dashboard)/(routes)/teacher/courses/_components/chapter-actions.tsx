@@ -24,53 +24,25 @@ export const ChapterActions = ({
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-
-    const publishChapter = async () => {
-        try {
-            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
-            router.refresh();
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        }
-    }
-
-    const unpublishChapter = async () => {
-        try {
-            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
-            router.refresh();
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        }
-    }
-
     const onClick = async () => {
         try {
             setIsLoading(true);
             if (isPublished) {
-                const response = unpublishChapter()
+                const response = axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
                     success: "Chapter unpublished"
                 });
             } else {
-                const response = publishChapter()
+                const response = axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
                     success: "Chapter published"
                 });
             }
+            router.refresh();
         } catch (error) {
             console.log(error)
         } finally {
@@ -78,25 +50,12 @@ export const ChapterActions = ({
         }
     }
 
-    const deleteChapter = async () => {
-        try {
-            const response = await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
-            router.refresh();
-            router.push(`/teacher/courses/${courseId}`)
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        }
-    }
-
     const onDelete = async () => {
         try {
             setIsLoading(true);
-            const response = deleteChapter();
+            const response = axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
+            router.refresh();
+            router.push(`/teacher/courses/${courseId}`)
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",

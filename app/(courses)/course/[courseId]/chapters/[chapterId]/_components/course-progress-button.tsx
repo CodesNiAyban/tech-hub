@@ -30,7 +30,7 @@ export const CourseProgressButton = ({
     try {
       setIsLoading(true);
 
-      await axios.put(
+      const response = axios.put(
         `/api/courses/${courseId}/chapters/${chapterId}/progress`,
         {
           isCompleted: !isCompleted,
@@ -42,10 +42,17 @@ export const CourseProgressButton = ({
       }
 
       if (!isCompleted && nextChapterId) {
-        router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+        router.push(`/course/${courseId}/chapters/${nextChapterId}`);
       }
-
-      toast.success("Progress updated");
+      
+      toast.promise(
+        response,
+        {
+          loading: 'Finishing Chapter...',
+          success: <b>Progress updated</b>,
+          error: <b>Could not complete. Please try again.</b>,
+        }
+      );
       router.refresh();
     } catch {
       toast.error("Something went wrong");

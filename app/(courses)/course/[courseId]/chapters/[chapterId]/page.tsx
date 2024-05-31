@@ -13,6 +13,9 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 import { Banner } from "@/components/banner";
 import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/db";
+import { CourseProgress } from "@/components/course-progress";
+import { getProgress } from "@/actions/get-progress";
+import { CourseSubscribedEnrollButton } from "./_components/course-subscribed-enroll-button";
 
 const ChapterIdPage = async ({
     params,
@@ -59,8 +62,9 @@ const ChapterIdPage = async ({
         return true;
     })();
 
-    const completeOnEnd = !!isLocked && userProgress?.isCompleted;
+    const completeOnEnd = !isLocked && userProgress?.isCompleted;
 
+    const progressCount = await getProgress(userId, params.courseId);
 
     return (
         <div>
@@ -94,12 +98,18 @@ const ChapterIdPage = async ({
                                 price={course.price!}
                             />
                         ) : (
-                            <CourseProgressButton
-                                chapterId={params.chapterId}
-                                courseId={params.courseId}
-                                nextChapterId={nextChapter?.id}
-                                isCompleted={!!userProgress?.isCompleted}
-                            />
+                            <div className="flex items-center justify-center gap-x-2">
+                                <CourseSubscribedEnrollButton
+                                    courseId={params.courseId}
+                                    price={course.price!}
+                                />
+                                <CourseProgressButton
+                                    chapterId={params.chapterId}
+                                    courseId={params.courseId}
+                                    nextChapterId={nextChapter?.id}
+                                    isCompleted={!!userProgress?.isCompleted}
+                                />
+                            </div>
                         )}
                     </div>
                     <Separator />
@@ -122,6 +132,11 @@ const ChapterIdPage = async ({
                                 ))}
                             </div>
                         </>
+                    )}
+                    {!isLocked && (
+                        <div className="mt-10">
+                            <CourseProgress variant="success" value={progressCount} />
+                        </div>
                     )}
                 </div>
             </div>

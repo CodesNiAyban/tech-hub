@@ -36,7 +36,7 @@ export const VideoPlayer = ({
     const onEnd = async () => {
         try {
             if (completeOnEnd) {
-                await axios.put(
+                const response = axios.put(
                     `/api/courses/${courseId}/chapters/${chapterId}/progress`,
                     {
                         isCompleted: true,
@@ -47,11 +47,18 @@ export const VideoPlayer = ({
                     confetti.onOpen();
                 }
 
-                toast.success("Progress updated");
+                toast.promise(
+                    response,
+                    {
+                        loading: 'Finishing Chapter...',
+                        success: <b>Progress updated</b>,
+                        error: <b>Could not complete. Please try again.</b>,
+                    }
+                );
                 router.refresh();
 
                 if (nextChapterId) {
-                    router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+                    router.push(`/course/${courseId}/chapters/${nextChapterId}`);
                 }
             }
         } catch {

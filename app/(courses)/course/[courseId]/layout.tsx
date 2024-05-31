@@ -1,12 +1,12 @@
 
 import { redirect } from "next/navigation";
-
 import { getProgress } from "@/actions/get-progress";
 import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/db";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
 import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastProvider } from "@/components/providers/toaster-provider";
 
 
 const CourseLayout = async ({
@@ -63,6 +63,7 @@ const CourseLayout = async ({
                     <CourseNavbar course={course} progressCount={progressCount} />
                 </div>
                 <div className="hidden md:flex h-full w-80 flex-col fixed inset-y-0 z-50">
+                    <ToastProvider />
                     <CourseSidebar course={course} progressCount={progressCount} />
                 </div>
                 <main className="md:pl-80 pt-[80px] h-full">{children}</main>

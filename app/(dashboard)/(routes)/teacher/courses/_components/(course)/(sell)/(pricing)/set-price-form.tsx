@@ -37,27 +37,11 @@ export const EditPriceForm = ({
         },
     });
 
-    const editPrice = async (values: z.infer<typeof priceSchema>) => {
+    const onSubmit = async (values: z.infer<typeof priceSchema>) => {
         setIsSubmitting(true);
         try {
-            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            const response = axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
-            return response;
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
-        } finally {
-            setIsSubmitting(false);
-            toggleModal()
-        }
-    };
-
-    const onSubmit = async (values: z.infer<typeof priceSchema>) => {
-        try {
-            const response = editPrice(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
@@ -65,6 +49,9 @@ export const EditPriceForm = ({
             });
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsSubmitting(false);
+            toggleModal()
         }
     }
 

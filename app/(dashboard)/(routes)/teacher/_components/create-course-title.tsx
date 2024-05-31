@@ -26,15 +26,10 @@ export const CreateCourse = () => {
         }
     });
 
-    const createTitle = async (values: z.infer<typeof createSchema>) => {
-        const response = await axios.post("/api/courses", values);
-        router.push(`/teacher/courses/${response.data.id}`)
-        return response;
-    };
-
     const onSubmit = async (values: z.infer<typeof createSchema>) => {
         try {
-            const response = createTitle(values);
+            const response = axios.post("/api/courses", values);
+            router.push(`/teacher/courses/${(await response).data.id}`)
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
