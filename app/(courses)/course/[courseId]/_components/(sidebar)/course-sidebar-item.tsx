@@ -34,28 +34,29 @@ export const CourseSidebarItem = ({
             onClick={onClick}
             type="button"
             className={cn(
-                "flex items-center gap-x-2 text-sm font-[500] pl-6 transition-all hover:bg-primary/70 hover:text-slate-40",
-                isActive &&
-                " bg-primary/40 hover:bg-primary/70 hover:text-slate-40",
-                isCompleted && "text-emerald-700 hover:text-emerald-700",
-                isCompleted && isActive && "bg-emerald-200/20"
+                "flex items-center gap-x-2 text-sm font-medium pl-6 transition-all",
+                isActive
+                    ? "bg-ring dark:bg-ring/30 text-slate-900 dark:text-primary"
+                    : "text-slate-700 dark:text-primary hover:bg-primary/30 dark:hover:bg-primary/30",
+                isCompleted && "text-emerald-700 dark:text-emerald-500",
+                isCompleted && isActive && "bg-emerald-200/20 dark:bg-emerald-500/20"
             )}
         >
             <div className="flex items-center gap-x-2 py-4">
                 <Icon
                     size={22}
                     className={cn(
-                        isActive && "text-destructive",
-                        isCompleted && "text-emerald-700"
+                        isActive ? "text-secondary-foreground" : "",
+                        isCompleted ? "text-emerald-700 dark:text-emerald-500" : "text-current"
                     )}
                 />
                 {label}
             </div>
             <div
                 className={cn(
-                    "ml-auto opacity-0 border-2 bg-primary/40 h-full transition-all",
-                    isActive && "opacity-100",
-                    isCompleted && "border-emerald-700"
+                    "ml-auto opacity-0 border-2 bg-secondary h-full transition-all",
+                    isActive ? "opacity-100" : "",
+                    isCompleted ? "border-emerald-700 dark:border-emerald-500" : "border-yellow-500"
                 )}
             />
         </button>
