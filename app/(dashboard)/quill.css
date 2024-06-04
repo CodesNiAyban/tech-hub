@@ -1,12 +1,18 @@
-/*REACT QUILL*/
 .ql-container {
     font-size: 16px !important;
-}
-
-.ql-toolbar.ql-snow {
+  }
+  
+  body .ql-editor {
+    height: 200px !important; /* Fixed height */
+    width: 350px !important; /* Fixed width */
+    overflow: auto !important; /* Enable scrolling */
+  }
+  
+  .ql-toolbar.ql-snow {
     border: none !important;
-}
-
-.ql-container.ql-snow {
+  }
+  
+  .ql-container.ql-snow {
     border: none !important;
-}
+  }
+  

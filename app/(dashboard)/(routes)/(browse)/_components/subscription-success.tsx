@@ -1,34 +1,27 @@
 "use client";
+import { Logo } from "@/components/logo";
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle
+    AlertDialogContent
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { IconBadge } from "@/components/icon-badge";
-import { CourseChapter } from "../../teacher/courses/_components/(course)/(chapters)/(chapter)/course-chapter";
-import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { StripeCustomer } from "@prisma/client";
 import { CheckCircle2 } from "lucide-react";
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from "react";
 
 interface SubscriptionSuccessProps {
     user: StripeCustomer | null;
 }
+
 export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
     const [open, setOpen] = useState(false);
     const params = useSearchParams();
     const success = params.get('success');
 
     useEffect(() => {
+        console.log("Success param:", success);
         if (success) {
             setOpen(true);
         }
@@ -98,4 +91,3 @@ export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
         </AlertDialog>
     );
 };
-

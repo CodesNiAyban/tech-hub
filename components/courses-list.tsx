@@ -1,20 +1,19 @@
-import { Category, Course } from "@prisma/client";
 import React from "react";
 import { CourseCard } from "./course-card";
+import { Category, Course, SubscriptionType } from "@prisma/client";
 
 type CourseWithProgressWithCategory = Course & {
     categories: Category[] | null;
-    chapters: { id: string }[];
+    chapters: { id: string; subscription: SubscriptionType | null }[];
     progress?: number | null;
-}
+};
+
 
 interface CoursesListProps {
     items: CourseWithProgressWithCategory[];
 }
 
-export const CoursesList = ({
-    items,
-}: CoursesListProps) => {
+export const CoursesList = ({ items }: CoursesListProps) => {
     return (
         <div className="flex-1 flex flex-col p-3">
             {items.length > 0 ? (
@@ -26,6 +25,7 @@ export const CoursesList = ({
                             title={item.title}
                             imageUrl={item.imageUrl!}
                             chaptersLength={item.chapters.length}
+                            chapters={item.chapters}
                             price={item.price!}
                             progress={item.progress!}
                             categories={item.categories!}
@@ -37,13 +37,11 @@ export const CoursesList = ({
                 </div>
             ) : (
                 <div
-                    className="flex flex-1 flex-col items-center justify-center rounded-lg h-screen w-full border border-dashed shadow-sm p-80" // Changed h-full to h-screen
+                    className="flex flex-1 flex-col items-center justify-center rounded-lg h-screen w-full border border-dashed shadow-sm p-80"
                     x-chunk="dashboard-02-chunk-1"
                 >
                     <div className="flex flex-col items-center gap-1 text-center">
-                        <h3 className="text-2xl font-bold tracking-tight">
-                            No Courses Found
-                        </h3>
+                        <h3 className="text-2xl font-bold tracking-tight">No Courses Found</h3>
                         <p className="text-sm text-muted-foreground">
                             Please try to search another keyword or click a category.
                         </p>
@@ -51,5 +49,5 @@ export const CoursesList = ({
                 </div>
             )}
         </div>
-    )
-}
+    );
+};

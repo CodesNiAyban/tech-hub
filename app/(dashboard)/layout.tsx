@@ -7,6 +7,8 @@ import { ThemeProvider } from "next-themes";
 import { SideBar } from "./_components/(sidebar)/sidebar";
 import DashboardNavBar from "./_components/(navbar)/navbar";
 import { ConfettiProvider } from "@/components/providers/confetti-provider";
+import './quill.css'
+
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {

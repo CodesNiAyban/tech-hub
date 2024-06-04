@@ -1,26 +1,40 @@
-import { Category, Course } from "@prisma/client";
+import { Category, Course, SubscriptionType } from "@prisma/client";
 
 import { getProgress } from "@/actions/get-progress";
 import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
-
-type CourseWithProgressWithCategory = Course & {
+export interface CourseWithProgressWithCategory {
+    id: string;
+    userId: string;
+    title: string;
+    description: string | null;
+    imageUrl: string | null;
+    price: number | null;
+    isPublished: boolean;
+    createdAt: Date;
+    updatedAt: Date;
     categories: Category[] | null;
-    chapters: { id: string }[];
-    progress?: number | null; // Make progress property optional
-};
+    chapters: {
+        id: string;
+        subscription: SubscriptionType | null;
+    }[];
+    purchases: {
+        id: string;
+    }[];
+    progress?: number | null;
+}
 
-type GetCourses = {
+export interface GetCoursesParams {
     userId?: string;
     title?: string;
-    categoryId?: string; // Maybe this will be a culprit in array category search
-};
+    categoryId?: string;
+}
 
 export const getCourses = async ({
     userId,
     title,
     categoryId,
-}: GetCourses): Promise<CourseWithProgressWithCategory[]> => {
+}: GetCoursesParams): Promise<CourseWithProgressWithCategory[]> => {
     try {
         const courses = await db.course.findMany({
             where: {
@@ -30,16 +44,16 @@ export const getCourses = async ({
                 },
                 categories: {
                     some: {
-                        id: categoryId
-                    }
-                }
+                        id: categoryId,
+                    },
+                },
             },
             include: {
                 categories: {
                     select: {
                         id: true,
-                        name: true
-                    }
+                        name: true,
+                    },
                 },
                 chapters: {
                     where: {
@@ -47,20 +61,21 @@ export const getCourses = async ({
                     },
                     select: {
                         id: true,
-                    }
+                        subscription: true,
+                    },
                 },
                 purchases: {
                     where: {
                         userId,
                     },
                     select: {
-                        id: true, // Include only the fields that actually exist
-                    }
-                }
+                        id: true,
+                    },
+                },
             },
             orderBy: {
                 createdAt: "desc",
-            }
+            },
         });
 
         if (userId) {

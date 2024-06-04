@@ -9,24 +9,22 @@ interface BrowseProps {
     searchParams: {
         title: string;
         categoryId: string;
-    }
+    };
 }
 
-const Browse = async ({
-    searchParams,
-}: BrowseProps) => {
+const Browse = async ({ searchParams }: BrowseProps) => {
     const { userId } = auth();
 
     const categories = await db.category.findMany({
         orderBy: {
-            name: "asc"
-        }
+            name: "asc",
+        },
     });
 
     const courses = await getCourses({
         userId: userId || "",
         ...searchParams,
-    })
+    });
 
     const user = await db.stripeCustomer.findUnique({
         where: {
@@ -37,17 +35,14 @@ const Browse = async ({
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
-
-                {user?.subscription && <SubscriptionSuccess user={user} />}
-                <Categories
-                    items={categories}
-                />
-                <CoursesList
-                    items={courses}
-                />
+                {user?.subscription && (
+                    <SubscriptionSuccess user={user} />
+                )}
+                <Categories items={categories} />
+                <CoursesList items={courses} />
             </div>
         </>
     );
-}
+};
 
 export default Browse;
