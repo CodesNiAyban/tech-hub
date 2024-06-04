@@ -34,12 +34,28 @@ export const EditTitleForm = ({
         resolver: zodResolver(titleSchema),
         defaultValues: initialData,
     });
-    
+
+    const editTitle = async (values: z.infer<typeof titleSchema>) => {
+        setIsSubmitting(true); // Set submission status to true
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        } finally {
+            setIsSubmitting(false); // Reset submission status to false
+            toggleModal()
+        }
+    };
+
     const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            setIsSubmitting(true);
-            const response = axios.patch(`/api/courses/${courseId}`, values);
-            router.refresh();
+            const response = editTitle(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
@@ -47,9 +63,6 @@ export const EditTitleForm = ({
             });
         } catch (error) {
             console.log(error)
-        } finally {
-            setIsSubmitting(false); // Reset submission status to false
-            toggleModal()
         }
     }
 

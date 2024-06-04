@@ -26,12 +26,12 @@ export const DeleteAttachmentDialog = ({
     attachmentId,
     courseId
 }: DeleteAttachmentDialogProps) => {
+    const [deletingId, setDeletingId] = useState<string | null>(null)
     const router = useRouter();
 
     const onDelete = async (id: string) => {
         try {
-            const response = axios.delete(`/api/courses/${courseId}/attachments/${id}`)
-            router.refresh();
+            const response = deleteAttachment(id);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
@@ -43,8 +43,25 @@ export const DeleteAttachmentDialog = ({
             } else {
                 toast.error("An error occurred. Please try again later.");
             }
+        } finally {
+            setDeletingId(null);
         }
     }
+
+    const deleteAttachment = async (id: string) => {
+        try {
+            setDeletingId(id);
+            const response = await axios.delete(`/api/courses/${courseId}/attachments/${id}`)
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        }
+    };
 
     return (
         <AlertDialog>

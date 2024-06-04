@@ -28,10 +28,21 @@ export const EditVideoForm = ({
 }: EditVideoProps) => {
     const router = useRouter();
 
+    const setVideo = async (values: z.infer<typeof videoSchema>) => {
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
+            router.refresh();
+            return response;
+        } catch (error) {
+            console.log(error)
+        } finally {
+            toggleModal()
+        }
+    };
+
     const onSubmit = async (values: z.infer<typeof videoSchema>) => {
         try {
-            const response = axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
-            router.refresh();
+            const response = setVideo(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",

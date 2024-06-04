@@ -23,10 +23,25 @@ export const EditAttachmentForm = ({
 }: EditAttachmentProps) => {
     const router = useRouter();
 
+    const editAttachment = async (values: z.infer<typeof attachmentSchema>) => {
+        try {
+            const response = await axios.post(`/api/courses/${courseId}/attachments`, values);
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        } finally {
+            toggleModal()
+        }
+    };
+
     const onSubmit = async (values: z.infer<typeof attachmentSchema>) => {
         try {
-            const response = axios.post(`/api/courses/${courseId}/attachments`, values);
-            router.refresh();
+            const response = editAttachment(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",

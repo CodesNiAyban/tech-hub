@@ -22,19 +22,48 @@ export const CourseActions = ({
 }: CourseActionsProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-    const confetti = useConfettiStore()
+    const confetti = useConfettiStore();
+
+    const publishCourse = async () => {
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}/publish`);
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        }
+    }
+
+    const unpublishCourse = async () => {
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}/unpublish`);
+            router.refresh();
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        }
+    }
+
     const onClick = async () => {
         try {
             setIsLoading(true);
             if (isPublished) {
-                const response = axios.patch(`/api/courses/${courseId}/unpublish`);
+                const response = unpublishCourse()
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
                     success: "Course unpublished"
                 });
             } else {
-                const response = axios.patch(`/api/courses/${courseId}/publish`);
+                const response = publishCourse()
                 toast.promise(response, {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
@@ -42,7 +71,6 @@ export const CourseActions = ({
                 });
                 confetti.onOpen();
             }
-            router.refresh();
         } catch (error) {
             console.log(error)
         } finally {
@@ -50,12 +78,25 @@ export const CourseActions = ({
         }
     }
 
+    const deleteCourse = async () => {
+        try {
+            const response = await axios.delete(`/api/courses/${courseId}`)
+            router.refresh();
+            router.push(`/teacher/courses`)
+            return response;
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
+        }
+    }
+
     const onDelete = async () => {
         try {
             setIsLoading(true);
-            const response = axios.delete(`/api/courses/${courseId}`);
-            router.refresh();
-            router.push(`/teacher/courses`)
+            const response = deleteCourse();
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
@@ -67,7 +108,6 @@ export const CourseActions = ({
             setIsLoading(false);
         }
     }
-
     return (
         <div className="flex items-center gap-x-2">
             <Button

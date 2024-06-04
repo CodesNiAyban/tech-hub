@@ -25,11 +25,22 @@ export const EditImageForm = ({
     toggleModal
 }: EditImageProps) => {
     const router = useRouter();
-    
+
+    const setImage = async (values: z.infer<typeof imageSchema>) => {
+        try {
+            const response = await axios.patch(`/api/courses/${courseId}`, values);
+            router.refresh();
+            return response;
+        } catch (error) {
+            console.log(error)
+        } finally {
+            toggleModal()
+        }
+    };
+
     const onSubmit = async (values: z.infer<typeof imageSchema>) => {
         try {
-            const response = axios.patch(`/api/courses/${courseId}`, values);
-            router.refresh();
+            const response = setImage(values);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
@@ -41,8 +52,6 @@ export const EditImageForm = ({
             } else {
                 toast.error("An error occurred. Please try again later.");
             }
-        } finally {
-            toggleModal()
         }
     }
 
