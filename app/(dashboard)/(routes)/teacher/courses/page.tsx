@@ -23,6 +23,16 @@ const Courses = async () => {
         },
     });
 
+    const subscription = await db.stripeCustomer.findUnique({
+        where: {
+            userId,
+        },
+    });
+
+    if (!subscription || subscription.subscription === "null" || subscription.subscription === "BASIC") {
+        return redirect("/")
+    }
+
     return (
         <>
             {courses ? (

@@ -51,16 +51,16 @@ const ChapterIdPage = async ({
             userId: userId || "",
         },
     });
-
-    const isLocked = (() => {
+    const isLocked = (chapterSubscription: string | null) => {
         if (purchase) return false;
         if (user) {
             if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (chapter.subscription === "BASIC" && user.subscription === "BASIC") return false;
+            if (chapterSubscription === null) return false;
+            if (user.subscription === chapterSubscription) return false;
         }
-        if (chapter.subscription === null) return false;
         return true;
-    })();
+    };
+
 
     const completeOnEnd = !isLocked && userProgress?.isCompleted;
 
@@ -71,10 +71,10 @@ const ChapterIdPage = async ({
             {userProgress?.isCompleted && (
                 <Banner variant="success" label="You already completed this chapter." />
             )}
-            {isLocked && (
+            {isLocked(chapter.subscription) && (
                 <Banner
                     variant="warning"
-                    label="You need to purchase this course to watch this chapter."
+                    label={`You need to be subscribed to TechHub ${chapter.subscription} or purchase this course to watch this chapter`}
                 />
             )}
             <div className="flex flex-col max-w-4xl mx-auto pb-20">
@@ -85,14 +85,14 @@ const ChapterIdPage = async ({
                         courseId={params.courseId}
                         nextChapterId={nextChapter?.id}
                         playbackId={muxData?.playbackId!}
-                        isLocked={isLocked}
+                        isLocked={isLocked(chapter.subscription)}
                         completeOnEnd={completeOnEnd}
                     />
                 </div>
                 <div>
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
-                        {isLocked ? (
+                        {isLocked(chapter.subscription) ? (
                             <CourseEnrollButton
                                 courseId={params.courseId}
                                 price={course.price!}

@@ -39,22 +39,15 @@ export const CourseSidebar = async ({
         },
     });
 
-    const chapter = await db.chapter.findUnique({
-        where: {
-            id: course.id,
-        }
-    })
-
-    const isLocked = (() => {
+    const isLocked = (chapterSubscription: string | null) => {
         if (purchase) return false;
         if (user) {
             if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (chapter?.subscription === "BASIC" && user.subscription === "BASIC") return false;
+            if (chapterSubscription === null) return false;
+            if (user.subscription === chapterSubscription) return false;
         }
-        if (chapter?.subscription === null) return false;
         return true;
-    })();
-
+    };
 
     return (
         <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
@@ -70,10 +63,11 @@ export const CourseSidebar = async ({
                         label={chapter.title}
                         isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
                         courseId={course.id}
-                        isLocked={isLocked}
+                        isLocked={isLocked(chapter.subscription)}
+                        requiredSubscription={chapter.subscription} // Pass requiredSubscription
                     />
                 ))}
             </div>
         </div>
     );
-}
+};

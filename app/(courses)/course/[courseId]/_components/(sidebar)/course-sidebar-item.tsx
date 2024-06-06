@@ -1,5 +1,5 @@
-"use client";
-
+"use client"
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CheckCircle, Lock, PlayCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ interface CourseSidebarItemProps {
     isCompleted: boolean;
     courseId: string;
     isLocked: boolean;
+    requiredSubscription?: string | null; // Add requiredSubscription prop
 }
 
 export const CourseSidebarItem = ({
@@ -18,6 +19,7 @@ export const CourseSidebarItem = ({
     isCompleted,
     courseId,
     isLocked,
+    requiredSubscription, // Add requiredSubscription prop
 }: CourseSidebarItemProps) => {
     const pathname = usePathname();
     const router = useRouter();
@@ -26,7 +28,9 @@ export const CourseSidebarItem = ({
 
     const isActive = pathname?.includes(id);
     const onClick = () => {
-        router.push(`/course/${courseId}/chapters/${id}`);
+        if (!isLocked) {
+            router.push(`/course/${courseId}/chapters/${id}`);
+        }
     };
 
     return (
@@ -51,6 +55,11 @@ export const CourseSidebarItem = ({
                     )}
                 />
                 {label}
+                {isLocked && requiredSubscription && (
+                    <Badge variant="default" className="ml-auto">
+                        {requiredSubscription} Required
+                    </Badge>
+                )}
             </div>
             <div
                 className={cn(

@@ -19,8 +19,8 @@ export const createSchema = z.object({
 export const descriptionSchema = z.object({
   description: z.string().min(1, {
     message: "Description is required",
-  }).max(2000, {
-    message: "Description cannot exceed 2000 characters",
+  }).max(7000, {
+    message: "Description cannot exceed 7000 characters",
   }),
 });
 

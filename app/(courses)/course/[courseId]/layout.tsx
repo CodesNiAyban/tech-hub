@@ -66,7 +66,7 @@ const CourseLayout = async ({
                     <ToastProvider />
                     <CourseSidebar course={course} progressCount={progressCount} />
                 </div>
-                <main className="md:pl-80 pt-[80px] h-full">{children}</main>
+                <main className="md:pl-80 pt-[60px] h-full">{children}</main>
             </div>
         </ThemeProvider>
     );
