@@ -1,6 +1,6 @@
 "use client"
 
-import { titleSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { codeSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,29 +14,29 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 
-interface TitleFormProps {
+interface CodeFormProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditTitleForm = ({
+export const EditCodeForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: TitleFormProps) => {
+}: CodeFormProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof titleSchema>>({
-        resolver: zodResolver(titleSchema),
+    const form = useForm<z.infer<typeof codeSchema>>({
+        resolver: zodResolver(codeSchema),
         defaultValues: initialData,
     });
 
-    const editTitle = async (values: z.infer<typeof titleSchema>) => {
-        setIsSubmitting(true); // Set submission status to true
+    const editCode = async (values: z.infer<typeof codeSchema>) => {
+        setIsSubmitting(true);
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
@@ -45,35 +45,35 @@ export const EditTitleForm = ({
             if (axios.isAxiosError(error)) {
                 if (error.response) {
                     if (error.response.status === 403) {
-                        throw new Error("Duplicate title");
+                        throw new Error("Duplicate code");
                     }
                 }
             }
             if (error)
                 throw error.toString();
         } finally {
-            setIsSubmitting(false); // Reset submission status to false
-            toggleModal()
+            setIsSubmitting(false);
+            toggleModal();
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof titleSchema>) => {
+    const onSubmit = async (values: z.infer<typeof codeSchema>) => {
         try {
             const response = await toast.promise(
-                editTitle(values),
+                editCode(values),
                 {
                     loading: "Processing",
                     error: (error) => {
-                        return error.message === "Duplicate title" ? "Duplicate title, please try another title." : "An error occurred, please try again later.";
+                        return error.message === "Duplicate code" ? "Duplicate code, please try another title." : "An error occurred, please try again later.";
                     },
-                    success: "Course Title Updated!"
+                    success: "Course Code Updated!"
                 }
             );
             return response;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     return (
         <Form {...form}>
@@ -82,7 +82,7 @@ export const EditTitleForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="code"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">

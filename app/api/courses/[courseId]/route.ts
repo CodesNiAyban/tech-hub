@@ -68,6 +68,30 @@ export async function PATCH(
             return new NextResponse("Unathorized", { status: 401 })
         }
 
+        if (values.title) {
+            const existingCourseByTitle = await db.course.findUnique({
+                where: {
+                    title: values.title,
+                },
+            });
+
+            if (existingCourseByTitle && existingCourseByTitle.id !== courseId) {
+                return new NextResponse("Title must be unique", { status: 403 });
+            }
+        }
+
+        if (values.code) {
+            const existingCourseByCode = await db.course.findUnique({
+                where: {
+                    code: values.code,
+                },
+            });
+
+            if (existingCourseByCode && existingCourseByCode.id !== courseId) {
+                return new NextResponse("Code must be unique", { status: 403 });
+            }
+        }
+
         const course = await db.course.update({
             where: {
                 id: courseId,

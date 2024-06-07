@@ -20,6 +20,7 @@ import { CourseProgress } from "./course-progress";
 import { SubscriptionType } from "@prisma/client";
 
 interface CourseCardProps {
+    code: string;
     id: string;
     title: string;
     imageUrl: string;

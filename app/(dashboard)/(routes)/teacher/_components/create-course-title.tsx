@@ -35,11 +35,19 @@ export const CreateCourse = () => {
                 error: "An error occured, please try again later.",
                 success: "Course Title Created!",
             });
-        } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    if (error.response.status === 403) {
+                        toast.error("Duplicate title, please try another title.");
+                    } else {
+                        toast.error(error.response.data.message || "An error occurred");
+                    }
+                } else {
+                    toast.error("An unexpected error occurred");
+                }
             } else {
-                toast.error("An error occurred. Please try again later.");
+                toast.error("An unknown error occurred");
             }
         }
     }

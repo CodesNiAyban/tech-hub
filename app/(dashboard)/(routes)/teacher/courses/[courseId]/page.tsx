@@ -56,6 +56,7 @@ const CourseIdPage = async ({
 
     const requiredFields = [
         course.title,
+        course.code,
         course.description,
         course.imageUrl,
         course.price,
