@@ -48,11 +48,8 @@ export const EditChapterAccessForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.error(error)
+            throw error
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -61,12 +58,14 @@ export const EditChapterAccessForm = ({
 
     const onSubmit = async (values: z.infer<typeof accessSchema>) => {
         try {
-            const response = editAccess(values);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Chapter Access Updated!"
-            });
+            const response = toast.promise(
+                editAccess(values),
+                {
+                    loading: "Processing",
+                    error: "An error occured, please try again later.",
+                    success: "Chapter Access Updated!"
+                }
+            );
         } catch (error) {
             console.log(error)
         }

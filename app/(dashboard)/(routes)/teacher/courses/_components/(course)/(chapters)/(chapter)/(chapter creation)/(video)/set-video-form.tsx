@@ -35,6 +35,7 @@ export const EditVideoForm = ({
             return response;
         } catch (error) {
             console.log(error)
+            throw error
         } finally {
             toggleModal()
         }
@@ -42,12 +43,15 @@ export const EditVideoForm = ({
 
     const onSubmit = async (values: z.infer<typeof videoSchema>) => {
         try {
-            const response = setVideo(values);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Chapter Video Updated!"
-            });
+            const response = toast.promise(
+                setVideo(values),
+                {
+                    loading: "Processing",
+                    error: "An error occured, please try again later.",
+                    success: "Chapter Video Updated!"
+                }
+            );
+            return response;
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);
