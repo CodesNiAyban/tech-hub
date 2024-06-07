@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -116,7 +116,6 @@ export async function POST(req: Request) {
                     { status: 200 }
                 );
         }
-        cookies().set("AYBANNNNN", "true");
         return new NextResponse("Success", { status: 200 });
     } catch (error: any) {
         console.log(error);
