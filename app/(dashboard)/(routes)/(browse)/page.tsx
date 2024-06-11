@@ -13,7 +13,11 @@ interface BrowseProps {
 }
 
 const Browse = async ({ searchParams }: BrowseProps) => {
-    const { userId } = auth();
+    let { userId } = auth();
+
+    if (!userId) {
+        userId = "";
+    }
 
     const categories = await db.category.findMany({
         orderBy: {
