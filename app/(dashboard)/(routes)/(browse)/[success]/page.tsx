@@ -2,12 +2,15 @@ import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { Categories } from "./_components/categories";
+import { Categories } from "../_components/categories";
+import { SubscriptionSuccess } from "../_components/subscription-success";
+
 
 interface BrowseProps {
     searchParams: {
         title: string;
         categoryId: string;
+        success: string;
     };
 }
 
@@ -38,6 +41,7 @@ const Browse = async ({ searchParams }: BrowseProps) => {
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
+                <SubscriptionSuccess user={user} success={searchParams.success} />
                 <Categories items={categories} />
                 <CoursesList items={courses} />
             </div>

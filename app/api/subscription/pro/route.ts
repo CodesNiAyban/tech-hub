@@ -49,7 +49,7 @@ export async function POST() {
                 }
             ],
             mode: "subscription",
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}?success=true`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success=true`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
             subscription_data: {
                 metadata: {

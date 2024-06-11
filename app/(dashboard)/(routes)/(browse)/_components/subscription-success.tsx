@@ -8,17 +8,17 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { StripeCustomer } from "@prisma/client";
 import { CheckCircle2 } from "lucide-react";
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface SubscriptionSuccessProps {
     user: StripeCustomer | null;
+    success: string | null;
 }
 
-export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
+export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps, success: string | null) => {
     const [open, setOpen] = useState(false);
-    const params = useSearchParams();
-    const success = params.get('success');
+    const router = useRouter();
 
     useEffect(() => {
         console.log("Success param:", success);
@@ -28,6 +28,7 @@ export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
     }, []);
 
     const handleConfirm = () => {
+        router.push(`/`)
         setOpen(false);
     };
 

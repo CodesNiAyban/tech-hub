@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@clerk/elements": "^0.4.5",
-    "@clerk/nextjs": "^5.0.6",
+    "@clerk/nextjs": "^5.1.4",
     "@clerk/themes": "^2.1.2",
     "@headlessui/react": "^2.0.3",
     "@hello-pangea/dnd": "^16.6.0",
