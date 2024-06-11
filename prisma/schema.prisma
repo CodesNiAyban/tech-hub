@@ -69,8 +69,6 @@ model Chapter {
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  subscriptionId String?
-
   userProgress UserProgress[]
 
   createdAt DateTime @default(now())
@@ -109,8 +107,6 @@ model Purchase {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  subscriptionId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
