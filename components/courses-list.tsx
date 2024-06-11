@@ -1,13 +1,6 @@
 import React from "react";
 import { CourseCard } from "./course-card";
-import { Category, Course, SubscriptionType } from "@prisma/client";
-
-type CourseWithProgressWithCategory = Course & {
-    categories: Category[] | null;
-    chapters: { id: string; subscription: SubscriptionType | null }[];
-    progress?: number | null;
-};
-
+import { CourseWithProgressWithCategory } from "@/actions/get-courses";
 
 interface CoursesListProps {
     items: CourseWithProgressWithCategory[];
@@ -30,7 +23,7 @@ export const CoursesList = ({ items }: CoursesListProps) => {
                             price={item.price!}
                             progress={item.progress!}
                             categories={item.categories!}
-                            userId={item.userId}
+                            userId={item.userId || ""}
                             description={item.description}
                             createdAt={item.createdAt}
                         />
