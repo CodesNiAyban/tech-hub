@@ -1,52 +1,48 @@
-
+import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "./_components/categories";
-import { checkRole } from "@/lib/role";
-import { redirect } from "next/navigation";
-import toast from "react-hot-toast";
-import { getCourses } from "@/actions/get-courses";
 
 interface BrowseProps {
     searchParams: {
         title: string;
         categoryId: string;
-    }
+    };
 }
 
-const Browse = async ({
-    searchParams,
-}: BrowseProps) => {
-    const { userId } = auth();
+const Browse = async ({ searchParams }: BrowseProps) => {
+    let { userId } = auth();
 
     if (!userId) {
-        return redirect("/sign-in")
+        userId = "";
     }
 
     const categories = await db.category.findMany({
         orderBy: {
-            name: "asc"
-        }
+            name: "asc",
+        },
     });
 
     const courses = await getCourses({
         userId: userId || "",
         ...searchParams,
-    })
+    });
+
+    const user = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId || "",
+        },
+    });
 
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
-                <Categories
-                    items={categories}
-                />
-                <CoursesList
-                    items={courses}
-                />
+                <Categories items={categories} />
+                <CoursesList items={courses} />
             </div>
         </>
     );
-}
+};
 
 export default Browse;
