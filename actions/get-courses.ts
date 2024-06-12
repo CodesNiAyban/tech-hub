@@ -1,7 +1,7 @@
 import { Category, Course, SubscriptionType } from "@prisma/client";
 
 import { getProgress } from "@/actions/get-progress";
-import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
+import { Categories } from "@/app/(dashboard)/(routes)/browse/_components/categories";
 import db from "@/lib/db";
 export interface CourseWithProgressWithCategory {
     code: string;
