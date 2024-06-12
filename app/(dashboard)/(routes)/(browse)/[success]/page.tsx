@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "../_components/categories";
 import { SubscriptionSuccess } from "../_components/subscription-success";
+import { redirect } from "next/navigation";
 
 
 interface BrowseProps {
@@ -18,7 +19,7 @@ const Browse = async ({ searchParams }: BrowseProps) => {
     let { userId } = auth();
 
     if (!userId) {
-        userId = "";
+        return redirect("/")
     }
 
     const categories = await db.category.findMany({
