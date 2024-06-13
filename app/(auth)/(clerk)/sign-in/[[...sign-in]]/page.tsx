@@ -55,7 +55,7 @@ export default function SignInPage() {
                       </Button>
                     </Clerk.Connection>
                     <Clerk.Connection name="google" asChild>
-                      <Button size="sm" variant="outline" type="button" disabled={isGlobalLoading}>
+                      <Button size="sm" variant="outline" type="button" id="google-login-button" disabled={isGlobalLoading}>
                         <Clerk.Loading scope="provider:google">
                           {(isLoading) =>
                             isLoading ? (
@@ -78,7 +78,7 @@ export default function SignInPage() {
                     <Clerk.Label asChild>
                       <Label>Email address</Label>
                     </Clerk.Label>
-                    <Clerk.Input type="email" required asChild>
+                    <Clerk.Input type="email" id="email-login-field" required asChild>
                       <Input />
                     </Clerk.Input>
                     <Clerk.FieldError className="block text-sm text-destructive" />
@@ -87,7 +87,7 @@ export default function SignInPage() {
                 <CardFooter>
                   <div className="grid w-full gap-y-4">
                     <SignIn.Action submit asChild>
-                      <Button disabled={isGlobalLoading}>
+                      <Button disabled={isGlobalLoading} id="login-button">
                         <Clerk.Loading>
                           {(isLoading) => {
                             return isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue';
@@ -96,7 +96,7 @@ export default function SignInPage() {
                       </Button>
                     </SignIn.Action>
 
-                    <Button variant="link" size="sm" asChild>
+                    <Button variant="link" size="sm" id="login-signup-button" asChild>
                       <Link href="/sign-up">Don&apos;t have an account? Sign up</Link>
                     </Button>
                   </div>
@@ -153,7 +153,7 @@ export default function SignInPage() {
                       <Clerk.Label asChild>
                         <Label>Password</Label>
                       </Clerk.Label>
-                      <Clerk.Input type="password" asChild>
+                      <Clerk.Input type="password" asChild id="password-login-field">
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />

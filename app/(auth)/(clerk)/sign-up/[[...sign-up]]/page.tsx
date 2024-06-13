@@ -46,7 +46,7 @@ export default function SignUpPage() {
                         </Button>
                       </Clerk.Connection>
                       <Clerk.Connection name="google" asChild>
-                        <Button size="sm" variant="outline" type="button" disabled={isGlobalLoading}>
+                        <Button size="sm" variant="outline" type="button" id="google-login-button" disabled={isGlobalLoading}>
                           <Clerk.Loading scope="provider:google">
                             {(isLoading: any) =>
                               isLoading ? (
@@ -69,12 +69,12 @@ export default function SignUpPage() {
                       <Clerk.Label asChild>
                         <Label>Email address</Label>
                       </Clerk.Label>
-                      <Clerk.Input type="text" required asChild>
+                      <Clerk.Input type="text" id="email-register-field" required asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />
                     </Clerk.Field>
-                    <Clerk.Field name="password" className="space-y-2">
+                    <Clerk.Field name="password" id="password-register-field" className="space-y-2">
                       <Clerk.Label asChild>
                         <Label>Password</Label>
                       </Clerk.Label>
@@ -87,7 +87,7 @@ export default function SignUpPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignUp.Action submit asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button id="register-button" disabled={isGlobalLoading}>
                           <Clerk.Loading>
                             {(isLoading: any) => {
                               return isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue';
@@ -113,7 +113,7 @@ export default function SignUpPage() {
                       <Clerk.Label>
                         <Label>Username</Label>
                       </Clerk.Label>
-                      <Clerk.Input type="text" required asChild>
+                      <Clerk.Input type="text" id="name-register-field" required asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />
@@ -122,7 +122,7 @@ export default function SignUpPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignUp.Action submit asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button id="register-button" disabled={isGlobalLoading}>
                           <Clerk.Loading>
                             {(isLoading: any) => {
                               return isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue';
