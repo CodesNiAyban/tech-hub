@@ -58,26 +58,22 @@ export async function POST(req: Request) {
     const eventType = evt.type;
 
     switch (eventType) {
-        // case "user.created": {
-        //     const count = await db.stripeCustomer.count({
-        //         where: {
-        //             userId: id!,
-        //         },
-        //     });
+        case "user.created": {
+            const count = await db.stripeCustomer.count({
+                where: {
+                    userId: id!,
+                },
+            });
 
-        //     if (count === 0) {
-        //         await db.stripeCustomer.create({
-        //             data: {
-        //                 userId: id!,
-        //             },
-        //         });
-
-        //         const customer = await stripe.customers.create({
-        //             email: ,
-        //         });
-        //     }
-        //     break;
-        // }
+            if (count === 0) {
+                await db.stripeCustomer.create({
+                    data: {
+                        userId: id!,
+                    },
+                });
+            }
+            break;
+        }
         case "user.deleted": {
             // Delete all data related to this userId
             await deleteUserData(id || "");

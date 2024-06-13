@@ -55,7 +55,7 @@ const ChapterIdPage = async ({
         if (purchase) return false;
         if (user) {
             if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (chapterSubscription === null) return false;
+            if (chapterSubscription === "null" || chapterSubscription === null) return false;
             if (user.subscription === chapterSubscription) return false;
         }
         return true;
