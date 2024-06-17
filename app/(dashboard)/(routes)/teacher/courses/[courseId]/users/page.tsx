@@ -20,7 +20,7 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
     const { userId } = auth();
 
     if (!userId) {
-        return redirect("/");
+        return redirect("/sign-in");
     } // TODO: Change to admin check
 
     try {

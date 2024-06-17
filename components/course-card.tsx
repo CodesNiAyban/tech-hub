@@ -124,7 +124,8 @@ export const CourseCard = async ({
                                 />
                             ) : (
                                 <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">
-                                    {formatPrice(price)}
+
+                                    {price ? formatPrice(price) : "Free"}
                                 </p>
                             )}
                         </div>

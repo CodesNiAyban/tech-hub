@@ -4,6 +4,8 @@ import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "./_components/categories";
 
+export const maxDuration = 60;
+
 interface BrowseProps {
     searchParams: {
         title: string;

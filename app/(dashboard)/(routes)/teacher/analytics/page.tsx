@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Chart } from "./_components/chart";
 import { DataCard } from "./_components/data-card";
 
+export const maxDuration = 60;
 
 // Define the type for params
 type AnalyticsPageParams = {
