@@ -25,7 +25,7 @@ export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps, success:
         if (success) {
             setOpen(true);
         }
-    }, []);
+    }, [success]);
 
     const handleConfirm = () => {
         router.push(`/`)

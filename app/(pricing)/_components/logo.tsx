@@ -2,10 +2,6 @@ import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import Image from "next/image";
 
-const headingFont = localFont({
-  src: "../../../public/fonts/CalSans-SemiBold.woff2",
-});
-
 export const Logo = () => {
   return (
     <div className="flex hover:opacity-75 transition items-center gap-x-2">
