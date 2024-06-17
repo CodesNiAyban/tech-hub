@@ -8,7 +8,6 @@ import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/providers/toaster-provider";
 
-
 const CourseLayout = async ({
     children,
     params,

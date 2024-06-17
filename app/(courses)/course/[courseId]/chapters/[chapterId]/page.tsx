@@ -1,21 +1,20 @@
 
-import { redirect } from "next/navigation";
 import { File } from "lucide-react";
+import { redirect } from "next/navigation";
 
 import { getChapter } from "@/actions/get-chapter";
 
 import { Preview } from "@/components/preview";
 
-import { VideoPlayer } from "./_components/video-player";
-import { CourseEnrollButton } from "./_components/course-enroll-button";
-import { Separator } from "@/components/ui/separator";
-import { CourseProgressButton } from "./_components/course-progress-button";
-import { Banner } from "@/components/banner";
-import { auth } from "@clerk/nextjs/server";
-import db from "@/lib/db";
-import { CourseProgress } from "@/components/course-progress";
 import { getProgress } from "@/actions/get-progress";
-import { CourseSubscribedEnrollButton } from "./_components/course-subscribed-enroll-button";
+import { Banner } from "@/components/banner";
+import { CourseProgress } from "@/components/course-progress";
+import { Separator } from "@/components/ui/separator";
+import db from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { CourseEnrollButton } from "./_components/course-enroll-button";
+import { CourseProgressButton } from "./_components/course-progress-button";
+import { VideoPlayer } from "./_components/video-player";
 
 const ChapterIdPage = async ({
     params,
