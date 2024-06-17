@@ -16,6 +16,8 @@ import { CourseEnrollButton } from "./_components/course-enroll-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { VideoPlayer } from "./_components/video-player";
 
+export const maxDuration = 60;
+
 const ChapterIdPage = async ({
     params,
 }: {
