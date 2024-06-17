@@ -78,10 +78,9 @@ export const ChapterActions = ({
 
     const deleteChapter = async () => {
         try {
-            const response = await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
+            await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
             router.refresh();
             router.push(`/teacher/courses/${courseId}`)
-            return response;
         } catch (error) {
            console.error(error)
            throw error
