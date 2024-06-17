@@ -84,8 +84,8 @@ export async function POST(
       customer: stripeCustomer.stripeCustomerId ,
       line_items,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}?success=1`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}?canceled=1`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${params.courseId}?success=1`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${params.courseId}?canceled=1`,
       billing_address_collection: 'auto',
       metadata: {
         courseId: course.id,

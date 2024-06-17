@@ -48,7 +48,7 @@ const ChapterIdPage = async ({
 
     const user = await db.stripeCustomer.findUnique({
         where: {
-            userId: userId || "",
+            userId: userId,
         },
     });
     const isLocked = (chapterSubscription: string | null) => {
@@ -99,10 +99,6 @@ const ChapterIdPage = async ({
                             />
                         ) : (
                             <div className="flex items-center justify-center gap-x-2">
-                                <CourseSubscribedEnrollButton
-                                    courseId={params.courseId}
-                                    price={course.price!}
-                                />
                                 <CourseProgressButton
                                     chapterId={params.chapterId}
                                     courseId={params.courseId}
