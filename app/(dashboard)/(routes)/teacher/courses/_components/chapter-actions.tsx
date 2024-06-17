@@ -93,8 +93,9 @@ export const ChapterActions = ({
             const response = toast.promise(deleteChapter(), {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Chapter deleted"
+                success: `Chapter deleted ${router.refresh()}`
             });
+            router.refresh();
             return response;
         } catch (error) {
             console.log(error)

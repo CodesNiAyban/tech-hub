@@ -3,6 +3,10 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 
+const headingFont = localFont({
+  src: "../public/fonts/CalSans-SemiBold.woff2"
+})
+
 
 export const Logo = () => {
   return (
@@ -12,7 +16,8 @@ export const Logo = () => {
         <p
           className={cn(
             "font-bold", // Use a bold font
-            "text-yellow-500" 
+            "text-yellow-500",
+            headingFont.className
           )}
         >
           <span className="text-foreground mr-[0.5px]">Tech</span>
