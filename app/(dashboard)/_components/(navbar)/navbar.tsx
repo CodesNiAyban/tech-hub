@@ -26,9 +26,8 @@ export const DashboardNavBar = async () => {
                 userId: userId,
             }
         });
-    } else {
-        redirect("/");
-    }
+    } 
+    
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-sm">
             <Sheet>
