@@ -18,6 +18,7 @@ import { IconBadge } from "./icon-badge";
 import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "./course-progress";
 import { SubscriptionType } from "@prisma/client";
+import { CourseModal } from "./modals/course-modal";
 
 interface CourseCardProps {
     code: string;
@@ -35,13 +36,14 @@ interface CourseCardProps {
     }[];
     createdAt: Date;
     userId: string;
+    isPurchased: boolean;
 }
 
 const getSubscriptionBadges = (chapters: { subscription: SubscriptionType | null }[]) => {
     const subscriptions = new Set(chapters.map(chapter => chapter.subscription));
     const badges: { label: string, variant: "free" | "basic" | "pro" | "yellow" }[] = [];
 
-    if (subscriptions.has("null")) {
+    if (subscriptions.has(null)) {
         badges.push({ label: "Free", variant: "free" });
     }
     if (subscriptions.has("BASIC")) {
@@ -77,12 +79,28 @@ export const CourseCard = async ({
     progress,
     categories,
     createdAt,
+    code,
+    isPurchased
 }: CourseCardProps) => {
-    const user = await clerkClient.users.getUser(userId);
+    const user = JSON.parse(JSON.stringify(await clerkClient.users.getUser(userId)));
 
     return (
         <HoverCard>
-            <Link href={`/course/${id}`}>
+            <CourseModal
+                code={code}
+                courseId={id}
+                title={title}
+                imageUrl={imageUrl}
+                chaptersLength={chaptersLength}
+                chapters={chapters}
+                description={description}
+                userId={userId}
+                price={price}
+                progress={progress}
+                categories={categories}
+                createdAt={createdAt}
+                user={user}
+            >
                 <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 relative">
                     <div className="relative w-full aspect-video rounded-md overflow-hidden">
                         {getSubscriptionBadges(chapters)}
@@ -122,16 +140,19 @@ export const CourseCard = async ({
                                     value={progress}
                                     variant={progress === 100 ? "success" : "default"}
                                 />
+                            ) : isPurchased ? (
+                                <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">
+                                    Course Purchased
+                                </p>
                             ) : (
                                 <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">
-
                                     {price ? formatPrice(price) : "Free"}
                                 </p>
                             )}
                         </div>
                     </div>
                 </div>
-            </Link>
+            </CourseModal>
 
             <HoverCardContent>
                 <div className="flex justify-between w-50">
@@ -154,6 +175,6 @@ export const CourseCard = async ({
                     </div>
                 </div>
             </HoverCardContent>
-        </HoverCard>
+        </HoverCard >
     );
 };

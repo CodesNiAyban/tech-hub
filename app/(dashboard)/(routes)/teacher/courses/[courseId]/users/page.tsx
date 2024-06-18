@@ -76,24 +76,23 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
 
                 const completedCourse = chapterProgress.every(ch => ch.completed);
                 const progressCount = await getProgress(user.id, course.id);
-                const hasProgress = course.chapters.some(chapter => chapter.userProgress.length > 0);
+                const hasProgress = course.chapters.some(chapter => chapter.userProgress);
                 const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
 
                 // Determine engagement type
                 let engagementType = "";
 
-                if (!hasPurchase && hasProgress && userSubscription) {
-                    engagementType = `${userSubscription.subscription} Subscription Only`;
-                } else if (hasPurchase && hasProgress && (!userSubscription || userSubscription.subscription === "null")) {
+                if (!hasPurchase && hasProgress && userSubscription?.subscription === "null") {
+                    engagementType = "FREE User";
+                } else if (hasPurchase && hasProgress && (userSubscription && userSubscription.subscription === "null")) {
                     engagementType = "Purchase Only";
-                } else if (!hasPurchase && hasProgress && userSubscription && userSubscription.subscription !== "null") {
-                    engagementType = `Subscription Only`;
+                } else if (!hasPurchase && hasProgress && (userSubscription && userSubscription.subscription !== "null")) {
+                    engagementType = `${userSubscription.subscription} User`;
                 } else if (hasPurchase && hasProgress && userSubscription && userSubscription.subscription) {
-                    engagementType = `${userSubscription.subscription} + Purchase`;
+                    engagementType = `${userSubscription.subscription} + Purchase User`;
                 }
 
                 if (!engagementType) return null
-                if (engagementType === "Subscription Only" && !hasProgress) return null
 
                 return {
                     ...userPurchase,

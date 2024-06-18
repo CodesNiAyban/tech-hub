@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import { getProgress } from "@/actions/get-progress";
 import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/db";
-import { CourseNavbar } from "./_components/(navbar)/navbar";
-import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/providers/toaster-provider";
+import { CourseNavbar } from "./_components/(navbar)/navbar";
+import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
 
 const CourseLayout = async ({
     children,

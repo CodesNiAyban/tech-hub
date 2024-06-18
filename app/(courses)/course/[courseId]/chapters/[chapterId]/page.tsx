@@ -12,7 +12,7 @@ import { CourseProgress } from "@/components/course-progress";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { CourseEnrollButton } from "./_components/course-enroll-button";
+import { CourseEnrollButton } from "./_components/course-purchase-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { VideoPlayer } from "./_components/video-player";
 

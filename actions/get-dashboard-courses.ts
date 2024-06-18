@@ -6,6 +6,10 @@ type CourseWithProgressWithCategory = Course & {
   categories: Category[];
   chapters: Chapter[];
   progress: number | null;
+  purchases: {
+    id: string;
+    userId: string;
+}[];
 };
 
 type DashboardCourses = {
@@ -62,12 +66,12 @@ export const getDashboardCourses = async (
     // Combine and deduplicate courses
     const allCoursesMap = new Map<string, CourseWithProgressWithCategory>();
 
-    purchasedCourses.forEach((purchase) => {
-      allCoursesMap.set(purchase.course.id, {
-        ...purchase.course,
-        progress: null,
-      });
-    });
+    // purchasedCourses.forEach((purchase) => {
+    //   allCoursesMap.set(purchase.course.id, {
+    //     ...purchase.course,
+    //     progress: null,
+    //   });
+    // });
 
     progressCourses.forEach((progress) => {
       const course = progress.chapter.course as CourseWithProgressWithCategory;

@@ -1,33 +1,44 @@
+// CoursesList.tsx
+
 import React from "react";
 import { CourseCard } from "./course-card";
-import { CourseWithProgressWithCategory } from "@/actions/get-courses";
+import { CourseWithProgressWithCategory, getCourses } from "@/actions/get-courses";
+import { auth } from "@clerk/nextjs/server";
 
 interface CoursesListProps {
     items: CourseWithProgressWithCategory[];
 }
 
 export const CoursesList = ({ items }: CoursesListProps) => {
+    const { userId } = auth();
+
     return (
         <div className="flex-1 flex flex-col p-3">
             {items.length > 0 ? (
                 <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
-                    {items.map((item) => (
-                        <CourseCard
-                            key={item.id}
-                            id={item.id}
-                            code={item.code}
-                            title={item.title}
-                            imageUrl={item.imageUrl!}
-                            chaptersLength={item.chapters.length}
-                            chapters={item.chapters}
-                            price={item.price!}
-                            progress={item.progress!}
-                            categories={item.categories!}
-                            userId={item.userId || ""}
-                            description={item.description}
-                            createdAt={item.createdAt}
-                        />
-                    ))}
+                    {items.map((item) => {
+                        // Check if the current user has purchased this course
+                        const isPurchased = item.purchases.some(purchase => purchase.userId === userId);
+
+                        return (
+                            <CourseCard
+                                key={item.id}
+                                id={item.id}
+                                code={item.code}
+                                title={item.title}
+                                imageUrl={item.imageUrl!}
+                                chaptersLength={item.chapters.length}
+                                chapters={item.chapters}
+                                price={item.price!}
+                                progress={item.progress!}
+                                categories={item.categories!}
+                                userId={item.userId || ""}
+                                description={item.description}
+                                createdAt={item.createdAt}
+                                isPurchased={isPurchased}
+                            />
+                        );
+                    })}
                 </div>
             ) : (
                 <div

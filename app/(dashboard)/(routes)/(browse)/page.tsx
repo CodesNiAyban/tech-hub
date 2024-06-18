@@ -27,14 +27,8 @@ const Browse = async ({ searchParams }: BrowseProps) => {
     });
 
     const courses = await getCourses({
-        userId: userId || "",
+        userId: userId,
         ...searchParams,
-    });
-
-    const user = await db.stripeCustomer.findUnique({
-        where: {
-            userId: userId || "",
-        },
     });
 
     return (

@@ -1,13 +1,10 @@
+import { ConfettiProvider } from "@/components/providers/confetti-provider";
 import { ToastProvider } from "@/components/providers/toaster-provider";
 import { siteConfig } from "@/config/site";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
-import { SideBar } from "./_components/(sidebar)/sidebar";
 import DashboardNavBar from "./_components/(navbar)/navbar";
-import { ConfettiProvider } from "@/components/providers/confetti-provider";
-import './quill.css'
+import { SideBar } from "./_components/(sidebar)/sidebar";
 
 
 //TODO: Improve page, add more contents, add animations

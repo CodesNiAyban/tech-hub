@@ -21,6 +21,7 @@ export interface CourseWithProgressWithCategory {
     }[];
     purchases: {
         id: string;
+        userId: string;
     }[];
     progress?: number | null;
 }
@@ -87,27 +88,28 @@ export const getCourses = async ({
         if (userId) {
             const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
                 courses.map(async course => {
-                    if (course.purchases.length === 0) {
-                        return {
-                            ...course,
-                            progress: null,
-                        }
-                    }
 
                     const progressPercentage = await getProgress(userId, course.id);
 
                     return {
                         ...course,
                         progress: progressPercentage,
+                        purchases: course.purchases.map(purchase => ({
+                            ...purchase,
+                            userId: userId,
+                        })),
                     };
                 })
             );
-
             return coursesWithProgress;
         } else {
             return courses.map(course => ({
                 ...course,
                 progress: null,
+                purchases: course.purchases.map(purchase => ({
+                    ...purchase,
+                    userId: "",
+                })),
             }));
         }
     } catch (error) {

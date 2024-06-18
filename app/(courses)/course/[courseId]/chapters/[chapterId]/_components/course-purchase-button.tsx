@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 import axios from "axios";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -33,10 +34,11 @@ export const CourseEnrollButton = ({
         <Button
             disabled={isLoading}
             onClick={onClick}
-            className="w-full md:w-auto"
+            className="bg-green-600 text-white px-4 py-2"
             size="sm"
         >
-            Enroll for {formatPrice(price)}
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Purchase for {formatPrice(price)}
         </Button>
     );
 };

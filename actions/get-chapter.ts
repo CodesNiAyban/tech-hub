@@ -55,7 +55,7 @@ export const getChapter = async ({
         let nextChapter: Chapter | null = null;
 
         // Fetch attachments if the user has purchased the course
-        if (purchase) {
+        if (chapter.subscription || purchase) { //TODO: cHECK IF SUBSCRIPTION MATCHES THE SUBSCRIPTION COURSE
             attachments = await db.attachment.findMany({
                 where: {
                     courseId: courseId,

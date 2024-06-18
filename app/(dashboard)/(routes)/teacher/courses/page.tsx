@@ -13,7 +13,7 @@ const Courses = async () => {
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/")
+    return redirect("/");
   }
 
   const courses = await db.course.findMany({
@@ -57,8 +57,9 @@ const Courses = async () => {
   });
 
   if (!subscription || subscription.subscription === "null" || subscription.subscription === "BASIC") {
-    return redirect("/")
+    return redirect("/");
   }
+
   let users = [];
   try {
     const userResponse = await clerkClient.users.getUserList();
@@ -69,13 +70,11 @@ const Courses = async () => {
 
   const data = courses.map((course) => {
     const user = users.find((user: { id: string }) => user.id === course.userId);
+    const hasProgress = course.chapters.some(chapter => chapter.userProgress);
     return {
       ...course,
+      hasProgress,
       user: user || { id: course.userId, username: "Unknown" },
-      chapters: course.chapters.map((chapter) => ({
-        ...chapter,
-        userProgressCount: chapter.userProgress.length,
-      })),
     };
   });
 

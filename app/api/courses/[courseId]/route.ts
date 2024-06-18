@@ -43,7 +43,7 @@ export async function DELETE(
         }
 
         for (const chapter of course.chapters) {
-            if (!chapter.muxData?.assetId) {
+            if (chapter?.muxData?.assetId) {
                 await mux.video.assets.delete(chapter.muxData!.assetId);
             }
         }
