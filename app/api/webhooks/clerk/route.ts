@@ -61,7 +61,8 @@ export async function POST(req: Request) {
         case "user.created": {
             await db.stripeCustomer.create({
                 data: {
-                    userId: id!
+                    userId: id!,
+                    subscription: "null",
                 },
             });
             break;
