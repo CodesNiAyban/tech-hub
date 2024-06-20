@@ -40,10 +40,11 @@ export const CourseSidebar = async ({
     });
 
     const isLocked = (chapterSubscription: string | null) => {
+        if (course.price === 0) return false;
+        if (chapterSubscription === "null" || chapterSubscription === null) return false;
         if (purchase) return false;
         if (user) {
             if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (chapterSubscription === null || chapterSubscription === "null") return false;
             if (user.subscription === chapterSubscription) return false;
         }
         return true;

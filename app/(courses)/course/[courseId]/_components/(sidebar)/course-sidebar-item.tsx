@@ -57,7 +57,7 @@ export const CourseSidebarItem = ({
                 {label}
                 {isLocked && requiredSubscription && (
                     <Badge variant="default" className="ml-auto">
-                        {requiredSubscription} Required
+                        {requiredSubscription}
                     </Badge>
                 )}
             </div>
