@@ -6,6 +6,8 @@ import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 
+export const maxDuration = 60;
+
 export default async function Dashboard() {
   const { userId } = auth();
   if (!userId) {
