@@ -59,19 +59,11 @@ export async function POST(req: Request) {
 
     switch (eventType) {
         case "user.created": {
-            const count = await db.stripeCustomer.count({
-                where: {
-                    userId: id!,
+            await db.stripeCustomer.create({
+                data: {
+                    userId: id!
                 },
             });
-
-            if (count === 0) {
-                await db.stripeCustomer.create({
-                    data: {
-                        userId: id!,
-                    },
-                });
-            }
             break;
         }
         case "user.deleted": {
