@@ -76,23 +76,22 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
 
                 const completedCourse = chapterProgress.every(ch => ch.completed);
                 const progressCount = await getProgress(user.id, course.id);
-                const hasProgress = course.chapters.some(chapter => chapter.userProgress);
                 const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
 
                 // Determine engagement type
                 let engagementType = "";
 
-                if (!hasPurchase && hasProgress && userSubscription?.subscription === "null") {
+                if (!hasPurchase && progressCount && userSubscription?.subscription === "null") {
                     engagementType = "FREE User";
-                } else if (hasPurchase && hasProgress && (userSubscription && userSubscription.subscription === "null")) {
+                } else if (hasPurchase && progressCount && (userSubscription && userSubscription.subscription === "null")) {
                     engagementType = "Purchase Only";
-                } else if (!hasPurchase && hasProgress && (userSubscription && userSubscription.subscription !== "null")) {
+                } else if (!hasPurchase && progressCount && (userSubscription && userSubscription.subscription !== "null")) {
                     engagementType = `${userSubscription.subscription} User`;
-                } else if (hasPurchase && hasProgress && userSubscription && userSubscription.subscription) {
+                } else if (hasPurchase && progressCount && userSubscription && userSubscription.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase User`;
                 }
 
-                if (!engagementType) return null
+                if (progressCount === null) return null
 
                 return {
                     ...userPurchase,

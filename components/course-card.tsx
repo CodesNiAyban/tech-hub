@@ -37,13 +37,14 @@ interface CourseCardProps {
     createdAt: Date;
     userId: string;
     isPurchased: boolean;
+    userSubscription: string;
 }
 
 const getSubscriptionBadges = (chapters: { subscription: SubscriptionType | null }[]) => {
     const subscriptions = new Set(chapters.map(chapter => chapter.subscription));
     const badges: { label: string, variant: "free" | "basic" | "pro" | "yellow" }[] = [];
 
-    if (subscriptions.has(null)) {
+    if (subscriptions.has("null") || subscriptions.has(null)) {
         badges.push({ label: "Free", variant: "free" });
     }
     if (subscriptions.has("BASIC")) {
@@ -52,9 +53,9 @@ const getSubscriptionBadges = (chapters: { subscription: SubscriptionType | null
     if (subscriptions.has("PRO")) {
         badges.push({ label: "Pro", variant: "pro" });
     }
-    if (subscriptions.has("LIFETIME")) {
-        badges.push({ label: "Lifetime", variant: "yellow" });
-    }
+    // if (subscriptions.has("LIFETIME")) {
+    //     badges.push({ label: "Lifetime", variant: "yellow" });
+    // }
 
     return (
         <div className="absolute top-2 right-2 z-20 flex gap-1">
@@ -80,7 +81,8 @@ export const CourseCard = async ({
     categories,
     createdAt,
     code,
-    isPurchased
+    isPurchased,
+    userSubscription
 }: CourseCardProps) => {
     const user = JSON.parse(JSON.stringify(await clerkClient.users.getUser(userId)));
 
@@ -100,6 +102,8 @@ export const CourseCard = async ({
                 categories={categories}
                 createdAt={createdAt}
                 user={user}
+                isPurchased={isPurchased}
+                userSubscription={userSubscription}
             >
                 <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 relative">
                     <div className="relative w-full aspect-video rounded-md overflow-hidden">
@@ -140,7 +144,7 @@ export const CourseCard = async ({
                                     value={progress}
                                     variant={progress === 100 ? "success" : "default"}
                                 />
-                            ) : isPurchased ? (
+                            ) : isPurchased || userSubscription === "LIFETIME" ? (
                                 <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">
                                     Course Purchased
                                 </p>

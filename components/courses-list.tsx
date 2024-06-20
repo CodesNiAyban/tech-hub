@@ -7,10 +7,12 @@ import { auth } from "@clerk/nextjs/server";
 
 interface CoursesListProps {
     items: CourseWithProgressWithCategory[];
+    currentUserId?: string;
+    userSubscription: string;
 }
 
-export const CoursesList = ({ items }: CoursesListProps) => {
-    const { userId } = auth();
+export const CoursesList = ({ items, userSubscription, currentUserId }: CoursesListProps) => {
+    // const { userId } = auth(); // TODO: CHANGE TO NOT CHECK AUTH PER COURSE
 
     return (
         <div className="flex-1 flex flex-col p-3">
@@ -18,7 +20,7 @@ export const CoursesList = ({ items }: CoursesListProps) => {
                 <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
                     {items.map((item) => {
                         // Check if the current user has purchased this course
-                        const isPurchased = item.purchases.some(purchase => purchase.userId === userId);
+                        const isPurchased = item.purchases?.some(purchase => purchase.userId ===  currentUserId);
 
                         return (
                             <CourseCard
@@ -36,6 +38,7 @@ export const CoursesList = ({ items }: CoursesListProps) => {
                                 description={item.description}
                                 createdAt={item.createdAt}
                                 isPurchased={isPurchased}
+                                userSubscription={userSubscription}
                             />
                         );
                     })}

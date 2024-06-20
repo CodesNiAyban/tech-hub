@@ -15,6 +15,8 @@ import { auth } from "@clerk/nextjs/server";
 import { CourseEnrollButton } from "./_components/course-purchase-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { VideoPlayer } from "./_components/video-player";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const maxDuration = 60;
 
@@ -94,10 +96,11 @@ const ChapterIdPage = async ({
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
                         {isLocked(chapter.subscription) ? (
-                            <CourseEnrollButton
-                                courseId={params.courseId}
-                                price={course.price!}
-                            />
+                            <Button size='sm' asChild>
+                                <Link href={`/pricing`}>
+                                    Subscribe to {chapter.subscription}
+                                </Link>
+                            </Button>
                         ) : (
                             <div className="flex items-center justify-center gap-x-2">
                                 <CourseProgressButton
@@ -132,7 +135,7 @@ const ChapterIdPage = async ({
                     )}
                     {!isLocked && (
                         <div className="mt-10">
-                            <CourseProgress variant="success" value={progressCount} />
+                            <CourseProgress variant="success" value={progressCount || 0} />
                         </div>
                     )}
                 </div>

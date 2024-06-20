@@ -44,7 +44,7 @@ const Browse = async ({ searchParams }: BrowseProps) => {
             <div className="mt-10 flex-1 flex flex-col p-3">
                 <SubscriptionSuccess user={user} success={searchParams.success} />
                 <Categories items={categories} />
-                <CoursesList items={courses} />
+                <CoursesList items={courses} userSubscription={user?.subscription || "null"}/>
             </div>
         </>
     );

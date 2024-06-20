@@ -31,11 +31,17 @@ const Browse = async ({ searchParams }: BrowseProps) => {
         ...searchParams,
     });
 
+    const userSubscription = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId,
+        },
+    });
+
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
                 <Categories items={categories} />
-                <CoursesList items={courses} />
+                <CoursesList items={courses} currentUserId={userId} userSubscription={userSubscription?.subscription || "null"}/>
             </div>
         </>
     );

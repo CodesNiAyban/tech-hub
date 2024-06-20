@@ -37,6 +37,8 @@ interface CourseModalProps {
     createdAt: Date;
     userId: string;
     user: User;
+    isPurchased: boolean;
+    userSubscription: string;
 }
 
 export const CourseModal = ({
@@ -54,6 +56,8 @@ export const CourseModal = ({
     createdAt,
     userId,
     user,
+    isPurchased,
+    userSubscription,
 }: CourseModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,21 +118,49 @@ export const CourseModal = ({
 
     const handlePlay = async () => {
         try {
-            // Call your API function to enroll the user
-            if (progress === null) {
-                const response = toast.promise(
-                    enroll(),
-                    {
-                        loading: "Enrolling...",
-                        error: "An error occured, please try again later.",
-                        success: "User Enrolled to Course!"
-                    });
-                return response
+            // If user is Pro, Lifetime or has purchased the course, allow access to all chapters
+            if (userSubscription === "PRO" || userSubscription === "LIFETIME" || isPurchased || price === 0) {
+                // Enroll the user if they haven't started the course yet
+                if (progress === null) {
+                    const response = toast.promise(
+                        enroll(),
+                        {
+                            loading: "Enrolling...",
+                            error: "An error occurred, please try again later.",
+                            success: "User Enrolled to Course!"
+                        });
+                }
+                router.push(`/course/${courseId}`);
+                return;
+            }
+
+            // Check if there are chapters available for Basic or null subscription
+            const accessibleChapters = chapters.filter(chapter =>
+                chapter.subscription && (chapter.subscription === userSubscription) || (chapter.subscription === "null"));
+
+            if (accessibleChapters.length === 0) {
+                if (userSubscription === "BASIC") {
+                    toast.error("You must have PRO or LIFETIME subscription or purchased the course to access");
+                } else {
+                    toast.error("You must have BASIC, PRO or LIFETIME subscription or purchased the course to access");
+                }
+
+                return;
+            } else {
+                // Enroll the user if they haven't started the course yet
+                if (progress === null) {
+                    const response = toast.promise(
+                        enroll(),
+                        {
+                            loading: "Enrolling...",
+                            error: "An error occurred, please try again later.",
+                            success: "User Enrolled to Course!"
+                        });
+                }
             }
             setIsOpen(false);
         } catch (error) {
-            console.error("Failed to enroll user:", error);
-            // Handle error state or display a message to the user
+            toast.error(error as string)
         }
     };
 
@@ -141,9 +173,9 @@ export const CourseModal = ({
             <AlertDialogTrigger asChild>
                 {children}
             </AlertDialogTrigger>
-            <AlertDialogContent className="max-w-lg bg-gray-900 text-white rounded-lg shadow-lg">
-                <div className="relative">
-                    <Image src={imageUrl} alt={title} width={700} height={400} className="rounded-t-lg object-cover" />
+            <AlertDialogContent className="max-w-lg bg-gray-900 text-white rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
+                <div className="relative w-full aspect-video overflow-hidden">
+                    <Image src={imageUrl} alt={title} width={700} height={400} className="relative rounded-t-lg object-cover" />
                     <XCircle className=" absolute top-4 right-4 h-6 w-6 text-slate-600" onClick={handleClose} />
                     <div className="flex absolute bottom-4 left-4">
                         <Button
@@ -165,7 +197,7 @@ export const CourseModal = ({
                                 </Button>
                             </UnenrollConfirmModal>
                         )}
-                        {price > 0 && (
+                        {price > 0 && !isPurchased && (
                             <CourseEnrollButton
                                 courseId={courseId}
                                 price={price}

@@ -4,7 +4,7 @@
   
   body .ql-editor {
     height: 300px !important; /* Fixed height */
-    width: 350px !important; /* Fixed width */
+    width: 650px !important; /* Fixed width */
     overflow: auto !important; /* Enable scrolling */
   }
   
