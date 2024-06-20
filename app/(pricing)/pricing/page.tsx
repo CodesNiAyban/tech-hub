@@ -9,6 +9,8 @@ import { Logo } from '../_components/logo';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+export const maxDuration = 60;
+
 export interface PricingTierFrequency {
   id: string;
   value: string;
