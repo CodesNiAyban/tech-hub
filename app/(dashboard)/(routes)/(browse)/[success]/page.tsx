@@ -6,6 +6,7 @@ import { Categories } from "../_components/categories";
 import { SubscriptionSuccess } from "../_components/subscription-success";
 import { redirect } from "next/navigation";
 
+export const maxDuration = 60;
 
 interface BrowseProps {
     searchParams: {
