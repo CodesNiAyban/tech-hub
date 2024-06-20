@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import db from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-export const MobileSubscriptionCard = () => {
+export const MobileSubscriptionCard = async () => {
+    const { userId } = auth();
+
+    let userSubscription;
+    if (userId) {
+        userSubscription = await db.stripeCustomer.findUnique({
+            where: {
+                userId: userId,
+            }
+        });
+    }
+    
     return (
         <Card>
             <CardHeader>
@@ -13,11 +26,13 @@ export const MobileSubscriptionCard = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Button size="sm" className="w-full" asChild>
-                    <Link href="/pricing">
-                        Upgrade
-                    </Link>
-                </Button>
+                {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription === "null") &&
+                    <Button size="sm" className="w-full" asChild>
+                        <Link href="/pricing">
+                            Upgrade
+                        </Link>
+                    </Button>
+                }
             </CardContent>
         </Card>
     );

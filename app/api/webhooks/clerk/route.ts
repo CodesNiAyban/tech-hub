@@ -11,7 +11,6 @@ const mux = new Mux({
 });
 
 export async function POST(req: Request) {
-
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
     const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
@@ -27,7 +26,7 @@ export async function POST(req: Request) {
 
     // If there are no headers, error out
     if (!svix_id || !svix_timestamp || !svix_signature) {
-        return new Response('Error occured -- no svix headers', {
+        return new Response('Error occurred -- no svix headers', {
             status: 400
         })
     }
@@ -50,26 +49,47 @@ export async function POST(req: Request) {
         }) as WebhookEvent
     } catch (err) {
         console.error('Error verifying webhook:', err);
-        return new Response('Error occured', {
+        return new Response('Error occurred', {
             status: 400
         })
     }
-    const { id } = evt.data;
     const eventType = evt.type;
 
     switch (eventType) {
         case "user.created": {
-            await db.stripeCustomer.create({
-                data: {
-                    userId: id!,
-                    subscription: "null",
+            let stripeCustomer = await db.stripeCustomer.findUnique({
+                where: {
+                    userId: evt.data.id,
+                },
+                select: {
+                    stripeCustomerId: true,
                 },
             });
+
+            if (!stripeCustomer) {
+                const email = evt.data.email_addresses[0]?.email_address;
+                if (!email) {
+                    return new Response('Error: No email address found', {
+                        status: 400
+                    });
+                }
+
+                const customer = await stripe.customers.create({
+                    email: evt.data.email_addresses[0]?.email_address,
+                });
+
+                stripeCustomer = await db.stripeCustomer.create({
+                    data: {
+                        userId: evt.data.id!,
+                        stripeCustomerId: customer.id,
+                    },
+                });
+            }
             break;
         }
         case "user.deleted": {
             // Delete all data related to this userId
-            await deleteUserData(id!);
+            await deleteUserData(evt.data.id!);
             break;
         }
         default:
@@ -117,7 +137,6 @@ async function deleteUserData(userId: string) {
                 userId,
             },
         });
-
 
         // Add deletion logic for other related data models as needed
 

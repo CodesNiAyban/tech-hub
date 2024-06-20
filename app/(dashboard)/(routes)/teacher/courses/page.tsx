@@ -13,7 +13,7 @@ const Courses = async () => {
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/");
+    return redirect("/sign-in");
   }
 
   const courses = await db.course.findMany({
@@ -57,7 +57,7 @@ const Courses = async () => {
   });
 
   if (!subscription || subscription.subscription === "null" || subscription.subscription === "BASIC") {
-    return redirect("/");
+    return redirect("/sign-in");
   }
 
   let users = [];
