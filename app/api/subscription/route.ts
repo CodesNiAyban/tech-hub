@@ -39,11 +39,21 @@ export async function POST() {
             return new NextResponse("No stripe ID", { status: 400 });
         }
 
+        const price = await db.subscriptionPrices.findFirst({
+            where: {
+                subscription: "BASIC",
+            }
+        });
+
+        if(price === null) {
+            return new NextResponse("No price", { status: 400 });
+        }
+
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomer.stripeCustomerId,
             line_items: [
                 {
-                    price: process.env.STRIPE_BASIC_SUBSCRIPTION_ID,
+                    price: price?.stripePriceId,
                     quantity: 1,
                 }
             ],
