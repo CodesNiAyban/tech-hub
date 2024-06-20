@@ -11,17 +11,14 @@ const SearchComponent = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const pathname = usePathname();
     const [value, setValue] = useState("")
     const debouncedValue = useDebounce(value);
-
-    const isSearchPage = pathname === "/search"
 
     const currentCategoryId = searchParams.get("categoryId")
 
     useEffect(() => {
         const url = qs.stringifyUrl({
-            url: pathname,
+            url: '/',
             query: {
                 categoryId: currentCategoryId,
                 title: debouncedValue,
@@ -29,7 +26,7 @@ const SearchComponent = () => {
         }, { skipEmptyString: true, skipNull: true });
 
         router.push(url);
-    }, [currentCategoryId, debouncedValue, pathname, router]);
+    }, [currentCategoryId, debouncedValue, router]);
 
     return (
         <form>

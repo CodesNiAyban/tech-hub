@@ -15,6 +15,7 @@ import Link from "next/link"
 import { auth } from "@clerk/nextjs/server"
 import db from "@/lib/db"
 import { redirect } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
 
 export const DashboardNavBar = async () => {
     const { userId } = auth();
@@ -26,8 +27,8 @@ export const DashboardNavBar = async () => {
                 userId: userId,
             }
         });
-    } 
-    
+    }
+
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 duration-1000 animate-in slide-in-from-top-12 z-10 backdrop-blur-sm">
             <Sheet>
@@ -42,7 +43,14 @@ export const DashboardNavBar = async () => {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="flex flex-col">
-                    <LogoPhone />
+                    <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                        <LogoPhone />
+                        {userSubscription?.subscription?.toString() !== "null" && (
+                            <Badge className="ml-2 lg:block md:hidden sm:text-sm" variant="outline">
+                                <Link href="/pricing">{userSubscription?.subscription}</Link>
+                            </Badge>
+                        )}
+                    </div>
                     <NavBarRoutes />
                     {(userSubscription?.subscription?.toString() === "BASIC" || !userSubscription?.subscription) &&
                         <div className="mt-auto">
