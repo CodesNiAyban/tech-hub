@@ -6,8 +6,6 @@ import { ThemeProvider } from "next-themes";
 import DashboardNavBar from "./_components/(navbar)/navbar";
 import { SideBar } from "./_components/(sidebar)/sidebar";
 
-export const maxDuration = 60;
-
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {
     description: siteConfig.description
@@ -18,6 +16,7 @@ const MarketingLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
+
     return (
         <ThemeProvider
             attribute="class"

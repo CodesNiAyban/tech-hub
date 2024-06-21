@@ -46,7 +46,7 @@ const ChapterIdPage = async ({
     });
 
     if (!chapter || !course) {
-        return redirect("/");
+        return redirect("/sign-in");
     }
 
     const user = await db.stripeCustomer.findUnique({

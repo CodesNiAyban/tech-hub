@@ -4,7 +4,6 @@ import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "../_components/categories";
 import { SubscriptionSuccess } from "../_components/subscription-success";
-import { redirect } from "next/navigation";
 
 export const maxDuration = 60;
 
@@ -18,11 +17,7 @@ interface BrowseProps {
 
 const Browse = async ({ searchParams }: BrowseProps) => {
     let { userId } = auth();
-
-    if (!userId) {
-        return redirect("/")
-    }
-
+    
     const categories = await db.category.findMany({
         orderBy: {
             name: "asc",
@@ -45,7 +40,8 @@ const Browse = async ({ searchParams }: BrowseProps) => {
             <div className="mt-10 flex-1 flex flex-col p-3">
                 <SubscriptionSuccess user={user} success={searchParams.success} />
                 <Categories items={categories} />
-                <CoursesList items={courses} userSubscription={user?.subscription || "null"}/>
+
+                {user?.subscription !== "null" || user?.subscription !== null && <CoursesList items={courses} userSubscription={user?.subscription || "null"}/>}
             </div>
         </>
     );

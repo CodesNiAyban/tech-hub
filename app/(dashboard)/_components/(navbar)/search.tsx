@@ -16,17 +16,17 @@ const SearchComponent = () => {
 
     const currentCategoryId = searchParams.get("categoryId")
 
-    useEffect(() => {
-        const url = qs.stringifyUrl({
-            url: '/',
-            query: {
-                categoryId: currentCategoryId,
-                title: debouncedValue,
-            }
-        }, { skipEmptyString: true, skipNull: true });
+    // useEffect(() => {
+    //     const url = qs.stringifyUrl({
+    //         url: '/',
+    //         query: {
+    //             categoryId: currentCategoryId,
+    //             title: debouncedValue,
+    //         }
+    //     }, { skipEmptyString: true, skipNull: true });
 
-        router.push(url);
-    }, [currentCategoryId, debouncedValue, router]);
+    //     router.push(url);
+    // }, [currentCategoryId, debouncedValue, router]);
 
     return (
         <form>

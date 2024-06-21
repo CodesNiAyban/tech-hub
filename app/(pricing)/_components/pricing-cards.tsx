@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { cn } from '@/lib/utils';
 import styles from './pricing.module.css';
 
@@ -62,8 +62,10 @@ const CheckIcon = ({ className }: { className?: string }) => {
 
 export function PricingCards({ userSubscription, subscriptionPrices }: PricingCardsProps) {
   const [frequency, setFrequency] = useState(frequencies[0]);
+  const [isTransitionStarted, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
 
   const basicPrice = subscriptionPrices.find(price => price.subscription === SubscriptionType.BASIC);
   const proPrice = subscriptionPrices.find(price => price.subscription === SubscriptionType.PRO);
@@ -86,7 +88,21 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
       featured: false,
       highlighted: false,
       soldOut: false,
-      cta: userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.BASIC ? 'Cancel Subscription' : userSubscription?.status === "CANCELLED" ? 'Resume Subscription' : `Subscribe`,
+      cta: (() => {
+        if (!userSubscription) {
+          return 'Subscribe';
+        }
+
+        if (userSubscription.subscription === 'BASIC') {
+          if (userSubscription.status === 'ACTIVE') {
+            return 'Cancel Subscription';
+          } else if (userSubscription.status === 'CANCELLED') {
+            return 'Resume Subscription';
+          }
+        }
+
+        return 'Subscribe';
+      })(),
     },
     {
       name: 'Pro',
@@ -105,7 +121,21 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
       featured: false,
       highlighted: true,
       soldOut: false,
-      cta: userSubscription && userSubscription.subscription === SubscriptionType.PRO ? userSubscription?.status === "ACTIVE" ? 'Cancel Subscription' : 'Resume Subscription' : `Subscribe`,
+      cta: (() => {
+        if (!userSubscription) {
+          return 'Subscribe';
+        }
+
+        if (userSubscription.subscription === 'PRO') {
+          if (userSubscription.status === 'ACTIVE') {
+            return 'Cancel Subscription';
+          } else if (userSubscription.status === 'CANCELLED') {
+            return 'Resume Subscription';
+          }
+        }
+
+        return 'Subscribe';
+      })(),
     },
     {
       name: 'Lifetime',
@@ -154,7 +184,7 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
   const subscriptionLifetime = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.patch(`/api/subscription/lifetime`);
+      const response = await axios.post(`/api/subscription/lifetime`);
       window.location.assign(response.data.url);
     } catch (error) {
       toast.error("Something went wrong");
@@ -167,7 +197,9 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
     try {
       setIsLoading(true);
       const response = await axios.patch(`/api/subscription/cancel`);
-      router.refresh();
+      setTimeout(() => {
+        startTransition(router.refresh);
+      }, 3000);
       return response;
     } catch (error) {
       throw Error
@@ -182,7 +214,7 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
       toast.promise(response, {
         loading: "Cancelling Subscription",
         error: "An error occurred, please try again later.",
-        success: "Subscription Canceled",
+        success: "Subscription Cancelled",
       });
     } catch (error) {
       toast.error("Something went wrong");
@@ -193,7 +225,9 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
     try {
       setIsLoading(true);
       const response = await axios.patch(`/api/subscription/resume`);
-      router.refresh();
+      setTimeout(() => {
+        startTransition(router.refresh);
+      }, 3000);
       return response;
     } catch (error) {
       throw Error
@@ -364,7 +398,7 @@ export function PricingCards({ userSubscription, subscriptionPrices }: PricingCa
                 >
                   <Button
                     size="lg"
-                    disabled={tier.soldOut || userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.LIFETIME}
+                    disabled={tier.soldOut || userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.LIFETIME || (tier.name === "Basic" && userSubscription?.subscription === SubscriptionType.PRO)}
                     className={cn(
                       'w-full bg-[hsl(var(--accent))] hover:opacity-80 hover:text-slate-150',
                       !tier.highlighted && !tier.featured
