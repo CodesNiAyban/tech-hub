@@ -38,11 +38,7 @@ export const DeleteAttachmentDialog = ({
                 success: "Attachment removed"
             });
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         } finally {
             setDeletingId(null);
         }
@@ -55,11 +51,7 @@ export const DeleteAttachmentDialog = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         }
     };
 

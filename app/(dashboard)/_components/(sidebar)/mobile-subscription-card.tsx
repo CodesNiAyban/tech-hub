@@ -26,7 +26,7 @@ export const MobileSubscriptionCard = async () => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription === "null") &&
+                {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription === "null" || userSubscription?.subscription === null) &&
                     <Button size="sm" className="w-full" asChild>
                         <Link href="/pricing">
                             Upgrade

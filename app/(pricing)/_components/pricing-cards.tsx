@@ -9,7 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '../_components/logo';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { StripeCustomer, SubscriptionPrices, SubscriptionType } from '@prisma/client';
+import { formatPrice } from '@/lib/format';
+import { useRouter } from 'next/navigation';
 
+interface PricingCardsProps {
+  userSubscription: StripeCustomer | null;
+  subscriptionPrices: SubscriptionPrices[];
+}
 export interface PricingTierFrequency {
   id: string;
   value: string;
@@ -31,67 +38,9 @@ export interface PricingTier {
   soldOut?: boolean;
 }
 
-export const frequencies: PricingTierFrequency[] = [
+const frequencies: PricingTierFrequency[] = [
   { id: '1', value: '1', label: 'Monthly', priceSuffix: '/month' },
   { id: '2', value: '2', label: 'Annually', priceSuffix: '/year' },
-];
-
-export const tiers: PricingTier[] = [
-  {
-    name: 'Basic',
-    id: '0',
-    href: '/subscribe',
-    price: { '1': '$29.99', '2': '$299.99' },
-    discountPrice: { '1': '', '2': '$269.99' },
-    description: `Access basic tech courses, AI-generated quizzes, and video courses with chapters.`,
-    features: [
-      `Access to Basic Courses`,
-      `AI-Generated Quizzes`,
-      `Video Courses with Chapters`,
-      `Basic Student Access`,
-    ],
-    featured: false,
-    highlighted: false,
-    soldOut: false,
-    cta: `Subscribe`,
-  },
-  {
-    name: 'Pro',
-    id: '1',
-    href: '/subscribe',
-    price: { '1': '$79.99', '2': '$799.99' },
-    discountPrice: { '1': '', '2': '$749.99' },
-    description: `Includes all features of the Basic plan plus more advanced courses and teacher mode.`,
-    features: [
-      `All in the Basic Plan`,
-      `Advanced Tech Courses`,
-      `Teacher Mode`,
-      `Upload and Edit Courses`,
-      `Manage Students`,
-    ],
-    featured: false,
-    highlighted: true,
-    soldOut: false,
-    cta: `Get started`,
-  },
-  {
-    name: 'Lifetime',
-    id: '2',
-    href: '/contact-us',
-    price: { '1': '$1499.99', '2': '$1499.99' },
-    discountPrice: { '1': '', '2': '' },
-    description: `Lifetime access to all current and future courses, with priority support and enterprise-grade security.`,
-    features: [
-      `All in the Pro Plan`,
-      `Priority Support`,
-      `Enterprise-Grade Security`,
-      `Lifetime Access to All Courses`,
-    ],
-    featured: true,
-    highlighted: true,
-    soldOut: false,
-    cta: `Get started`,
-  },
 ];
 
 const CheckIcon = ({ className }: { className?: string }) => {
@@ -111,9 +60,72 @@ const CheckIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export function PricingCards() {
+export function PricingCards({ userSubscription, subscriptionPrices }: PricingCardsProps) {
   const [frequency, setFrequency] = useState(frequencies[0]);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const basicPrice = subscriptionPrices.find(price => price.subscription === SubscriptionType.BASIC);
+  const proPrice = subscriptionPrices.find(price => price.subscription === SubscriptionType.PRO);
+  const lifetimePrice = subscriptionPrices.find(price => price.subscription === SubscriptionType.LIFETIME);
+
+  const tiers: PricingTier[] = [
+    {
+      name: 'Basic',
+      id: '0',
+      href: '/subscribe',
+      price: { '1': formatPrice(basicPrice?.price || 0), '2': '$299.99' },
+      discountPrice: { '1': '', '2': '$269.99' },
+      description: `Access basic tech courses, AI-generated quizzes, and video courses with chapters.`,
+      features: [
+        `Access to Basic Courses`,
+        `AI-Generated Quizzes`,
+        `Video Courses with Chapters`,
+        `Basic Student Access`,
+      ],
+      featured: false,
+      highlighted: false,
+      soldOut: false,
+      cta: userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.BASIC ? 'Cancel Subscription' : userSubscription?.status === "CANCELLED" ? 'Resume Subscription' : `Subscribe`,
+    },
+    {
+      name: 'Pro',
+      id: '1',
+      href: '/subscribe',
+      price: { '1': formatPrice(proPrice?.price || 0), '2': '$799.99' },
+      discountPrice: { '1': '', '2': '$749.99' },
+      description: `Includes all features of the Basic plan plus more advanced courses and teacher mode.`,
+      features: [
+        `All in the Basic Plan`,
+        `Advanced Tech Courses`,
+        `Teacher Mode`,
+        `Upload and Edit Courses`,
+        `Manage Students`,
+      ],
+      featured: false,
+      highlighted: true,
+      soldOut: false,
+      cta: userSubscription && userSubscription.subscription === SubscriptionType.PRO ? userSubscription?.status === "ACTIVE" ? 'Cancel Subscription' : 'Resume Subscription' : `Subscribe`,
+    },
+    {
+      name: 'Lifetime',
+      id: '2',
+      href: '/contact-us',
+      price: { '1': formatPrice(lifetimePrice?.price || 0), '2': formatPrice(lifetimePrice?.price || 0) },
+      discountPrice: { '1': '', '2': '' },
+      description: `Lifetime access to all current and future courses, with priority support and enterprise-grade security.`,
+      features: [
+        `All in the Pro Plan`,
+        `Priority Support`,
+        `Enterprise-Grade Security`,
+        `Lifetime Access to All Courses`,
+      ],
+      featured: true,
+      highlighted: true,
+      soldOut: userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.LIFETIME ? true : false,
+      cta: `Get started`,
+    },
+  ];
 
   const subscriptionBasic = async () => {
     try {
@@ -142,12 +154,64 @@ export function PricingCards() {
   const subscriptionLifetime = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/subscription/lifetime`);
+      const response = await axios.patch(`/api/subscription/lifetime`);
       window.location.assign(response.data.url);
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const cancelSubscription = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.patch(`/api/subscription/cancel`);
+      router.refresh();
+      return response;
+    } catch (error) {
+      throw Error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancel = async () => {
+    try {
+      const response = cancelSubscription();
+      toast.promise(response, {
+        loading: "Cancelling Subscription",
+        error: "An error occurred, please try again later.",
+        success: "Subscription Canceled",
+      });
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const resumeSubscription = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.patch(`/api/subscription/resume`);
+      router.refresh();
+      return response;
+    } catch (error) {
+      throw Error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resume = async () => {
+    try {
+      const response = resumeSubscription();
+      toast.promise(response, {
+        loading: "Resuming Subscription",
+        error: "An error occurred, please try again later.",
+        success: "Subscription Resumed",
+      });
+    } catch (error) {
+      toast.error("Something went wrong");
     }
   };
 
@@ -300,7 +364,7 @@ export function PricingCards() {
                 >
                   <Button
                     size="lg"
-                    disabled={tier.soldOut}
+                    disabled={tier.soldOut || userSubscription?.status === "ACTIVE" && userSubscription.subscription === SubscriptionType.LIFETIME}
                     className={cn(
                       'w-full bg-[hsl(var(--accent))] hover:opacity-80 hover:text-slate-150',
                       !tier.highlighted && !tier.featured
@@ -310,17 +374,22 @@ export function PricingCards() {
                     )}
                     variant={tier.highlighted ? 'default' : 'outline'}
                     onClick={
-                      tier.name === 'Basic'
-                        ? subscriptionBasic
-                        : tier.name === 'Pro'
-                        ? subscriptionPro
-                        : tier.name === 'Lifetime'
-                        ? subscriptionLifetime
-                        : undefined
+                      tier.cta.toString() === 'Cancel Subscription'
+                        ? cancel
+                        : tier.cta === 'Resume Subscription'
+                          ? resume
+                          : tier.name === 'Basic' && tier.cta === 'Subscribe'
+                            ? subscriptionBasic
+                            : tier.name === 'Pro' && tier.cta === 'Subscribe'
+                              ? subscriptionPro
+                              : tier.name === 'Lifetime' && tier.cta === 'Get started'
+                                ? subscriptionLifetime
+                                : undefined
                     }
                   >
-                    {tier.soldOut ? 'Sold out' : tier.cta}
+                    {tier.soldOut ? 'Purchased' : tier.cta}
                   </Button>
+
                 </a>
 
                 <ul

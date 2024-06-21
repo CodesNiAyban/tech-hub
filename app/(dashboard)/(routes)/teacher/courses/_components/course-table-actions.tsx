@@ -30,11 +30,7 @@ export const CourseTableActions = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         }
     }
 
@@ -44,11 +40,7 @@ export const CourseTableActions = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         }
     }
 
@@ -85,11 +77,7 @@ export const CourseTableActions = ({
             router.push(`/teacher/courses`);
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         }
     }
 

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastProvider } from "@/components/providers/toaster-provider";
 
 
 const CourseLayout = async ({
@@ -28,9 +29,11 @@ const CourseLayout = async ({
         >
             <div className="h-full">
                 <div className="fixed w-full z-50">
-                    <CourseNavbar/>
+                    <CourseNavbar />
                 </div>
-                <main className="pt-[80px] h-full">{children}</main>
+                <main className="pt-[80px] h-full">{children}
+                    <ToastProvider />
+                </main>
             </div>
         </ThemeProvider>
     );

@@ -38,7 +38,7 @@ export const SideBar = async () => {
         <div className="flex-1">
           <SidebarRoutes />
         </div>
-        {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription === "null") && (
+        {(userSubscription?.subscription?.toString() === "BASIC" || userSubscription?.subscription?.toString() !== "null" || userSubscription?.subscription?.toString() !== null) && (
           <div className="mt-auto p-4">
             <SubscriptionCard />
           </div>
