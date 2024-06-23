@@ -11,7 +11,7 @@ interface CourseSideBarProps {
             userProgress: UserProgress[] | null;
         })[];
     };
-    progressCount: number;
+    progressCount: number | null;
 }
 
 export const CourseSidebar = async ({
@@ -39,16 +39,64 @@ export const CourseSidebar = async ({
         },
     });
 
-    const isLocked = (chapterSubscription: string | null) => {
-        if (course.price === 0) return false;
-        if (chapterSubscription === "null" || chapterSubscription === null) return false;
-        if (purchase) return false;
-        if (user) {
-            if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (user.subscription === chapterSubscription) return false;
+    const isLocked = (chapter: Chapter) => {
+        let unlock = false;
+
+        // Check all previous chapters completion status and subscription requirement
+        for (let i = 1; i <= chapter.position; i++) {
+            if (user) {
+                if (course.price === 0 ||
+                    purchase ||
+                    (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
+                    (user.subscription === chapter.subscription) ||
+                    chapter.subscription === "null"
+                ) {
+                    if (chapter.position === 1) return false
+
+                    const prevChapter = course.chapters[i - 1];
+
+                    // Fetch user progress for the previous chapter
+                    const userProgress = prevChapter.userProgress?.find(
+                        (progress) => progress.userId === userId
+                    );
+
+                    // If the previous chapter is not completed, lock the next chapter
+                    if (userProgress?.isCompleted) return false;
+
+                    // If the previous chapter is locked and doesn't match the subscription, lock the next chapter
+                    if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
+                        return true;
+                    }
+
+                    // If previous chapter is completed and meets conditions, unlock subsequent chapters
+                    if (userProgress?.isCompleted) {
+                        unlock = true;
+                    }
+                } else {
+                    return true
+                }
+            } else {
+                return true;
+            }
         }
-        return true;
+
+        return !unlock;
     };
+
+    const badgeLock = (chapter: Chapter) => {
+        if (user) {
+            if (course.price === 0 ||
+                purchase ||
+                (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
+                (user.subscription === chapter.subscription) ||
+                chapter.subscription === "null"
+            )
+                return false
+            else
+                return true
+
+        }
+    }
 
     return (
         <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
@@ -64,8 +112,9 @@ export const CourseSidebar = async ({
                         label={chapter.title}
                         isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
                         courseId={course.id}
-                        isLocked={isLocked(chapter.subscription)}
+                        isLocked={isLocked(chapter)}
                         requiredSubscription={chapter.subscription} // Pass requiredSubscription
+                        badgeLock={badgeLock(chapter)}
                     />
                 ))}
             </div>

@@ -9,6 +9,7 @@ interface CoursesListProps {
     items: CourseWithProgressWithCategory[];
     currentUserId?: string;
     userSubscription: string;
+    
 }
 
 export const CoursesList = ({ items, userSubscription, currentUserId }: CoursesListProps) => {
@@ -39,6 +40,8 @@ export const CoursesList = ({ items, userSubscription, currentUserId }: CoursesL
                                 createdAt={item.createdAt}
                                 isPurchased={isPurchased}
                                 userSubscription={userSubscription}
+                                averageRating={item.averageRating}
+                                totalRatings={item.totalRatings}
                             />
                         );
                     })}

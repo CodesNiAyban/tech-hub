@@ -38,6 +38,8 @@ interface CourseCardProps {
     userId: string;
     isPurchased: boolean;
     userSubscription: string;
+    averageRating: number | null | undefined;
+    totalRatings: number | null | undefined;
 }
 
 const getSubscriptionBadges = (chapters: { subscription: SubscriptionType | null }[]) => {
@@ -82,7 +84,9 @@ export const CourseCard = async ({
     createdAt,
     code,
     isPurchased,
-    userSubscription
+    userSubscription,
+    averageRating, 
+    totalRatings
 }: CourseCardProps) => {
     const user = JSON.parse(JSON.stringify(await clerkClient.users.getUser(userId)));
 
@@ -104,6 +108,8 @@ export const CourseCard = async ({
                 user={user}
                 isPurchased={isPurchased}
                 userSubscription={userSubscription}
+                averageRating={averageRating}
+                totalRatings={totalRatings}
             >
                 <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 relative">
                     <div className="relative w-full aspect-video rounded-md overflow-hidden">
@@ -146,7 +152,7 @@ export const CourseCard = async ({
                                 />
                             ) : isPurchased || userSubscription === "LIFETIME" ? (
                                 <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">
-                                    Course Purchased
+                                    Owned
                                 </p>
                             ) : (
                                 <p className="text-md md:text-sm font-medium text-slate-700 dark:text-slate-50">

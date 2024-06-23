@@ -3,14 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CheckCircle, Lock, PlayCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface CourseSidebarItemProps {
     label: string;
     id: string;
     isCompleted: boolean;
     courseId: string;
-    isLocked: boolean;
+    isLocked: boolean | undefined;
     requiredSubscription?: string | null; // Add requiredSubscription prop
+    badgeLock: boolean | undefined
 }
 
 export const CourseSidebarItem = ({
@@ -19,7 +21,8 @@ export const CourseSidebarItem = ({
     isCompleted,
     courseId,
     isLocked,
-    requiredSubscription, // Add requiredSubscription prop
+    requiredSubscription, 
+    badgeLock
 }: CourseSidebarItemProps) => {
     const pathname = usePathname();
     const router = useRouter();
@@ -30,6 +33,10 @@ export const CourseSidebarItem = ({
     const onClick = () => {
         if (!isLocked) {
             router.push(`/course/${courseId}/chapters/${id}`);
+        } else if (badgeLock) {
+            toast.error(`This chapter is locked. Subscribe to TechHub ${requiredSubscription} or purchase the course`);
+        } else {
+            toast.error("This chapter is locked, complete previous chapters first.");
         }
     };
 
@@ -55,7 +62,7 @@ export const CourseSidebarItem = ({
                     )}
                 />
                 {label}
-                {isLocked && requiredSubscription && (
+                {badgeLock && requiredSubscription && (
                     <Badge variant="default" className="ml-auto">
                         {requiredSubscription}
                     </Badge>

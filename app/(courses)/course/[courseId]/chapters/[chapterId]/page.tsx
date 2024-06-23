@@ -17,6 +17,7 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 import { VideoPlayer } from "./_components/video-player";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Chapter } from "@prisma/client";
 
 export const maxDuration = 60;
 
@@ -54,15 +55,32 @@ const ChapterIdPage = async ({
             userId: userId,
         },
     });
-    const isLocked = (chapterSubscription: string | null) => {
-        if (course.price === 0) return false;
-        if (chapterSubscription === "null" || chapterSubscription === null) return false;
-        if (purchase) return false;
-        if (user) {
-            if (user.subscription === "PRO" || user.subscription === "LIFETIME") return false;
-            if (user.subscription === chapterSubscription) return false;
+    const isLocked = (chapter: Chapter) => {
+        // Check all previous chapters completion status and subscription requirement
+        for (let i = 1; i < chapter.position; i++) {
+            const prevChapter = course.chapters[i];
+
+            // Fetch user progress for the previous chapter
+            const userProgress = prevChapter.userProgress?.find(
+                (progress) => progress.userId === userId
+            );
+
+            if (user) {
+                if (!userProgress?.isCompleted) return true;
+
+                if (course.price === 0) continue;
+                else if (purchase) continue;
+                else if (user.subscription === "PRO" || user.subscription === "LIFETIME") continue;
+                else if (user.subscription === chapter.subscription) continue;
+
+                // If the previous chapter is locked and doesn't match the subscription, lock the current chapter
+                if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
+                    return true;
+                }
+            } else {
+                return true;
+            }
         }
-        return true;
     };
 
 
@@ -75,7 +93,7 @@ const ChapterIdPage = async ({
             {userProgress?.isCompleted && (
                 <Banner variant="success" label="You already completed this chapter." />
             )}
-            {isLocked(chapter.subscription) && (
+            {isLocked(chapter) && (
                 <Banner
                     variant="warning"
                     label={`You need to be subscribed to TechHub ${chapter.subscription} or purchase this course to watch this chapter`}
@@ -89,17 +107,17 @@ const ChapterIdPage = async ({
                         courseId={params.courseId}
                         nextChapterId={nextChapter?.id}
                         playbackId={muxData?.playbackId!}
-                        isLocked={isLocked(chapter.subscription)}
+                        isLocked={isLocked(chapter)}
                         completeOnEnd={completeOnEnd}
                     />
                 </div>
                 <div>
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
-                        {isLocked(chapter.subscription) ? (
+                        {isLocked(chapter) ? (
                             <Button size='sm' asChild>
                                 <Link href={`/pricing`}>
-                                    Subscribe to {chapter.subscription}
+                                    Subscribe to TechHub {chapter.subscription}
                                 </Link>
                             </Button>
                         ) : (

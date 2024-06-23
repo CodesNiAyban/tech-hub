@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { UnenrollConfirmModal } from "./unenroll-confirm-modal";
 import { cn } from "@/lib/utils";
+import { StarRating } from "../star-rating";
 
 interface CourseModalProps {
     children: React.ReactNode;
@@ -39,6 +40,8 @@ interface CourseModalProps {
     user: User;
     isPurchased: boolean;
     userSubscription: string;
+    averageRating: number | null | undefined;
+    totalRatings: number | null | undefined;
 }
 
 export const CourseModal = ({
@@ -58,6 +61,8 @@ export const CourseModal = ({
     user,
     isPurchased,
     userSubscription,
+    averageRating,
+    totalRatings
 }: CourseModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -174,7 +179,7 @@ export const CourseModal = ({
                 {children}
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-lg bg-gray-900 text-white rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
-                <div className="relative w-full aspect-video overflow-hidden">
+                <div className="relative w-full aspect-w-16 aspect-h-9 overflow-hidden">
                     <Image src={imageUrl} alt={title} width={700} height={400} className="relative rounded-t-lg object-cover" />
                     <XCircle className=" absolute top-4 right-4 h-6 w-6 text-slate-600" onClick={handleClose} />
                     <div className="flex absolute bottom-4 left-4">
@@ -197,7 +202,7 @@ export const CourseModal = ({
                                 </Button>
                             </UnenrollConfirmModal>
                         )}
-                        {price > 0 && !isPurchased && (
+                        {price > 0 && !isPurchased || userSubscription !== "LIFETIME" && (
                             <CourseEnrollButton
                                 courseId={courseId}
                                 price={price}
@@ -205,8 +210,19 @@ export const CourseModal = ({
                         )}
                     </div>
                 </div>
-                <div className="p-2 flex flex-col">
-                    <h3 className="text-2xl font-bold">{title}</h3>
+
+                <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-bold">{title}</h3>
+                        <div className="flex items-center">
+                            <p className="mr-1 text-sm">({totalRatings})</p>
+                            <StarRating
+                                courseId={courseId}
+                                initialRating={averageRating}
+                                isEnrolled={isPurchased || progress !== null}
+                            />
+                        </div>
+                    </div>
                     <p className="text-sm text-gray-400">Created by: {user.username}</p>
                     <p className="mt-2 text-gray-300">{description}</p>
                     <div className="flex items-center mt-2 text-gray-400">
@@ -222,7 +238,7 @@ export const CourseModal = ({
                         )}
                     </div>
                     <Separator />
-                    <div className="flex flex-wrap gap-2 mb-4 mt-4">
+                    <div className="flex flex-wrap gap-2 mb-2 mt-4">
                         <p className="text-md text-gray-400">Info on </p>
                         <p className="text-md font-bold">{title}</p>
                     </div>

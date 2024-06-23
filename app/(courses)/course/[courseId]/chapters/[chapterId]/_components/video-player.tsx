@@ -15,7 +15,7 @@ interface VideoPlayerProps {
     courseId: string;
     chapterId: string;
     nextChapterId?: string;
-    isLocked: boolean | null;
+    isLocked: true | undefined;
     completeOnEnd: boolean | undefined;
     title: string;
 }
