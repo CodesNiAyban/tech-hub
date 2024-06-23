@@ -95,18 +95,18 @@ model Chapter {
 }
 
 model Comments {
-  id        String  @id @default(uuid())
+  id        String     @id @default(uuid())
   userId    String
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
-  comment  String?    @db.Text
-  parentId String? // Reference to parent comment for replies
-  parent   Comments?  @relation("CommentReplies", fields: [parentId], references: [id])
-  replies  Comments[] @relation("CommentReplies")
+  comment   String?    @db.Text
+  parentId  String?    // Reference to parent comment for replies
+  parent    Comments?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comments[] @relation("CommentReplies")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@unique([userId, chapterId, id])
   @@index([chapterId])

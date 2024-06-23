@@ -60,6 +60,12 @@ const ChapterIdPage = async ({
     const comments = await db.comments.findMany({
         where: {
             chapterId: chapter.id,
+        },
+        include: {
+            replies: true
+        },
+        orderBy: {
+            createdAt: "asc"
         }
     })
 
@@ -169,6 +175,7 @@ const ChapterIdPage = async ({
                     {!!attachments.length && (
                         <>
                             <div className="p-4">
+                                Attachments
                                 {attachments.map((attachment) => (
                                     <a
                                         href={attachment.url}
