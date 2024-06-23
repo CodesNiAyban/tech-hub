@@ -41,7 +41,7 @@ export default async function Dashboard() {
       </div>
       <CoursesList
         items={[...coursesInProgress, ...completedCourses]}
-        currentUserId={userId}
+        currentUserId={userId} 
         userSubscription={userSubscription?.subscription || "null"}
       />
     </div>

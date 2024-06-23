@@ -1,16 +1,14 @@
-import { LogoPhone } from "@/components/logo-phone"
+import { CourseProgress } from "@/components/course-progress"
 import { ModeToggle } from "@/components/theme-button"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+import { Chapter, Course, UserProgress } from "@prisma/client"
 import {
     Link,
-    Loader2,
-    Menu
+    Loader2
 } from "lucide-react"
-import { TeacherStudentButton } from "./teacher-student-button"
 import CourseMobileSidebar from "../(sidebar)/course-mobile-sidebar"
-import { Chapter, Course, UserProgress } from "@prisma/client"
+import { TeacherStudentButton } from "./teacher-student-button"
 
 interface CourseNavbarProps {
     course: Course & {

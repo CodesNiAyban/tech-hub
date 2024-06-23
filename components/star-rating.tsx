@@ -38,12 +38,20 @@ export const StarRating = ({ courseId, initialRating, isEnrolled }: StarRatingPr
         }
     };
 
+    const calculateFillPercentage = (value: number, rating: number | null | undefined) => {
+        if (!rating) return 0;
+        if (value <= rating) return 100;
+        if (value - 1 < rating && rating < value) return (rating - (value - 1)) * 100;
+        return 0;
+    };
+
     return (
         <div className="flex items-center">
             {[1, 2, 3, 4, 5].map((value) => (
                 <StarIcon
                     key={value}
                     filled={value <= (hoverRating || rating || 0)}
+                    fillPercentage={calculateFillPercentage(value, hoverRating || rating)}
                     className={cn("w-5 h-5")}
                     onClick={() => handleRating(value)}
                     onMouseEnter={() => setHoverRating(value)}

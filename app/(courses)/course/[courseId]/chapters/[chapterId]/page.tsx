@@ -11,13 +11,14 @@ import { Banner } from "@/components/banner";
 import { CourseProgress } from "@/components/course-progress";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
+import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { CourseEnrollButton } from "./_components/course-purchase-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { VideoPlayer } from "./_components/video-player";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Chapter } from "@prisma/client";
+import CommentSection from "./_components/comment-section";
 
 export const maxDuration = 60;
 
@@ -39,7 +40,7 @@ const ChapterIdPage = async ({
         attachments,
         nextChapter,
         userProgress,
-        purchase,
+        purchase
     } = await getChapter({
         userId,
         chapterId: params.chapterId,
@@ -55,34 +56,61 @@ const ChapterIdPage = async ({
             userId: userId,
         },
     });
+
+    const comments = await db.comments.findMany({
+        where: {
+            chapterId: chapter.id,
+        }
+    })
+
     const isLocked = (chapter: Chapter) => {
+        let unlock = false;
+
         // Check all previous chapters completion status and subscription requirement
-        for (let i = 1; i < chapter.position; i++) {
-            const prevChapter = course.chapters[i];
-
-            // Fetch user progress for the previous chapter
-            const userProgress = prevChapter.userProgress?.find(
-                (progress) => progress.userId === userId
-            );
-
+        for (let i = 1; i <= chapter.position; i++) {
             if (user) {
-                if (!userProgress?.isCompleted) return true;
+                if (course.price === 0 ||
+                    purchase ||
+                    (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
+                    (user.subscription === chapter.subscription) ||
+                    ((chapter.subscription === "null" || chapter.subscription === null || !chapter.subscription) && (user.subscription === "null" || user.subscription === null || !user.subscription))
+                ) {
+                    if (chapter.position === 1) return false
 
-                if (course.price === 0) continue;
-                else if (purchase) continue;
-                else if (user.subscription === "PRO" || user.subscription === "LIFETIME") continue;
-                else if (user.subscription === chapter.subscription) continue;
+                    const prevChapter = course.chapters[i - 1];
 
-                // If the previous chapter is locked and doesn't match the subscription, lock the current chapter
-                if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
-                    return true;
+                    // Fetch user progress for the previous chapter
+                    const userProgress = prevChapter.userProgress?.find(
+                        (progress) => progress.userId === userId
+                    );
+
+                    // If the previous chapter is not completed, lock the next chapter
+                    if (userProgress?.isCompleted) return false;
+
+                    // If the previous chapter is locked and doesn't match the subscription, lock the next chapter
+                    if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
+                        return true;
+                    }
+
+                    // If previous chapter is completed and meets conditions, unlock subsequent chapters
+                    if (userProgress?.isCompleted) {
+                        unlock = true;
+                    }
+                } else {
+                    return true
                 }
             } else {
                 return true;
             }
         }
+
+        return !unlock;
     };
 
+    const getUsers = await clerkClient.users.getUserList();
+    const users: User[] = JSON.parse(JSON.stringify(getUsers.data));
+
+    const currentUser = users.find(user => user.id === userId);
 
     const completeOnEnd = !isLocked && userProgress?.isCompleted;
 
@@ -115,11 +143,14 @@ const ChapterIdPage = async ({
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
                         {isLocked(chapter) ? (
-                            <Button size='sm' asChild>
-                                <Link href={`/pricing`}>
-                                    Subscribe to TechHub {chapter.subscription}
-                                </Link>
-                            </Button>
+                            <div className="flex items-center justify-center gap-x-2">
+                                <Button size='sm' asChild>
+                                    <Link href={`/pricing`}>
+                                        Subscribe to TechHub {chapter.subscription}
+                                    </Link>
+                                </Button>
+                                {!course.price || course.price > 0 && <CourseEnrollButton price={course.price || 0} courseId={params.courseId} />}
+                            </div>
                         ) : (
                             <div className="flex items-center justify-center gap-x-2">
                                 <CourseProgressButton
@@ -152,11 +183,8 @@ const ChapterIdPage = async ({
                             </div>
                         </>
                     )}
-                    {!isLocked && (
-                        <div className="mt-10">
-                            <CourseProgress variant="success" value={progressCount || 0} />
-                        </div>
-                    )}
+
+                    <CommentSection comments={comments} users={users} currentUser={currentUser} courseId={params.courseId} chapterId={params.chapterId} />
                 </div>
             </div>
         </div>

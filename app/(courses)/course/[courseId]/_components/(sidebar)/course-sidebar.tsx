@@ -49,7 +49,7 @@ export const CourseSidebar = async ({
                     purchase ||
                     (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
                     (user.subscription === chapter.subscription) ||
-                    chapter.subscription === "null"
+                    ((chapter.subscription === "null" || chapter.subscription === null || !chapter.subscription) && (user.subscription === "null" || user.subscription === null || !user.subscription))
                 ) {
                     if (chapter.position === 1) return false
 
@@ -117,6 +117,9 @@ export const CourseSidebar = async ({
                         badgeLock={badgeLock(chapter)}
                     />
                 ))}
+            </div>
+            <div className="p-4">
+                <CourseProgress variant="success" value={progressCount || 0} />
             </div>
         </div>
     );

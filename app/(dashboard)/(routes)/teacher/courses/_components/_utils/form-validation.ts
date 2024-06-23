@@ -29,6 +29,13 @@ export const descriptionSchema = z.object({
   }),
 });
 
+export const commentSchema = z.object({
+  comment: notOnlyWhitespace("Description is required and cannot be whitespace only").max(1000, {
+    message: "Comments cannot exceed 1000 characters",
+  }),
+});
+
+
 export const imageSchema = z.object({
   imageUrl: notOnlyWhitespace("Image URL is required and cannot be whitespace only"),
 });

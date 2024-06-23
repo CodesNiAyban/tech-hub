@@ -9,9 +9,10 @@ type CourseWithProgressWithCategory = Course & {
   purchases: {
     id: string;
     userId: string;
-}[];
+  }[];
+  averageRating?: number | null;
+  totalRatings?: number | null;
 };
-
 type DashboardCourses = {
   completedCourses: CourseWithProgressWithCategory[];
   coursesInProgress: CourseWithProgressWithCategory[];
@@ -35,6 +36,11 @@ export const getDashboardCourses = async (
                 isPublished: true,
               },
             },
+            ratings: {
+              select: {
+                rating: true,
+              },
+            },
           },
         },
       },
@@ -56,6 +62,11 @@ export const getDashboardCourses = async (
                     isPublished: true,
                   },
                 },
+                ratings: {
+                  select: {
+                    rating: true,
+                  },
+                },
               },
             },
           },
@@ -74,11 +85,17 @@ export const getDashboardCourses = async (
     // });
 
     progressCourses.forEach((progress) => {
-      const course = progress.chapter.course as CourseWithProgressWithCategory;
+      const totalRatings = progress.chapter.course.ratings.length;
+      const sumRatings = progress.chapter.course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
+      const averageRating = totalRatings > 0 ? sumRatings / totalRatings : null;
+
+      const course = progress.chapter.course as unknown as CourseWithProgressWithCategory;
       if (!allCoursesMap.has(course.id)) {
         allCoursesMap.set(course.id, {
           ...course,
           progress: null,
+          averageRating: averageRating,
+          totalRatings: totalRatings,
         });
       }
     });

@@ -86,11 +86,31 @@ model Chapter {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
+  comments     Comments[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+}
+
+model Comments {
+  id        String  @id @default(uuid())
+  userId    String
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  comment  String?    @db.Text
+  parentId String? // Reference to parent comment for replies
+  parent   Comments?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comments[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId, id])
+  @@index([chapterId])
+  @@index([parentId])
 }
 
 model MuxData {

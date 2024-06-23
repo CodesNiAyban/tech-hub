@@ -27,7 +27,7 @@ export const SideBar = async () => {
           <Logo />
           {userSubscription?.subscription?.toString() !== "null" && (
             <Badge className="ml-1 text-xs xl:block lg:hidden md:hidden sm:hidden" variant="outline">
-              <Link href="/pricing">{userSubscription?.subscription === "LIFETIME" ? "LT" : userSubscription?.subscription}</Link>
+              <Link href="/pricing">{userSubscription?.subscription === "LIFETIME" ? "LT" : userSubscription?.subscription ? userSubscription?.subscription : "FREE"}</Link>
             </Badge>
           )}
           <Button variant="outline" size="icon" className="h-8 w-8 ml-auto">

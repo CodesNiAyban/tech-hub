@@ -81,9 +81,9 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                 // Determine engagement type
                 let engagementType = "";
 
-                if (!hasPurchase && progressCount && userSubscription?.subscription === "null") {
+                if (!hasPurchase && progressCount && (userSubscription?.subscription === "null" && userSubscription?.subscription === null)) {
                     engagementType = "FREE User";
-                } else if (hasPurchase && progressCount && (userSubscription && userSubscription.subscription === "null")) {
+                } else if (hasPurchase && progressCount && (userSubscription && (userSubscription?.subscription === "null" && userSubscription?.subscription === null))) {
                     engagementType = "Purchase Only";
                 } else if (!hasPurchase && progressCount && (userSubscription && userSubscription.subscription !== "null")) {
                     engagementType = `${userSubscription.subscription} User`;

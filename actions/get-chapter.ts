@@ -46,6 +46,12 @@ export const getChapter = async ({
                                 userId: true,
                             },
                         },
+                        comments: {
+                            select: {
+                                id: true,
+                                comment: true,
+                            },
+                        },
                     },
                     orderBy: {
                         position: 'asc',

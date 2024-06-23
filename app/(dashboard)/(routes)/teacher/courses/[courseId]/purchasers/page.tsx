@@ -81,7 +81,7 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
 
                 // Determine engagement type
                 let engagementType = "";
-                if (hasPurchase && (!userSubscription || userSubscription.subscription === "null")) {
+                if (hasPurchase && (!userSubscription || (userSubscription?.subscription === "null" && userSubscription?.subscription === null))) {
                     engagementType = "Purchase Only";
                 } else if (hasPurchase && userSubscription && userSubscription.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase`;

@@ -202,7 +202,7 @@ export const CourseModal = ({
                                 </Button>
                             </UnenrollConfirmModal>
                         )}
-                        {price > 0 && !isPurchased || userSubscription !== "LIFETIME" && (
+                        {price > 0 && !isPurchased && (
                             <CourseEnrollButton
                                 courseId={courseId}
                                 price={price}
@@ -215,7 +215,7 @@ export const CourseModal = ({
                     <div className="flex items-center justify-between">
                         <h3 className="text-2xl font-bold">{title}</h3>
                         <div className="flex items-center">
-                            <p className="mr-1 text-sm">({totalRatings})</p>
+                            <p className="mr-1 text-sm">({totalRatings ? totalRatings : 0})</p>
                             <StarRating
                                 courseId={courseId}
                                 initialRating={averageRating}
