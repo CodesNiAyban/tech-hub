@@ -1,21 +1,20 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { User } from "@clerk/nextjs/server";
+import * as z from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { Heart, MessageCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import * as z from "zod";
+import { CornerDownLeft, Heart, MessageCircle } from "lucide-react";
 import { commentSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
-import { User } from "@clerk/nextjs/server";
-import { Comments } from "@prisma/client";
 
 interface Comment {
     id: string;
@@ -26,7 +25,7 @@ interface Comment {
     createdAt: Date;
     updatedAt: Date;
     emojiId: string | null;
-    replies?: Comments[];
+    replies?: Comment[];
 }
 
 interface CommentListProps {
@@ -93,48 +92,92 @@ const CommentList = ({ comments, users, chapterId, courseId }: CommentListProps)
         }
     };
 
+    const renderReplies = (replies: Comment[], level: number = 1) => {
+        return replies.slice(0, 4).map((reply) => (
+            <div key={reply.id} className={`ml-${level * 8} mt-2 space-y-2`}>
+                <Card className="flex items-start space-x-2 border-l-primary p-4">
+                    <Avatar className="w-6 h-6">
+                        <AvatarImage src={users.find(u => u.id === reply.userId)?.imageUrl} />
+                        <AvatarFallback>test</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col w-full">
+                        <p className="text-md font-semibold">{users.find(u => u.id === reply.userId)?.username}</p>
+                        <p>{reply.comment}</p>
+                        <div className="flex justify-between items-center mt-2">
+                            <p className="text-xs text-gray-500">{reply.createdAt.toLocaleDateString()}</p>
+                            <div className="flex items-center cursor-pointer" onClick={() => handleReply(reply.id, reply.userId)}>
+                                <CornerDownLeft className="text-blue-500 h-4 w-4" />
+                                <p className="text-blue-500 text-sm ml-1">Reply</p>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+                {replyingTo === reply.id && (
+                    <div className="ml-8 mt-2 space-y-2">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="comment"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Textarea
+                                                    {...field}
+                                                    placeholder="Write your comment here..."
+                                                    disabled={isSubmitting}
+                                                    className="resize-none"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex justify-end space-x-2">
+                                    <Button onClick={cancelReply} variant="outline">Cancel</Button>
+                                    <Button type="submit" disabled={isSubmitting}>Reply</Button>
+                                </div>
+                            </form>
+                        </Form>
+                    </div>
+                )}
+                {reply.replies && renderReplies(reply.replies, level + 1)}
+            </div>
+        ));
+    };
+
     return (
         <div className="mt-6 space-y-4 p-4">
             {comments.map((comment) => (
                 <Card key={comment.id} className="w-full bg-white shadow-md rounded-lg p-4 border border-gray-200">
-                    <Card>
-                        <CardHeader>
-                            <div className="flex items-center">
-                                <Avatar className="w-8 h-8 mr-3">
-                                    <AvatarImage src={users.find(u => u.id === comment.userId)?.imageUrl} />
-                                    <AvatarFallback>test</AvatarFallback>
-                                </Avatar>
-                                <p className="text-md font-semibold">{users.find(u => u.id === comment.userId)?.username}</p>
+                    <CardHeader>
+                        <div className="flex items-center">
+                            <Avatar className="w-8 h-8 mr-3">
+                                <AvatarImage src={users.find(u => u.id === comment.userId)?.imageUrl} />
+                                <AvatarFallback>test</AvatarFallback>
+                            </Avatar>
+                            <p className="text-md font-semibold">{users.find(u => u.id === comment.userId)?.username}</p>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="mt-2">
+                        <p>{comment.comment}</p>
+                    </CardContent>
+                    <CardFooter className="flex justify-between items-center mt-4">
+                        <div className="flex items-center space-x-4">
+                            <Heart className="text-red-500 cursor-pointer" />
+                            <div className="flex items-center cursor-pointer" onClick={() => handleReply(comment.id, comment.userId)}>
+                                <MessageCircle className="text-blue-500" />
+                                <p className="text-blue-500 ml-1">Reply</p>
                             </div>
-                        </CardHeader>
-                        <CardContent className="mt-2">
-                            <p>{comment.comment}</p>
-                        </CardContent>
-                        <CardFooter className="flex justify-between items-center mt-4">
-                            <div className="flex items-center space-x-4">
-                                <Heart className="text-red-500 cursor-pointer" />
-                                <MessageCircle className="text-blue-500 cursor-pointer" onClick={() => handleReply(comment.id, comment.userId)} />
-                            </div>
-                            <p className="text-sm text-gray-500">{comment.createdAt.toLocaleDateString()}</p>
-                        </CardFooter>
-                    </Card>
+                        </div>
+                        <p className="text-sm text-gray-500">{comment.createdAt.toLocaleDateString()}</p>
+                    </CardFooter>
                     <div className="p-2">
                         {comment.replies && comment.replies.length > 0 && (
                             <>
                                 <p className="mt-4 ml-4">Replies</p>
                                 <div className="ml-8 m-2 space-y-2 border-gray-200">
-                                    {comment.replies.map(reply => (
-                                        <Card key={reply.id} className="flex items-start space-x-2 border-l-primary p-4">
-                                            <Avatar className="w-6 h-6">
-                                                <AvatarImage src={users.find(u => u.id === reply.userId)?.imageUrl} />
-                                                <AvatarFallback>test</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col">
-                                                <p>{reply.comment}</p>
-                                                <p className="text-xs text-gray-500">{reply.createdAt.toLocaleDateString()}</p>
-                                            </div>
-                                        </Card>
-                                    ))}
+                                    {renderReplies(comment.replies)}
                                 </div>
                             </>
                         )}
