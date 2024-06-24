@@ -71,19 +71,16 @@ const Courses = async () => {
 
   const data = await Promise.all(courses.map(async (course) => {
     const courseCreator = users.find((user: { id: string }) => user.id === course.userId);
-    const usersData = await Promise.all(users.map(async (user: User) => {
-      const progressCount = await getProgress(user.id, course.id);
-      if (progressCount === null) return null;
-      return {
-        ...user,
-        user,
-      };
-    }));
+    const usersData = await db.enrollees.findMany({
+      where: {
+        courseId: course.id,
+      },
+    });
 
     return {
       ...course,
       courseCreator,
-      userData: usersData.filter(Boolean),
+      userData: usersData,
     };
   }));
 

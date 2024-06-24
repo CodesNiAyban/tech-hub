@@ -35,6 +35,12 @@ export async function POST(req: Request) {
                                 userId: session.metadata.userId,
                             },
                         });
+                        await db.enrollees.create({
+                            data: {
+                                courseId: session.metadata.courseId,
+                                userId: session.metadata.userId,
+                            }
+                        });
                     } else if (session.metadata && session.metadata.type === "lifetime") {
                         await db.stripeCustomer.update({
                             where: {

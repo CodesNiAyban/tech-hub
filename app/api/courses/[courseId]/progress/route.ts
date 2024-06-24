@@ -38,6 +38,15 @@ export async function DELETE(
             },
         });
 
+        await db.enrollees.delete({
+            where: {
+                userId_courseId: {
+                    courseId: courseId,
+                    userId: userId,
+                }
+            }
+        });
+
         return new NextResponse("UserProgress updated successfully", { status: 200 });
 
     } catch (error) {

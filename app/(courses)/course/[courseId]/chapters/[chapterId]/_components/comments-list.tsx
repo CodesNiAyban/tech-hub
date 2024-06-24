@@ -27,7 +27,6 @@ interface Comment {
     parentId: string | null;
     createdAt: Date;
     updatedAt: Date;
-    emojiId: string | null;
     replies?: Comment[];
 }
 

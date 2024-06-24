@@ -17,7 +17,7 @@ import { Badge } from "./ui/badge";
 import { IconBadge } from "./icon-badge";
 import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "./course-progress";
-import { SubscriptionType } from "@prisma/client";
+import { Enrollees, SubscriptionType } from "@prisma/client";
 import { CourseModal } from "./modals/course-modal";
 
 interface CourseCardProps {
@@ -40,6 +40,7 @@ interface CourseCardProps {
     userSubscription: string;
     averageRating: number | null | undefined;
     totalRatings: number | null | undefined;
+    isEnrolled: Enrollees | null;
 }
 
 const getSubscriptionBadges = (chapters: { subscription: SubscriptionType | null }[]) => {
@@ -86,7 +87,8 @@ export const CourseCard = async ({
     isPurchased,
     userSubscription,
     averageRating, 
-    totalRatings
+    totalRatings,
+    isEnrolled
 }: CourseCardProps) => {
     const user = JSON.parse(JSON.stringify(await clerkClient.users.getUser(userId)));
 
@@ -110,6 +112,7 @@ export const CourseCard = async ({
                 userSubscription={userSubscription}
                 averageRating={averageRating}
                 totalRatings={totalRatings}
+                isEnrolled = {isEnrolled}
             >
                 <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 relative">
                     <div className="relative w-full aspect-video rounded-md overflow-hidden">

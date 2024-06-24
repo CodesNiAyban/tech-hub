@@ -22,8 +22,8 @@ export const getDashboardCourses = async (
   userId: string
 ): Promise<DashboardCourses> => {
   try {
-    // Fetch purchased courses
-    const purchasedCourses = await db.purchase.findMany({
+    // Fetch enrolled courses
+    const enrolledCourses = await db.enrollees.findMany({
       where: {
         userId: userId,
       },
@@ -77,19 +77,12 @@ export const getDashboardCourses = async (
     // Combine and deduplicate courses
     const allCoursesMap = new Map<string, CourseWithProgressWithCategory>();
 
-    // purchasedCourses.forEach((purchase) => {
-    //   allCoursesMap.set(purchase.course.id, {
-    //     ...purchase.course,
-    //     progress: null,
-    //   });
-    // });
-
-    progressCourses.forEach((progress) => {
-      const totalRatings = progress.chapter.course.ratings.length;
-      const sumRatings = progress.chapter.course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    enrolledCourses.forEach((enrollee) => {
+      const course = enrollee.course as unknown as CourseWithProgressWithCategory;
+      const totalRatings = enrollee.course.ratings.length;
+      const sumRatings = enrollee.course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
       const averageRating = totalRatings > 0 ? sumRatings / totalRatings : null;
 
-      const course = progress.chapter.course as unknown as CourseWithProgressWithCategory;
       if (!allCoursesMap.has(course.id)) {
         allCoursesMap.set(course.id, {
           ...course,
@@ -99,6 +92,7 @@ export const getDashboardCourses = async (
         });
       }
     });
+
 
     const allCourses = Array.from(allCoursesMap.values());
 

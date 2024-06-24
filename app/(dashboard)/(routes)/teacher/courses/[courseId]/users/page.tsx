@@ -79,17 +79,25 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                 const completedCourse = chapterProgress.every(ch => ch.completed);
                 const progressCount = await getProgress(user.id, course.id);
                 const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
+                const isEnrolled = await db.enrollees.findUnique({
+                    where: {
+                        userId_courseId: {
+                            courseId: course.id,
+                            userId: user.id
+                        }
+                    },
+                });
 
                 // Determine engagement type
                 let engagementType = "";
 
-                if (!hasPurchase && progressCount && (userSubscription?.subscription === "null" && userSubscription?.subscription === null)) {
+                if (!hasPurchase && isEnrolled && (userSubscription?.subscription === "null" && userSubscription?.subscription === null)) {
                     engagementType = "FREE User";
-                } else if (hasPurchase && progressCount && (userSubscription && (userSubscription?.subscription === "null" && userSubscription?.subscription === null))) {
+                } else if (hasPurchase && isEnrolled && (userSubscription && (userSubscription?.subscription === "null" && userSubscription?.subscription === null))) {
                     engagementType = "Purchase Only";
-                } else if (!hasPurchase && progressCount && (userSubscription && userSubscription.subscription !== "null")) {
+                } else if (!hasPurchase && isEnrolled && (userSubscription && userSubscription.subscription !== "null")) {
                     engagementType = `${userSubscription.subscription} User`;
-                } else if (hasPurchase && progressCount && userSubscription && userSubscription.subscription) {
+                } else if (hasPurchase && isEnrolled && userSubscription && userSubscription.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase User`;
                 }
 

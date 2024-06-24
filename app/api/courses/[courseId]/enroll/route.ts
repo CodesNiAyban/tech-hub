@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PUT(
     req: Request,
-    { params }: { params: { courseId: string }}
+    { params }: { params: { courseId: string } }
 ) {
     try {
         const { userId } = auth();
@@ -15,11 +15,18 @@ export async function PUT(
 
         const course = await db.course.findUnique({
             where: {
-                id: params.courseId,  
+                id: params.courseId,
                 isPublished: true,
             },
             select: {
                 chapters: true,
+            },
+        });
+
+        await db.enrollees.create({
+            data: {
+                courseId: params.courseId,
+                userId: userId,
             },
         });
 
@@ -84,6 +91,15 @@ export async function DELETE(
                     },
                 }
             },
+        });
+
+        await db.enrollees.delete({
+            where: {
+                userId_courseId: {
+                    userId: userId,
+                    courseId: courseId
+                }
+            }
         });
 
         return new NextResponse("UserProgress updated successfully", { status: 200 });

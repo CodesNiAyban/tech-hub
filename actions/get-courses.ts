@@ -85,7 +85,7 @@ export const getCourses = async ({
                     select: {
                         rating: true,
                     },
-                },
+                }
             },
             orderBy: {
                 createdAt: "desc",

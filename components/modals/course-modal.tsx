@@ -1,7 +1,7 @@
 "use client";
 import { CourseEnrollButton } from "@/app/(courses)/course/[courseId]/chapters/[chapterId]/_components/course-purchase-button";
 import { User } from "@clerk/nextjs/server";
-import { SubscriptionType } from "@prisma/client";
+import { Enrollees, SubscriptionType } from "@prisma/client";
 import axios from "axios";
 import { BadgeX, BookX, Play, UserPlus, XCircle } from "lucide-react";
 import Image from "next/image";
@@ -42,6 +42,7 @@ interface CourseModalProps {
     userSubscription: string;
     averageRating: number | null | undefined;
     totalRatings: number | null | undefined;
+    isEnrolled: Enrollees | null;
 }
 
 export const CourseModal = ({
@@ -62,7 +63,8 @@ export const CourseModal = ({
     isPurchased,
     userSubscription,
     averageRating,
-    totalRatings
+    totalRatings,
+    isEnrolled
 }: CourseModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -126,7 +128,7 @@ export const CourseModal = ({
             // If user is Pro, Lifetime or has purchased the course, allow access to all chapters
             if (userSubscription === "PRO" || userSubscription === "LIFETIME" || isPurchased || price === 0) {
                 // Enroll the user if they haven't started the course yet
-                if (progress === null) {
+                if (progress === null && !isEnrolled) {
                     const response = toast.promise(
                         enroll(),
                         {
@@ -153,7 +155,7 @@ export const CourseModal = ({
                 return;
             } else {
                 // Enroll the user if they haven't started the course yet
-                if (progress === null) {
+                if (progress === null && !isEnrolled) {
                     const response = toast.promise(
                         enroll(),
                         {
@@ -185,16 +187,16 @@ export const CourseModal = ({
                     <div className="flex absolute bottom-4 left-4">
                         <Button
                             onClick={handlePlay}
-                            className={cn(progress !== null ? "bg-red-600 text-white px-4 py-2 mr-2" :
+                            className={cn(progress !== null && isEnrolled ? "bg-red-600 text-white px-4 py-2 mr-2" :
                                 "bg-blue-600 text-white px-4 py-2 mr-2"
                             )}
                             disabled={isSubmitting}
                             size="sm"
                         >
-                            {progress !== null ? <Play className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
-                            {progress !== null ? "Resume" : "Enroll"}
+                            {progress !== null && isEnrolled ? <Play className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                            {progress !== null && isEnrolled ? "Resume" : "Enroll"}
                         </Button>
-                        {progress !== null && (
+                        {progress !== null && isEnrolled && (
                             <UnenrollConfirmModal onConfirm={handleUnenroll}>
                                 <Button size="sm" disabled={isSubmitting} className=" bg-blue-600 text-white px-4 py-2 mr-2">
                                     <BadgeX className="h-4 w-4 mr-2" />
@@ -219,7 +221,7 @@ export const CourseModal = ({
                             <StarRating
                                 courseId={courseId}
                                 initialRating={averageRating}
-                                isEnrolled={isPurchased || progress !== null}
+                                isEnrolled={isPurchased || isEnrolled !== null}
                             />
                         </div>
                     </div>
@@ -229,7 +231,7 @@ export const CourseModal = ({
                         <p className="text-sm">{chaptersLength} {chaptersLength === 1 ? 'Chapter' : 'Chapters'}</p>
                     </div>
                     <div className="mb-4">
-                        {progress !== null && (
+                        {progress !== null && isEnrolled && (
                             <CourseProgress
                                 size="sm"
                                 value={progress}
