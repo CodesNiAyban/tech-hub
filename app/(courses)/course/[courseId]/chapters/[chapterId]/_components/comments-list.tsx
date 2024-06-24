@@ -1,6 +1,7 @@
 "use client";
 
 import { commentSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { ConfirmModal } from "@/components/modals/comment-confirm-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -146,6 +147,21 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
         }
     };
 
+    const onDelete = async (commentId: string) => {
+        try {
+            await toast.promise(
+                deleteComment(commentId),
+                {
+                    loading: "Deleting...",
+                    error: "An error occurred, please try again later.",
+                    success: "Comment Deleted"
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const onEditSubmit = async (values: z.infer<typeof commentSchema>) => {
         try {
             const commentId = editingComment || editingReply; // Use the correct ID based on what is being edited
@@ -194,10 +210,12 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
                                                 </Button>
                                             </div>
                                             <div className="flex flex-col mr-2">
-                                                <Button onClick={() => deleteComment(reply.id)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
-                                                    <Trash className="h-4 w-4 mr-2" />
-                                                    Delete
-                                                </Button>
+                                                <ConfirmModal onConfirm={() => onDelete(reply.id)}>
+                                                    <Button size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
+                                                        <Trash className="h-4 w-4 mr-2" />
+                                                        Delete
+                                                    </Button>
+                                                </ConfirmModal>
                                             </div>
                                         </DropdownMenuContent>
                                     </>
@@ -319,7 +337,7 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
                                                     </Button>
                                                 </div>
                                                 <div className="flex flex-col mr-2">
-                                                    <Button onClick={() => deleteComment(comment.id)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
+                                                    <Button onClick={() => onDelete(comment.id)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
                                                         <Trash className="h-4 w-4 mr-2" />
                                                         Delete
                                                     </Button>
