@@ -41,6 +41,7 @@ interface CommentListProps {
 const CommentList = ({ comments, users, chapterId, courseId, currentUser }: CommentListProps) => {
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [editingComment, setEditingComment] = useState<string | null>(null);
+    const [editingReply, setEditingReply] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
@@ -96,13 +97,21 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
         }
     };
 
-    const handleEdit = (commentId: string, comment: string) => {
+    const handleCommentEdit = (commentId: string, comment: string) => {
         setEditingComment(commentId);
+        setEditingReply(null); // Ensure reply editing is not active
+        form.setValue('comment', comment);
+    };
+
+    const handleReplyEdit = (replyId: string, comment: string) => {
+        setEditingReply(replyId);
+        setEditingComment(null); // Ensure comment editing is not active
         form.setValue('comment', comment);
     };
 
     const cancelEdit = () => {
         setEditingComment(null);
+        setEditingReply(null);
         form.setValue('comment', ''); // Clear the form input
     };
 
@@ -123,22 +132,6 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
         }
     };
 
-    const onEditSubmit = async (values: z.infer<typeof commentSchema>) => {
-        try {
-            await toast.promise(
-                updateComment(values, editingComment!.toString()),
-                {
-                    loading: "Updating...",
-                    error: "An error occurred, please try again later.",
-                    success: "Comment Updated"
-                }
-            );
-            cancelEdit();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const deleteComment = async (commentId: string) => {
         setIsSubmitting(true);
         try {
@@ -152,6 +145,26 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
             setIsSubmitting(false);
         }
     };
+
+    const onEditSubmit = async (values: z.infer<typeof commentSchema>) => {
+        try {
+            const commentId = editingComment || editingReply; // Use the correct ID based on what is being edited
+            if (commentId) {
+                await toast.promise(
+                    updateComment(values, commentId.toString()),
+                    {
+                        loading: "Updating...",
+                        error: "An error occurred, please try again later.",
+                        success: "Comment Updated"
+                    }
+                );
+                cancelEdit();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     const renderReplies = (replies: Comment[], comment: Comment) => {
         return replies.map((reply) => (
@@ -175,13 +188,13 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
                                     <>
                                         <DropdownMenuContent align="end">
                                             <div className="flex flex-col">
-                                                <Button size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
+                                                <Button onClick={() => handleReplyEdit(reply.id, reply.comment!)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
                                                     <Edit className="h-4 w-4 mr-2" />
                                                     Edit
                                                 </Button>
                                             </div>
                                             <div className="flex flex-col mr-2">
-                                                <Button size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
+                                                <Button onClick={() => deleteComment(reply.id)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
                                                     <Trash className="h-4 w-4 mr-2" />
                                                     Delete
                                                 </Button>
@@ -202,7 +215,37 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
                                 )}
                             </DropdownMenu>
                         </div>
-                        <p>{reply.comment}</p>
+                        {editingReply === reply.id ? (
+                            <div className="ml-8 mt-2 space-y-2">
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="comment"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <Textarea
+                                                            {...field}
+                                                            placeholder="Edit your comment..."
+                                                            disabled={isSubmitting}
+                                                            className="resize-none"
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <div className="flex justify-end space-x-2">
+                                            <Button onClick={cancelEdit} variant="outline">Cancel</Button>
+                                            <Button type="submit" disabled={isSubmitting}>Update</Button>
+                                        </div>
+                                    </form>
+                                </Form>
+                            </div>
+                        ) : (
+                            <p>{reply.comment}</p>
+                        )}
                         <div className="flex justify-between items-center mt-2">
                             <p className="text-xs text-gray-500">{formatDistanceToNow(new Date(reply.createdAt))} ago</p>
                             <div className="flex items-center cursor-pointer" onClick={() => handleReply(comment.id, reply)}>
@@ -250,13 +293,15 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
             {comments.filter(comment => comment.parentId === null).map((comment) => (
                 <Card key={comment.id} className="w-full bg-white shadow-md rounded-lg p-4 border border-gray-200">
                     <CardHeader>
-                        <div className="flex items-center">
-                            <Avatar className="w-8 h-8 mr-3">
-                                <AvatarImage src={users.find(u => u.id === comment.userId)?.imageUrl} />
-                                <AvatarFallback>test</AvatarFallback>
-                            </Avatar>
-                            <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center">
+                                <Avatar className="w-8 h-8 mr-3">
+                                    <AvatarImage src={users.find(u => u.id === comment.userId)?.imageUrl} />
+                                    <AvatarFallback>test</AvatarFallback>
+                                </Avatar>
                                 <p className="text-md font-semibold">{users.find(u => u.id === comment.userId)?.username}</p>
+                            </div>
+                            <div className="flex items-center">
                                 <DropdownMenu>
                                     <Button variant="ghost" className="h-4 w-8 p-0" asChild>
                                         <DropdownMenuTrigger>
@@ -268,7 +313,7 @@ const CommentList = ({ comments, users, chapterId, courseId, currentUser }: Comm
                                         <>
                                             <DropdownMenuContent align="end">
                                                 <div className="flex flex-col">
-                                                    <Button onClick={() => handleEdit(comment.id, comment.comment!)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
+                                                    <Button onClick={() => handleCommentEdit(comment.id, comment.comment!)} size="sm" disabled={isSubmitting} variant="ghost" className="flex items-left justify-start">
                                                         <Edit className="h-4 w-4 mr-2" />
                                                         Edit
                                                     </Button>
