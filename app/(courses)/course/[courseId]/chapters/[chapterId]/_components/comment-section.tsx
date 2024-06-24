@@ -92,8 +92,7 @@ const CommentSection = ({ comments, users, currentUser, chapterId, courseId }: C
                     </div>
                 </form>
             </Form>
-            {/* Display existing comments */}
-            <CommentList comments={comments} users={users} courseId={courseId} chapterId={chapterId} />
+            <CommentList comments={comments} users={users} courseId={courseId} chapterId={chapterId} currentUser={currentUser} />
         </div>
     );
 };

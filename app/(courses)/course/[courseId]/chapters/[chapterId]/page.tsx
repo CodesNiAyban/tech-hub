@@ -120,7 +120,6 @@ const ChapterIdPage = async ({
 
     const completeOnEnd = !isLocked && userProgress?.isCompleted;
 
-    const progressCount = await getProgress(userId, params.courseId);
 
     return (
         <div>
