@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button"
 import { CreateCourse } from "./create-course-title"
 import { PlusCircle } from "lucide-react"
 
+export const maxDuration = 60;
+
 export function CreateCourseDialog() {
     return (
         <AlertDialog>

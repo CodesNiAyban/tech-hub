@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import * as z from "zod"
 
+export const maxDuration = 60;
+
 export const CreateCourse = () => {
     const router = useRouter();
     const createForm = useForm<z.infer<typeof createSchema>>({
