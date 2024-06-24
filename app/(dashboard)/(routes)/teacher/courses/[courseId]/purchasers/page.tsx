@@ -6,6 +6,8 @@ import { Course, Purchase } from "@prisma/client";
 import { getProgress } from "@/actions/get-progress";
 import { columns } from "../../_components/purchase-columns";
 
+export const maxDuration = 60;
+
 interface ExtendedPurchase extends Purchase {
     user: User;
     chapterProgress: { chapterTitle: string; completed: boolean }[];
