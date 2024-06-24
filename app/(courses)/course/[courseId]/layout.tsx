@@ -8,6 +8,8 @@ import { ToastProvider } from "@/components/providers/toaster-provider";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
 import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
 
+export const maxDuration = 60;
+
 const CourseLayout = async ({
     children,
     params,
