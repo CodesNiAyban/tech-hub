@@ -7,7 +7,8 @@ const isProtectedRoute = createRouteMatcher([
   '/course(.*)',
   '/home(.*)',
   '/teacher(.*)',
-  '/pricing(.*)', 
+  '/pricing(.*)',
+  '/user-profile(.*)',
   '/'
 ]);
 
