@@ -22,7 +22,6 @@ import { StarRating } from "../star-rating";
 
 interface CourseModalProps {
     children: React.ReactNode;
-    code: string;
     courseId: string;
     title: string;
     imageUrl: string;
@@ -47,7 +46,6 @@ interface CourseModalProps {
 
 export const CourseModal = ({
     children,
-    code,
     courseId,
     title,
     imageUrl,
@@ -253,10 +251,6 @@ export const CourseModal = ({
                     <div className="flex flex-wrap gap-2 mb-1">
                         <p className="text-xs text-gray-400">Created: </p>
                         <p className="text-xs ">{new Date(createdAt).toLocaleDateString()}</p>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-1">
-                        <p className="text-xs text-gray-400">Code:</p>
-                        <p className="text-xs">{code}</p>
                     </div>
                 </div>
             </AlertDialogContent>

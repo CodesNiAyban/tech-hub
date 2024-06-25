@@ -4,7 +4,6 @@ import { getProgress } from "@/actions/get-progress";
 import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
 export interface CourseWithProgressWithCategory {
-    code: string;
     id: string;
     userId?: string;
     title: string;
@@ -29,7 +28,6 @@ export interface CourseWithProgressWithCategory {
 }
 
 export interface GetCoursesParams {
-    code?: string;
     userId?: string | "";
     title?: string;
     categoryId?: string;
@@ -39,15 +37,11 @@ export const getCourses = async ({
     userId,
     title,
     categoryId,
-    code
 }: GetCoursesParams): Promise<CourseWithProgressWithCategory[]> => {
     try {
         const courses = await db.course.findMany({
             where: {
                 isPublished: true,
-                code: {
-                    contains: code,
-                },
                 title: {
                     contains: title,
                 },

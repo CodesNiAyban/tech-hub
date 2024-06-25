@@ -21,7 +21,6 @@ import { Enrollees, SubscriptionType } from "@prisma/client";
 import { CourseModal } from "./modals/course-modal";
 
 interface CourseCardProps {
-    code: string;
     id: string;
     title: string;
     imageUrl: string;
@@ -83,7 +82,6 @@ export const CourseCard = async ({
     progress,
     categories,
     createdAt,
-    code,
     isPurchased,
     userSubscription,
     averageRating, 
@@ -95,7 +93,6 @@ export const CourseCard = async ({
     return (
         <HoverCard>
             <CourseModal
-                code={code}
                 courseId={id}
                 title={title}
                 imageUrl={imageUrl}
