@@ -30,7 +30,18 @@ const ChapterIdPage = async ({
     const { userId } = auth();
 
     if (!userId) {
-        return redirect("/sign-in");
+        return redirect("/");
+    }
+
+    const isEnrolled = await db.enrollees.findFirst({
+        where: {
+            userId: userId,
+            courseId: params.courseId
+        },
+    });
+
+    if (!isEnrolled) {
+        return redirect("/");
     }
 
     const {
@@ -48,7 +59,7 @@ const ChapterIdPage = async ({
     });
 
     if (!chapter || !course) {
-        return redirect("/sign-in");
+        return redirect("/");
     }
 
     const user = await db.stripeCustomer.findUnique({
