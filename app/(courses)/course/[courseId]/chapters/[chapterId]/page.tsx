@@ -177,6 +177,9 @@ const ChapterIdPage = async ({
                                 />
                             </div>
                         )}
+                        <Button size='sm'>
+                            Take the Quiz😱
+                        </Button>
                     </div>
                     <Separator />
                     <div>
