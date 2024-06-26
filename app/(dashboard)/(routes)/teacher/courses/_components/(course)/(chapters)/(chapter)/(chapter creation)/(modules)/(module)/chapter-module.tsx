@@ -1,21 +1,12 @@
 "use client"
 import { Chapter } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { Document, Page, pdfjs } from 'react-pdf';
 import { EditModuleDialog } from "./edit-module-dialog";
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Loader2 } from "lucide-react";
+import { DeleteModuleDialog } from "./delete-module-dialog";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url,
-).toString();
-
-const options = {
-    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
-    cMapPacked: true,
-};
 
 interface ChapterModuleProps {
     initialData: Chapter;
@@ -63,12 +54,18 @@ export const EditChapterModule = ({
                     </div>
                 )}
                 {initialData.pdfUrl && (
-                    <iframe
-                        src={initialData.pdfUrl}
-                        width="100%"
-                        height="500px"
-                        className="border rounded-md"
-                    />
+                    <>
+                        <DeleteModuleDialog
+                            courseId={courseId}
+                            chapterId={chapterId}
+                        />
+                        <iframe
+                            src={initialData.pdfUrl}
+                            width="100%"
+                            height="500px"
+                            className="border rounded-md"
+                        />
+                    </>
 
                 )}
             </div>
