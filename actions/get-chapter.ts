@@ -37,6 +37,7 @@ export const getChapter = async ({
                         id: true,
                         position: true,
                         subscription: true,
+                        pdfUrl: true,
                         userProgress: {
                             where: {
                                 userId,

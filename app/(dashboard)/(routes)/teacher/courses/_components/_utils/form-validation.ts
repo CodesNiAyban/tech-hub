@@ -55,6 +55,10 @@ export const attachmentSchema = z.object({
   url: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
 });
 
+export const moduleSchema = z.object({
+  pdfUrl: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
+});
+
 export const chapterSchema = z.object({
   title: notOnlyWhitespace("Chapter title is required and cannot be whitespace only").max(100, {
     message: "Chapter title cannot exceed 100 characters",

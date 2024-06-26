@@ -182,6 +182,15 @@ const ChapterIdPage = async ({
                     <div>
                         <Preview value={chapter.description!} />
                     </div>
+                    {chapter.pdfUrl && (
+                        <iframe
+                            src={chapter.pdfUrl}
+                            width="100%"
+                            height="500px"
+                            className="border rounded-md"
+                        />
+
+                    )}
                     {!!attachments.length && (
                         <>
                             <div className="p-4">
