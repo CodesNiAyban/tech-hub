@@ -26,21 +26,24 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
     } // TODO: Change to admin check
 
     try {
-        const course = await db.course.findUnique({
-            where: { id: params.courseId },
-            include: {
-                purchases: {
-                    orderBy: { createdAt: "desc" }
-                },
-                chapters: {
-                    where: { isPublished: true },
-                    include: {
-                        userProgress: true
+        const [course, usersResponse] = await Promise.all([
+            db.course.findUnique({
+                where: { id: params.courseId },
+                include: {
+                    purchases: {
+                        orderBy: { createdAt: "desc" }
                     },
-                    orderBy: { position: "asc" }
+                    chapters: {
+                        where: { isPublished: true },
+                        include: {
+                            userProgress: true
+                        },
+                        orderBy: { position: "asc" }
+                    }
                 }
-            }
-        });
+            }),
+            clerkClient.users.getUserList(),
+        ]);
 
         if (!course) {
             return (
@@ -58,16 +61,12 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
         }
 
         const selectedCourse = course.title;
-        const usersResponse = await clerkClient.users.getUserList();
         const users = JSON.parse(JSON.stringify(usersResponse.data));
-
 
         const data: ExtendedPurchase[] = await Promise.all(
             users.map(async (user: User) => {
                 const userPurchase = course.purchases.find(p => p.userId === user.id);
                 const hasPurchase = !!userPurchase;
-
-
                 const chapterProgress = course.chapters.map(chapter => {
                     const progress = chapter.userProgress.find(up => up.userId === user.id);
                     return {
@@ -75,11 +74,13 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                         completed: progress ? progress.isCompleted : false
                     };
                 });
-
-                const completedCourse = chapterProgress.every(ch => ch.completed);
-                const progressCount = await getProgress(user.id, course.id);
                 const hasProgress = course.chapters.some(chapter => chapter.userProgress.length > 0);
-                const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
+                const completedCourse = chapterProgress.every(ch => ch.completed);
+
+                const [progressCount, userSubscription] = await Promise.all([
+                    getProgress(user.id, course.id),
+                    db.stripeCustomer.findUnique({ where: { userId: user.id } }),
+                ]);
 
                 // Determine engagement type
                 let engagementType = "";
@@ -89,8 +90,8 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                     engagementType = `${userSubscription.subscription} + Purchase`;
                 }
 
-                if (!engagementType) return null
-                if (engagementType === "Subscription Only" && !hasProgress) return null
+                if (!engagementType) return null;
+                if (engagementType === "Subscription Only" && !hasProgress) return null;
 
                 return {
                     ...userPurchase,

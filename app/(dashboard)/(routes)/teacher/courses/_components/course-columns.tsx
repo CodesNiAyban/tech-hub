@@ -16,12 +16,11 @@ export const maxDuration = 60;
 interface ExtendedCourse extends Course {
   categories: { name: string }[];
   chapters: { isPublished: boolean; position: number; userProgress: { userId: string }[] }[];
-  courseCreator: User;
   purchases: { id: string; userId: string; createdAt: Date }[];
-  userData: any[]
+  userCount: number;
 }
 
-export const columns: ColumnDef<ExtendedCourse>[] = [
+export const columns: ColumnDef<ExtendedCourse >[] = [
   {
     accessorKey: "title",
     header: ({ column }) => (
@@ -58,19 +57,6 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
     },
   },
   {
-    accessorKey: "user.username",
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Created By
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const user = row.original.courseCreator;
-      return user ? <div>{user.username}</div> : <div>Unknown</div>;
-    },
-  },
-  {
     accessorKey: "purchases",
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -92,8 +78,8 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const enrolledUser = row.original.userData;
-      return <div>{enrolledUser.length} Users</div>;
+      const enrolledUser = row.original;
+      return <div>{enrolledUser.userCount} Users</div>;
     },
   },
   {

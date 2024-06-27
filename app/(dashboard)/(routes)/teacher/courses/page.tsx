@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DataTable } from "./_components/data-table";
-import { User, auth, clerkClient } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { CreateCourseDialog } from "../_components/create-course";
 import { columns } from "./_components/course-columns";
-import { getProgress } from "@/actions/get-progress";
+import { DataTable } from "./_components/data-table";
 
 export const maxDuration = 60;
 
@@ -17,61 +14,54 @@ const Courses = async () => {
     return redirect("/sign-in");
   }
 
-  const courses = await db.course.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      chapters: {
-        orderBy: {
-          position: "asc",
+  const [courses, subscription, userResponse] = await Promise.all([
+    db.course.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        chapters: {
+          orderBy: {
+            position: "asc",
+          },
+          include: {
+            userProgress: true,
+          },
         },
-        include: {
-          userProgress: true,
+        categories: {
+          orderBy: {
+            name: "desc",
+          },
+        },
+        attachments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        purchases: {
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
-      categories: {
-        orderBy: {
-          name: "desc",
-        },
+    }),
+    db.stripeCustomer.findUnique({
+      where: {
+        userId,
       },
-      attachments: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-      purchases: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-    },
-  });
-
-  const subscription = await db.stripeCustomer.findUnique({
-    where: {
-      userId,
-    },
-  });
+    }),
+    clerkClient.users.getUserList()
+  ]);
 
   if (!subscription || subscription.subscription === "null" || subscription.subscription === "BASIC") {
     return redirect("/sign-in");
   }
 
-  let users = [];
-  try {
-    const userResponse = await clerkClient.users.getUserList();
-    users = JSON.parse(JSON.stringify(userResponse.data));
-  } catch (error) {
-    console.error("Error parsing user data:", error);
-  }
-
   const data = await Promise.all(courses.map(async (course) => {
-    const courseCreator = users.find((user: { id: string }) => user.id === course.userId);
-    const usersData = await db.enrollees.findMany({
+    const userCount = await db.enrollees.count({
       where: {
         courseId: course.id,
       },
@@ -79,8 +69,7 @@ const Courses = async () => {
 
     return {
       ...course,
-      courseCreator,
-      userData: usersData,
+      userCount,
     };
   }));
 

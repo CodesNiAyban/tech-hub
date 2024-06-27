@@ -26,21 +26,20 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
     } // TODO: Change to admin check
 
     try {
-        const course = await db.course.findUnique({
-            where: { id: params.courseId },
-            include: {
-                purchases: {
-                    orderBy: { createdAt: "desc" }
-                },
-                chapters: {
-                    where: { isPublished: true },
-                    include: {
-                        userProgress: true
-                    },
-                    orderBy: { position: "asc" }
+        const [course, usersResponse] = await Promise.all([
+            db.course.findUnique({
+                where: { id: params.courseId },
+                include: {
+                    purchases: { orderBy: { createdAt: "desc" } },
+                    chapters: {
+                        where: { isPublished: true },
+                        include: { userProgress: true },
+                        orderBy: { position: "asc" }
+                    }
                 }
-            }
-        });
+            }),
+            clerkClient.users.getUserList()
+        ]);
 
         if (!course) {
             return (
@@ -58,15 +57,25 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
         }
 
         const selectedCourse = course.title;
-        const usersResponse = await clerkClient.users.getUserList();
-        const users = JSON.parse(JSON.stringify(usersResponse.data));
-
-
-        const data: ExtendedPurchase[] = await Promise.all(
+        const users: User[] = JSON.parse(JSON.stringify(usersResponse.data));
+        
+        const data: (ExtendedPurchase | null)[] = await Promise.all(
             users.map(async (user: User) => {
-                const userPurchase = course.purchases.find(p => p.userId === user.id);
-                const hasPurchase = !!userPurchase;
+                const [userPurchase, userSubscription, progressCount, isEnrolled] = await Promise.all([
+                    course.purchases.find(p => p.userId === user.id) || null,
+                    db.stripeCustomer.findUnique({ where: { userId: user.id } }),
+                    getProgress(user.id, course.id),
+                    db.enrollees.findUnique({
+                        where: {
+                            userId_courseId: {
+                                courseId: course.id,
+                                userId: user.id
+                            }
+                        }
+                    })
+                ]);
 
+                const hasPurchase = !!userPurchase;
 
                 const chapterProgress = course.chapters.map(chapter => {
                     const progress = chapter.userProgress.find(up => up.userId === user.id);
@@ -77,34 +86,29 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                 });
 
                 const completedCourse = chapterProgress.every(ch => ch.completed);
-                const progressCount = await getProgress(user.id, course.id);
-                const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
-                const isEnrolled = await db.enrollees.findUnique({
-                    where: {
-                        userId_courseId: {
-                            courseId: course.id,
-                            userId: user.id
-                        }
-                    },
-                });
 
                 // Determine engagement type
                 let engagementType = "";
-
-                if (!hasPurchase && isEnrolled && (userSubscription?.subscription === "null" && userSubscription?.subscription === null)) {
+                if (!hasPurchase && isEnrolled && (!userSubscription || userSubscription?.subscription === "null")) {
                     engagementType = "FREE User";
-                } else if (hasPurchase && isEnrolled && (userSubscription && (userSubscription?.subscription === "null" && userSubscription?.subscription === null))) {
+                } else if (hasPurchase && isEnrolled && (!userSubscription || userSubscription?.subscription === "null")) {
                     engagementType = "Purchase Only";
-                } else if (!hasPurchase && isEnrolled && (userSubscription && userSubscription.subscription !== "null")) {
-                    engagementType = `${userSubscription.subscription} User`;
-                } else if (hasPurchase && isEnrolled && userSubscription && userSubscription.subscription) {
+                } else if (!hasPurchase && isEnrolled && userSubscription?.subscription !== "null") {
+                    engagementType = `${userSubscription!.subscription} User`;
+                } else if (hasPurchase && isEnrolled && userSubscription?.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase User`;
+                } else { 
+                    return null
                 }
 
-                if (progressCount === null) return null
+                if (progressCount === null || !isEnrolled) return null;
 
                 return {
-                    ...userPurchase,
+                    id: userPurchase?.id ?? "default-id",
+                    userId: userPurchase?.userId ?? user.id,
+                    courseId: userPurchase?.courseId ?? course.id,
+                    createdAt: userPurchase?.createdAt ?? new Date(),
+                    updatedAt: userPurchase?.updatedAt ?? new Date(),
                     course,
                     user,
                     chapterProgress,
@@ -120,7 +124,8 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
             })
         );
 
-        const filteredData = data.filter((row): row is ExtendedPurchase => row !== null);
+        // Filter out null values
+        const filteredData: ExtendedPurchase[] = data.filter((row): row is ExtendedPurchase => row !== null);
 
         return (
             <div className="items-center m-4 mt-16">

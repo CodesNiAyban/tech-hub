@@ -1,11 +1,8 @@
-
 import { File } from "lucide-react";
 import { redirect } from "next/navigation";
 
 import { getChapter } from "@/actions/get-chapter";
-
 import { Preview } from "@/components/preview";
-
 import { getProgress } from "@/actions/get-progress";
 import { Banner } from "@/components/banner";
 import { CourseProgress } from "@/components/course-progress";
@@ -33,12 +30,31 @@ const ChapterIdPage = async ({
         return redirect("/");
     }
 
-    const isEnrolled = await db.enrollees.findFirst({
-        where: {
-            userId: userId,
-            courseId: params.courseId
-        },
-    });
+    const [isEnrolled, chapterData, userResponse, comments] = await Promise.all([
+        db.enrollees.findFirst({
+            where: {
+                userId: userId,
+                courseId: params.courseId
+            },
+        }),
+        getChapter({
+            userId,
+            chapterId: params.chapterId,
+            courseId: params.courseId,
+        }),
+        clerkClient.users.getUserList(),
+        db.comments.findMany({
+            where: {
+                chapterId: params.chapterId,
+            },
+            include: {
+                replies: true
+            },
+            orderBy: {
+                createdAt: "asc"
+            }
+        }),
+    ]);
 
     if (!isEnrolled) {
         return redirect("/");
@@ -51,12 +67,8 @@ const ChapterIdPage = async ({
         attachments,
         nextChapter,
         userProgress,
-        purchase
-    } = await getChapter({
-        userId,
-        chapterId: params.chapterId,
-        courseId: params.courseId,
-    });
+        purchase,
+    } = chapterData;
 
     if (!chapter || !course) {
         return redirect("/");
@@ -68,76 +80,37 @@ const ChapterIdPage = async ({
         },
     });
 
-    const comments = await db.comments.findMany({
-        where: {
-            chapterId: chapter.id,
-        },
-        include: {
-            replies: true
-        },
-        orderBy: {
-            createdAt: "asc"
-        }
-    })
-
-    const isLocked = (chapter: Chapter) => {
-        let unlock = false;
-
-        // Check all previous chapters completion status and subscription requirement
-        for (let i = 1; i <= chapter.position; i++) {
-            if (user) {
-                if (course.price === 0 ||
-                    purchase ||
-                    (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
-                    (user.subscription === chapter.subscription) ||
-                    ((chapter.subscription === "null" || chapter.subscription === null || !chapter.subscription) && (user.subscription === "null" || user.subscription === null || !user.subscription))
-                ) {
-                    if (chapter.position === 1) return false
-
-                    const prevChapter = course.chapters[i - 1];
-
-                    // Fetch user progress for the previous chapter
-                    const userProgress = prevChapter.userProgress?.find(
-                        (progress) => progress.userId === userId
-                    );
-
-                    // If the previous chapter is not completed, lock the next chapter
-                    if (userProgress?.isCompleted) return false;
-
-                    // If the previous chapter is locked and doesn't match the subscription, lock the next chapter
-                    if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
-                        return true;
-                    }
-
-                    // If previous chapter is completed and meets conditions, unlock subsequent chapters
-                    if (userProgress?.isCompleted) {
-                        unlock = true;
-                    }
-                } else {
-                    return true
-                }
-            } else {
-                return true;
-            }
-        }
-
-        return !unlock;
-    };
-
-    const getUsers = await clerkClient.users.getUserList();
-    const users: User[] = JSON.parse(JSON.stringify(getUsers.data));
-
+    const users: User[] = JSON.parse(JSON.stringify(userResponse.data));
     const currentUser = users.find(user => user.id === userId);
+    const completeOnEnd = !isLocked(chapter, user, course, userProgress, purchase);
 
-    const completeOnEnd = !isLocked && userProgress?.isCompleted;
+    function isLocked(chapter: Chapter, user: any, course: any, userProgress: any, purchase: any): boolean {
+        if (user && (course.price === 0 || purchase || ["PRO", "LIFETIME"].includes(user.subscription) || user.subscription === chapter.subscription || !chapter.subscription)) {
+            if (chapter.position === 1) return false;
 
+            for (let i = 1; i < chapter.position; i++) {
+                const prevChapter = course.chapters[i - 1];
+                const userProgress = prevChapter.userProgress?.find(
+                    (progress: { userId: string | null; }) => progress.userId === userId
+                );
+
+                if (!userProgress?.isCompleted || (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null")) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 
     return (
         <div>
             {userProgress?.isCompleted && (
                 <Banner variant="success" label="You already completed this chapter." />
             )}
-            {isLocked(chapter) && (
+            {isLocked(chapter, user, course, userProgress, purchase) && (
                 <Banner
                     variant="warning"
                     label={`You need to be subscribed to TechHub ${chapter.subscription} or purchase this course to watch this chapter`}
@@ -151,14 +124,14 @@ const ChapterIdPage = async ({
                         courseId={params.courseId}
                         nextChapterId={nextChapter?.id}
                         playbackId={muxData?.playbackId!}
-                        isLocked={isLocked(chapter)}
+                        isLocked={isLocked(chapter, user, course, userProgress, purchase)}
                         completeOnEnd={completeOnEnd}
                     />
                 </div>
                 <div>
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
-                        {isLocked(chapter) ? (
+                        {isLocked(chapter, user, course, userProgress, purchase) ? (
                             <div className="flex items-center justify-center gap-x-2">
                                 <Button size='sm' asChild>
                                     <Link href={`/pricing`}>
@@ -175,11 +148,11 @@ const ChapterIdPage = async ({
                                     nextChapterId={nextChapter?.id}
                                     isCompleted={!!userProgress?.isCompleted}
                                 />
+                                <Button>
+                                    Take the Quiz😱
+                                </Button>
                             </div>
                         )}
-                        <Button size='sm'>
-                            Take the Quiz😱
-                        </Button>
                     </div>
                     <Separator />
                     <div>
@@ -192,7 +165,6 @@ const ChapterIdPage = async ({
                             height="500px"
                             className="border rounded-md"
                         />
-
                     )}
                     {!!attachments.length && (
                         <>
@@ -212,7 +184,6 @@ const ChapterIdPage = async ({
                             </div>
                         </>
                     )}
-
                     <CommentSection comments={comments} users={users} currentUser={currentUser} courseId={params.courseId} chapterId={params.chapterId} />
                 </div>
             </div>
