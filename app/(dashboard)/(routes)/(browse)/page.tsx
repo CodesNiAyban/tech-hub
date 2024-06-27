@@ -6,6 +6,10 @@ import { Categories } from "./_components/categories";
 
 export const maxDuration = 60;
 
+export const metadata = {
+    title: "Browse",
+}
+
 interface BrowseProps {
     searchParams: {
         title: string;

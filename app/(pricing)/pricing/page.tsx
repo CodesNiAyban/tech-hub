@@ -3,6 +3,10 @@ import { PricingCards } from "../_components/pricing-cards";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Pricing",
+}
+
 const PricingPage = async () => {
   const { userId } = auth();
 

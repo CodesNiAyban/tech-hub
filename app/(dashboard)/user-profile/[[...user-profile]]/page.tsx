@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+export const maxDuration = 60;
+
 const UserProfilePage = () => {
     const router = useRouter();
     const { signOut } = useClerk();

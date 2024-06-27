@@ -1,8 +1,8 @@
 import { Category, Course, SubscriptionType } from "@prisma/client";
 
 import { getProgress } from "@/actions/get-progress";
-import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
+
 export interface CourseWithProgressWithCategory {
     id: string;
     userId?: string;
@@ -43,11 +43,11 @@ export const getCourses = async ({
             where: {
                 isPublished: true,
                 title: {
-                    contains: title,
+                    contains: title || '',
                 },
                 categories: {
                     some: {
-                        id: categoryId,
+                        id: categoryId || undefined,
                     },
                 },
             },
@@ -69,7 +69,7 @@ export const getCourses = async ({
                 },
                 purchases: {
                     where: {
-                        userId,
+                        userId: userId || undefined,
                     },
                     select: {
                         id: true,
@@ -86,41 +86,32 @@ export const getCourses = async ({
             },
         });
 
-        if (userId) {
-            const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
-                courses.map(async course => {
-                    const progressPercentage = await getProgress(userId, course.id);
+        const coursesWithProgressAndRatings = await Promise.all(
+            courses.map(async course => {
+                let progressPercentage = null;
+                if (userId) {
+                    progressPercentage = await getProgress(userId, course.id);
+                }
 
-                    // Calculate average rating
-                    const totalRatings = course.ratings.length;
-                    const sumRatings = course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
-                    const averageRating = totalRatings > 0 ? sumRatings / totalRatings : null;
+                // Calculate average rating
+                const totalRatings = course.ratings.length;
+                const sumRatings = course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
+                const averageRating = totalRatings > 0 ? sumRatings / totalRatings : null;
 
-                    return {
-                        ...course,
-                        progress: progressPercentage,
-                        purchases: course.purchases.map(purchase => ({
-                            ...purchase,
-                            userId: userId,
-                        })),
-                        averageRating: averageRating,
-                        totalRatings: totalRatings,
-                    };
-                })
-            );
-            return coursesWithProgress;
-        } else {
-            return courses.map(course => ({
-                ...course,
-                progress: null,
-                purchases: course.purchases.map(purchase => ({
-                    ...purchase,
-                    userId: "",
-                })),
-                averageRating: null,
-                totalRatings: null,
-            }));
-        }
+                return {
+                    ...course,
+                    progress: progressPercentage,
+                    purchases: course.purchases.map(purchase => ({
+                        ...purchase,
+                        userId: userId || "",
+                    })),
+                    averageRating: averageRating,
+                    totalRatings: totalRatings,
+                };
+            })
+        );
+
+        return coursesWithProgressAndRatings;
     } catch (error) {
         console.error("[GET_COURSES]: ", error);
         return [];

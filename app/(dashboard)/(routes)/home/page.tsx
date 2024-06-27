@@ -8,6 +8,10 @@ import db from "@/lib/db";
 
 export const maxDuration = 60;
 
+export const metadata = {
+  title: "Home",
+}
+
 export default async function Dashboard() {
   const { userId } = auth();
   if (!userId) {
