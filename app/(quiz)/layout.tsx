@@ -1,18 +1,14 @@
 
 import { redirect } from "next/navigation";
-
+import { ToastProvider } from "@/components/providers/toaster-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { auth } from "@clerk/nextjs/server";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ToastProvider } from "@/components/providers/toaster-provider";
-
 
 const CourseLayout = async ({
     children,
-    params,
 }: {
     children: React.ReactNode;
-    params: { courseId: string };
 }) => {
     const { userId } = auth();
 

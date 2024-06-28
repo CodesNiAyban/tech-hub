@@ -1,9 +1,14 @@
-import { IconBadge } from "@/components/icon-badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { History, Eye, Trash, BarChart, PlusCircle, Activity } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from "@clerk/nextjs/server";
+import { Activity, BarChart } from "lucide-react";
+import { redirect } from "next/navigation";
+import HistoryComponent from "./histories";
 
 export const RecentActivityCard = () => {
+    const { userId } = auth();
+    if (!userId) {
+        return redirect("/sign-in");
+    }
     return (
         <Card className="lg:col-span-3 sm:col-span-4">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -39,22 +44,7 @@ export const RecentActivityCard = () => {
                         Recent Quizzes
                     </h3>
                     <div className="mt-2 space-y-2">
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm">
-                                Quiz on React Basics
-                            </p>
-                            <Button size="sm" variant="ghost">
-                                Retry
-                            </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm">
-                                JavaScript Fundamentals
-                            </p>
-                            <Button size="sm" variant="ghost">
-                                Retry
-                            </Button>
-                        </div>
+                        <HistoryComponent limit={3} userId="1" />
                     </div>
                 </div>
             </CardContent>

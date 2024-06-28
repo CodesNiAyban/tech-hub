@@ -10,7 +10,11 @@ import { Award, Clock, PlayCircle, Swords } from "lucide-react";
 
 export const maxDuration = 60;
 
-export function CreateQuizDialog() {
+interface CreateQuizProps {
+    topic?: string;
+}
+
+export function CreateQuizDialog({ topic }: CreateQuizProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -51,7 +55,7 @@ export function CreateQuizDialog() {
                 </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
-                <CreateQuiz />
+                <CreateQuiz topic={topic}/>
             </AlertDialogContent>
         </AlertDialog>
     )

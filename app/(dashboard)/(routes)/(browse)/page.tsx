@@ -1,8 +1,10 @@
+
 import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { Categories } from "./_components/categories";
+import { SubscriptionSuccess } from "./_components/subscription-success";
 
 export const maxDuration = 60;
 
@@ -44,8 +46,9 @@ const Browse = async ({ searchParams }: BrowseProps) => {
     return (
         <>
             <div className="mt-10 flex-1 flex flex-col p-3">
+                <SubscriptionSuccess user={userSubscription} />
                 <Categories items={categories} />
-                <CoursesList items={courses} currentUserId={userId} userSubscription={userSubscription?.subscription || "null"}/>
+                <CoursesList items={courses} currentUserId={userId} userSubscription={userSubscription?.subscription || "null"} />
             </div>
         </>
     );

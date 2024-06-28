@@ -8,27 +8,27 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { StripeCustomer } from "@prisma/client";
 import { CheckCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface SubscriptionSuccessProps {
     user: StripeCustomer | null;
-    success: string | null;
 }
 
-export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps, success: string | null) => {
+export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps) => {
     const [open, setOpen] = useState(false);
+    const searchParams = useSearchParams();
+    const success = searchParams.get('success') === 'true';
     const router = useRouter();
 
     useEffect(() => {
-        console.log("Success param:", success);
         if (success) {
             setOpen(true);
         }
     }, [success]);
 
     const handleConfirm = () => {
-        router.push(`/`)
+        router.push(`/`);
         setOpen(false);
     };
 
@@ -48,7 +48,7 @@ export const SubscriptionSuccess = ({ user }: SubscriptionSuccessProps, success:
     } else if (user?.subscription === 'PRO') {
         subscriptionDetails = (
             <div>
-                <p className="text-sm mb-4">Thank you for subscribing to the Pro plan, With this plan, you can access:</p>
+                <p className="text-sm mb-4">Thank you for subscribing to the Pro plan. With this plan, you can access:</p>
                 <ul className="list-disc pl-5">
                     <li className="mb-1">All features of the Basic plan</li>
                     <li className="mb-1">More advanced courses</li>

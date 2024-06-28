@@ -60,7 +60,7 @@ export async function POST() {
                 }
             ],
             mode: "payment",
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success=true`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?success=true`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
             metadata: {
                 userId: user.id,

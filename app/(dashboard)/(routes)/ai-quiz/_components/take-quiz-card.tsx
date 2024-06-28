@@ -1,8 +1,17 @@
+"use client"
+import {
+    QueryClient,
+    QueryClientProvider
+} from '@tanstack/react-query';
 import { CreateQuizDialog } from "./create-quiz";
+
+const queryClient = new QueryClient()
 
 export const TakeAQuizCard = () => {
     return (
-        <CreateQuizDialog />
+        <QueryClientProvider client={queryClient}>
+            <CreateQuizDialog />
+        </QueryClientProvider>
     );
 }
 

@@ -11,7 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { BookOpen, CopyCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -21,57 +21,67 @@ import * as z from "zod"
 import { useMutation } from "@tanstack/react-query";
 import { quizCreationSchema } from "../../teacher/courses/_components/_utils/form-validation";
 import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import LoadingQuestions from "./loading-questions";
 
 export const maxDuration = 60;
 
-export const CreateQuiz = () => {
+interface CreateQuizProps {
+    topic?: string
+}
+
+export const CreateQuiz = ({ topic }: CreateQuizProps) => {
     const router = useRouter();
     const [showLoader, setShowLoader] = useState(false);
     const [finishedLoading, setFinishedLoading] = useState(false);
-    // const { mutate: getQuestions } = useMutation({
-    //     mutationFn: async ({ amount, topic, type }: z.infer<typeof quizCreationSchema>) => {
-    //         const response = await axios.post("/api/game", { amount, topic, type });
-    //         return response.data;
-    //     },
-    // });
+    const { mutate: getQuestions, isPending } = useMutation({
+        mutationFn: async ({ amount, topic, type }: z.infer<typeof quizCreationSchema>) => {
+            const response = await axios.post("/api/quiz/game", { amount, topic, type });
+            if (response.status !== 200) {
+                throw new Error("An error occured, please try again later.");
+            } else {
+                toast.success("Quiz created successfully.");
+            }
+            return response.data;
+        },
+    });
     const createForm = useForm<z.infer<typeof quizCreationSchema>>({
         resolver: zodResolver(quizCreationSchema),
         defaultValues: {
-            topic: "",
+            topic: topic || "",
             type: "mcq",
             amount: 3,
         },
     });
 
+    const onSubmit = async (data: z.infer<typeof quizCreationSchema>) => {
+        setShowLoader(true);
+        getQuestions(data, {
+            onError: (error) => {
+                setShowLoader(false);
+                if (error instanceof AxiosError) {
+                    if (error.response?.status === 500) {
+                        toast.error("An error occured, please try again later.");
+                    }
+                }
+            },
+            onSuccess: ({ gameId }: { gameId: string }) => {
+                setFinishedLoading(true);
+                setTimeout(() => {
+                    if (createForm.getValues("type") === "mcq") {
+                        router.push(`quiz/play/mcq/${gameId}`);
+                    } else if (createForm.getValues("type") === "open_ended") {
+                        router.push(`quiz/play/open-ended/${gameId}`);
+                    }
+                }, 2000);
+            },
+        });
+    };
+
     createForm.watch();
 
-    const onSubmit = async (values: z.infer<typeof quizCreationSchema>) => {
-        try {
-            const response = axios.post("/api/quizs", values);
-            router.push(`/teacher/quizs/${(await response).data.id}`)
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Quiz Title Created!",
-            });
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    if (error.response.status === 403) {
-                        toast.error("Duplicate title, please try another title.");
-                    } else {
-                        toast.error(error.response.data.message || "An error occurred");
-                    }
-                } else {
-                    toast.error("An unexpected error occurred");
-                }
-            } else {
-                toast.error("An unknown error occurred");
-            }
-        }
+    if (showLoader) {
+        return <LoadingQuestions finished={finishedLoading} />;
     }
-
-    const { isSubmitting } = createForm.formState;
 
     return (
         <>
@@ -161,7 +171,7 @@ export const CreateQuiz = () => {
                                     Cancel
                                 </Button>
                             </AlertDialogCancel>
-                            <Button disabled={isSubmitting} type="submit" className="justify-end">
+                            <Button disabled={isPending} type="submit" className="justify-end">
                                 Submit
                             </Button>
                         </div>
