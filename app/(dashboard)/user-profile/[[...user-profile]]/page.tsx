@@ -44,7 +44,7 @@ const UserProfilePage = () => {
     };
 
     return (
-        <div className="flex h-full items-center justify-center p-4">
+        <div className="flex h-full items-center justify-center p-4 mt-24">
             <div className="shadow-lg rounded-lg p-6">
                 <UserProfile path="/user-profile" />
                 <div className="flex justify-end mt-4">

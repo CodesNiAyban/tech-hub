@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Text } from '@visx/text';
 import { scaleLog } from '@visx/scale';
 import Wordcloud from '@visx/wordcloud/lib/Wordcloud';
-import { totoAfricaLyrics } from './text.fixture';
 
 interface ExampleProps {
   width: number;
@@ -18,27 +17,42 @@ export interface WordData {
 
 const colors = ['#143059', '#2F6B9A', '#82a6c2'];
 
-function wordFreq(text: string): WordData[] {
-  const words: string[] = text.replace(/\./g, '').split(/\s/);
-  const freqMap: Record<string, number> = {};
-
-  for (const w of words) {
-    if (!freqMap[w]) freqMap[w] = 0;
-    freqMap[w] += 1;
-  }
-  return Object.keys(freqMap).map((word) => ({ text: word, value: freqMap[word] }));
-}
-
-function getRotationDegree() {
-  const rand = Math.random();
-  const degree = rand > 0.5 ? 60 : -60;
-  return rand * degree;
-}
-
-const words = wordFreq(totoAfricaLyrics);
+const techWords = [
+  { text: 'JavaScript', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'React', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Node.js', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'GraphQL', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'TypeScript', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Webpack', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Babel', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'ESLint', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Prettier', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'NPM', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Yarn', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Docker', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Kubernetes', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Python', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Java', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'C++', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Go', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Rust', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Swift', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Objective-C', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Ruby', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'PHP', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'SQL', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'NoSQL', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'HTML', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'CSS', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Sass', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'LESS', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'AWS', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'Azure', value: Math.floor(Math.random() * 100) + 1 },
+  { text: 'GCP', value: Math.floor(Math.random() * 100) + 1 },
+];
 
 const fontScale = scaleLog({
-  domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
+  domain: [Math.min(...techWords.map((w) => w.value)), Math.max(...techWords.map((w) => w.value))],
   range: [10, 100],
 });
 const fontSizeSetter = (datum: WordData) => fontScale(datum.value);
@@ -52,9 +66,9 @@ export default function Example({ width, height, showControls }: ExampleProps) {
   const [withRotation, setWithRotation] = useState(false);
 
   return (
-    <div className="wordcloud max-h-[550px]">
+    <div className="wordcloud h-[550px] max-h-[550px]">
       <Wordcloud
-        words={words}
+        words={techWords}
         width={width}
         height={height}
         fontSize={fontSizeSetter}
@@ -79,54 +93,12 @@ export default function Example({ width, height, showControls }: ExampleProps) {
           ))
         }
       </Wordcloud>
-      {showControls && (
-        <div>
-          <label>
-            Spiral type &nbsp;
-            <select
-              onChange={(e) => setSpiralType(e.target.value as SpiralType)}
-              value={spiralType}
-            >
-              <option key={'archimedean'} value={'archimedean'}>
-                archimedean
-              </option>
-              <option key={'rectangular'} value={'rectangular'}>
-                rectangular
-              </option>
-            </select>
-          </label>
-          <label>
-            With rotation &nbsp;
-            <input
-              type="checkbox"
-              checked={withRotation}
-              onChange={() => setWithRotation(!withRotation)}
-            />
-          </label>
-          <br />
-        </div>
-      )}
-      <style jsx>{`
-        .wordcloud {
-          display: flex;
-          flex-direction: column;
-          user-select: none;
-        }
-        .wordcloud svg {
-          margin: 1rem 0;
-          cursor: pointer;
-        }
-
-        .wordcloud label {
-          display: inline-flex;
-          align-items: center;
-          font-size: 14px;
-          margin-right: 8px;
-        }
-        .wordcloud textarea {
-          min-height: 100px;
-        }
-      `}</style>
     </div>
   );
+}
+
+function getRotationDegree() {
+  const rand = Math.random();
+  const degree = rand > 0.5 ? 60 : -60;
+  return rand * degree;
 }

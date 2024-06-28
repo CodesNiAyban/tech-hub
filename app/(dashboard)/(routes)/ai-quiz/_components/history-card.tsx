@@ -1,7 +1,5 @@
-import { IconBadge } from "@/components/icon-badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { History, Eye, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Eye, History, Trash } from "lucide-react";
 
 export const HistoryCard = () => {
     return (

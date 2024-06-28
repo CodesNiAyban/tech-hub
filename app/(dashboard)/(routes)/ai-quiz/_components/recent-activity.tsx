@@ -13,10 +13,8 @@ export const RecentActivityCard = () => {
                 <Activity className="h-8 w-8 text-primary" />
             </CardHeader>
             <CardContent className="max-h-[600px] overflow-auto">
-                <CardDescription>
-                    <p className="text-sm text-muted-foreground">
-                        You have played a total of 43 quizzes.
-                    </p>
+                <CardDescription className="text-sm text-muted-foreground">
+                    You have played a total of 43 quizzes.
                 </CardDescription>
                 <div className="mt-4">
                     <h3 className="text-lg font-semibold">
@@ -25,13 +23,13 @@ export const RecentActivityCard = () => {
                     <div className="flex items-center mt-2">
                         <BarChart className="h-5 w-5 text-primary mr-2" />
                         <p className="text-sm">
-                            Quizzes Taken: <span className="font-bold">12</span>
+                            Quizzes Taken: <a className="font-bold">12</a>
                         </p>
                     </div>
                     <div className="flex items-center mt-2">
                         <BarChart className="h-5 w-5 text-primary mr-2" />
                         <p className="text-sm">
-                            Average Score: <span className="font-bold">85%</span>
+                            Average Score: <a className="font-bold">85%</a>
                         </p>
                     </div>
                 </div>
