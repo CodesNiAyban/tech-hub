@@ -203,6 +203,9 @@ model Game {
   timeEnded   DateTime?
   gameType    GameType
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
 }
 
@@ -218,6 +221,9 @@ model Question {
   userAnswer        String?
 
   game Game @relation(fields: [gameId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([gameId])
 }

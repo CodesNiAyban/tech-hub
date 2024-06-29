@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     Card,
     CardDescription,
@@ -30,24 +30,23 @@ const MCQ = ({ game }: Props) => {
         correct_answers: 0,
         wrong_answers: 0,
     });
-    const [selectedChoice, setSelectedChoice] = useState<number>(0);
+    const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
     const [now, setNow] = useState(new Date());
 
-    const currentQuestion = useMemo(() => {
-        return game.questions[questionIndex];
-    }, [questionIndex, game.questions]);
+    const currentQuestion = game.questions[questionIndex];
 
-    const options = useMemo(() => {
-        if (!currentQuestion) return [];
-        if (!currentQuestion.options) return [];
-        return JSON.parse(currentQuestion.options as string) as string[];
-    }, [currentQuestion]);
+    let options: string[] = [];
+    try {
+        options = JSON.parse(currentQuestion.options as string);
+    } catch (e) {
+        console.error("Failed to parse options:", e);
+    }
 
     const { mutate: checkAnswer, isPending: isChecking } = useMutation({
         mutationFn: async () => {
             const payload: z.infer<typeof checkAnswerSchema> = {
                 questionId: currentQuestion.id,
-                userInput: options[selectedChoice],
+                userInput: options[selectedChoice as number],
             };
             const response = await axios.post(`/api/quiz/check-answer`, payload);
             return response.data;
@@ -74,6 +73,8 @@ const MCQ = ({ game }: Props) => {
     }, [hasEnded]);
 
     const handleNext = useCallback(() => {
+        if (isChecking || selectedChoice === null) return; // Ensure a choice is selected
+
         checkAnswer(undefined, {
             onSuccess: ({ isCorrect }) => {
                 if (isCorrect) {
@@ -94,10 +95,19 @@ const MCQ = ({ game }: Props) => {
                     setHasEnded(true);
                     return;
                 }
+                setSelectedChoice(null); // Reset the selected choice before moving to next question
                 setQuestionIndex((questionIndex) => questionIndex + 1);
             },
+            onError: (error) => {
+                console.error("Error checking answer:", error);
+                toast.error("An error occurred while checking the answer.");
+            },
         });
-    }, [checkAnswer, questionIndex, game.questions.length, endGame]);
+    }, [checkAnswer, questionIndex, game.questions.length, endGame, isChecking, selectedChoice]);
+
+    useEffect(() => {
+        setSelectedChoice(null); // Reset the selected choice whenever the question index changes
+    }, [questionIndex]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -122,6 +132,12 @@ const MCQ = ({ game }: Props) => {
             document.removeEventListener("keydown", handleKeyDown);
         };
     }, [handleNext]);
+
+    useEffect(() => {
+        console.log("Current Question Index:", questionIndex);
+        console.log("Selected Choice:", selectedChoice);
+        console.log("Current Stats:", stats);
+    }, [questionIndex, selectedChoice, stats]);
 
     if (hasEnded) {
         return (
@@ -179,7 +195,7 @@ const MCQ = ({ game }: Props) => {
                 {options.map((option, index) => {
                     return (
                         <Button
-                            key={option}
+                            key={`${option}-${index}`}
                             variant={selectedChoice === index ? "default" : "outline"}
                             className="justify-start w-full py-8 mb-4"
                             onClick={() => setSelectedChoice(index)}
@@ -197,10 +213,8 @@ const MCQ = ({ game }: Props) => {
                     variant="default"
                     className="mt-2"
                     size="lg"
-                    disabled={isChecking || hasEnded}
-                    onClick={() => {
-                        handleNext();
-                    }}
+                    disabled={isChecking || hasEnded || selectedChoice === null} // Ensure a choice is selected
+                    onClick={handleNext}
                 >
                     {isChecking && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Next <ChevronRight className="w-4 h-4 ml-2" />

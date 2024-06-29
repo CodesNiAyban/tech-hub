@@ -79,38 +79,62 @@ const ChapterIdPage = async ({
             userId: userId,
         },
     });
+    const isLocked = (chapter: Chapter) => {
+        let unlock = false;
+
+        // Check all previous chapters completion status and subscription requirement
+        for (let i = 1; i <= chapter.position; i++) {
+            if (user) {
+                if (course.price === 0 ||
+                    purchase ||
+                    (user.subscription === "PRO" || user.subscription === "LIFETIME") ||
+                    (user.subscription === chapter.subscription) ||
+                    ((chapter.subscription === "null" || chapter.subscription === null || !chapter.subscription) && (user.subscription === "null" || user.subscription === null || !user.subscription))
+                ) {
+                    if (chapter.position === 1) return false
+
+                    const prevChapter = course.chapters[i - 1];
+
+                    // Fetch user progress for the previous chapter
+                    const userProgress = prevChapter.userProgress?.find(
+                        (progress) => progress.userId === userId
+                    );
+
+                    // If the previous chapter is not completed, lock the next chapter
+                    if (userProgress?.isCompleted) return false;
+
+                    // If the previous chapter is locked and doesn't match the subscription, lock the next chapter
+                    if (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null") {
+                        return true;
+                    }
+
+                    // If previous chapter is completed and meets conditions, unlock subsequent chapters
+                    if (userProgress?.isCompleted) {
+                        unlock = true;
+                    }
+                } else {
+                    return true
+                }
+            } else {
+                return true;
+            }
+        }
+
+        return !unlock;
+    };
 
     const users: User[] = JSON.parse(JSON.stringify(userResponse.data));
     const currentUser = users.find(user => user.id === userId);
-    const completeOnEnd = !isLocked(chapter, user, course, userProgress, purchase);
+    const completeOnEnd = !isLocked(chapter);
 
-    function isLocked(chapter: Chapter, user: any, course: any, userProgress: any, purchase: any): boolean {
-        if (user && (course.price === 0 || purchase || ["PRO", "LIFETIME"].includes(user.subscription) || user.subscription === chapter.subscription || !chapter.subscription)) {
-            if (chapter.position === 1) return false;
 
-            for (let i = 1; i < chapter.position; i++) {
-                const prevChapter = course.chapters[i - 1];
-                const userProgress = prevChapter.userProgress?.find(
-                    (progress: { userId: string | null; }) => progress.userId === userId
-                );
-
-                if (!userProgress?.isCompleted || (prevChapter.subscription !== user.subscription && prevChapter.subscription !== "null")) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        return true;
-    }
 
     return (
         <div>
             {userProgress?.isCompleted && (
                 <Banner variant="success" label="You already completed this chapter." />
             )}
-            {isLocked(chapter, user, course, userProgress, purchase) && (
+            {isLocked(chapter) && (
                 <Banner
                     variant="warning"
                     label={`You need to be subscribed to TechHub ${chapter.subscription} or purchase this course to watch this chapter`}
@@ -124,14 +148,14 @@ const ChapterIdPage = async ({
                         courseId={params.courseId}
                         nextChapterId={nextChapter?.id}
                         playbackId={muxData?.playbackId!}
-                        isLocked={isLocked(chapter, user, course, userProgress, purchase)}
+                        isLocked={isLocked(chapter)}
                         completeOnEnd={completeOnEnd}
                     />
                 </div>
                 <div>
                     <div className="p-4 flex flex-col md:flex-row items-center justify-between">
                         <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
-                        {isLocked(chapter, user, course, userProgress, purchase) ? (
+                        {isLocked(chapter) ? (
                             <div className="flex items-center justify-center gap-x-2">
                                 <Button size='sm' asChild>
                                     <Link href={`/pricing`}>

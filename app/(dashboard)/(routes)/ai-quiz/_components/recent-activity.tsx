@@ -44,7 +44,7 @@ export const RecentActivityCard = () => {
                         Recent Quizzes
                     </h3>
                     <div className="mt-2 space-y-2">
-                        <HistoryComponent limit={3} userId="1" />
+                        <HistoryComponent limit={3} userId={userId} />
                     </div>
                 </div>
             </CardContent>

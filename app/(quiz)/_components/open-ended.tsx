@@ -54,7 +54,7 @@ const OpenEnded = ({ game }: Props) => {
                 questionId: currentQuestion.id,
                 userInput: filledAnswer,
             };
-            const response = await axios.post(`/api/checkAnswer`, payload);
+            const response = await axios.post(`/api/quiz/check-answer`, payload);
             return response.data;
         },
     });
@@ -108,7 +108,7 @@ const OpenEnded = ({ game }: Props) => {
                     {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
                 </div>
                 <Link
-                    href={`/statistics/${game.id}`}
+                    href={`/quiz/statistics/${game.id}`}
                     className={cn(buttonVariants({ size: "lg" }), "mt-2")}
                 >
                     View Statistics

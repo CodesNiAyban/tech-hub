@@ -1,10 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { HistoryCard } from "./_components/history-card";
 import { TakeAQuizCard } from "./_components/take-quiz-card";
 import { HotTopicsCard } from "./_components/hot-topics";
 import { RecentActivityCard } from "./_components/recent-activity";
 import db from "@/lib/db";
+import { HistoryDialog } from "./_components/history-dialog";
 
 export const metadata = {
     title: "AI Quiz"
@@ -12,6 +12,7 @@ export const metadata = {
 
 const AIQuizPage = async () => {
     const { userId } = auth();
+
     if (!userId) {
         return redirect("/sign-in");
     }
@@ -30,11 +31,11 @@ const AIQuizPage = async () => {
                 <div className="flex items-center justify-center">
                     <h2 className="mr-3 text-3xl font-bold tracking-tight dark:text-white sm:text-5xl">WELCOME TO AI QUIZ</h2>
                 </div>
-                <div className="grid gap-4 mt-4 md:grid-cols-2">
+                <div className="grid gap-4 mt-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                     <TakeAQuizCard />
-                    <HistoryCard />
+                    <HistoryDialog userId={userId} />
                 </div>
-                <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-7">
+                <div className="grid gap-4 mt-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
                     <HotTopicsCard formattedTopics={formattedTopics} />
                     <RecentActivityCard />
                 </div>
