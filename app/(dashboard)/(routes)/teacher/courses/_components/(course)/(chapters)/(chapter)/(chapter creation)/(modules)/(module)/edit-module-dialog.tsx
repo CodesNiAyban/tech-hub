@@ -20,7 +20,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Chapter } from "@prisma/client";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Replace } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditModuleForm } from "./edit-module-form";
 interface EditModuleDialogProps {
@@ -52,7 +52,7 @@ export const EditModuleDialog = ({
 
 	const handleClose = () => {
 		setOpen(false);
-		toggleModal(); 
+		toggleModal();
 	};
 
 
@@ -61,7 +61,7 @@ export const EditModuleDialog = ({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
 					<Button variant="ghost" className="font-medium ml-auto">
-						<PlusCircle className="h-5 w-5 mr-2" />
+						{initialData.pdfUrl ? <Replace className="h-5 w-5 mr-2" /> : <PlusCircle className="h-5 w-5 mr-2" />}
 						{title}
 					</Button>
 				</DialogTrigger>

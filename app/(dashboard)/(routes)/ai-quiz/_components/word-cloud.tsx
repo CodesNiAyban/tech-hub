@@ -63,7 +63,7 @@ export default function Example({ width, height, formattedTopics }: ExampleProps
   };
 
   return (
-    <div className="wordcloud h-[550px] max-h-[850px]">
+    <div className="wordcloud h-[400px] max-h-[850px]">
       <QueryClientProvider client={queryClient}>
         <Wordcloud
           words={formattedTopics}

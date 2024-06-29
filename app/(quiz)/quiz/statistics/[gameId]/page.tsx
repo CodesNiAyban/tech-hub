@@ -10,6 +10,7 @@ import ResultsCard from "../_components/results-card";
 import AccuracyCard from "../_components/accuracy-card";
 import TimeTakenCard from "../_components/time-taken-card";
 import QuestionsList from "../_components/questions-list";
+import LevelCard from "../_components/level-card";
 type Props = {
     params: {
         gameId: string;
@@ -17,7 +18,7 @@ type Props = {
 };
 
 const Statistics = async ({ params: { gameId } }: Props) => {
-    const { userId } = await auth();
+    const { userId } = auth();
 
     if (!userId) {
         return redirect("/sign-in");
@@ -29,7 +30,7 @@ const Statistics = async ({ params: { gameId } }: Props) => {
         },
     });
 
-    if ((userSubscription && userSubscription.subscription === "null") || !userSubscription ) {
+    if ((userSubscription && userSubscription.subscription === "null") || !userSubscription) {
         return redirect("/");
     }
 
@@ -76,9 +77,10 @@ const Statistics = async ({ params: { gameId } }: Props) => {
                     <ResultsCard accuracy={accuracy} />
                     <AccuracyCard accuracy={accuracy} />
                     <TimeTakenCard
-                        timeEnded={new Date()}
+                        timeEnded={game.updatedAt}
                         timeStarted={game.createdAt}
                     />
+                    <LevelCard level={game.level} />
                 </div>
                 <QuestionsList questions={game.questions} />
             </div>

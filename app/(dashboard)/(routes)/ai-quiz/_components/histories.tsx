@@ -23,6 +23,21 @@ const HistoryComponent = async ({ limit, userId }: Props) => {
         },
     });
 
+    const getLevelInfo = (level: string) => {
+        switch (level) {
+            case "Easy":
+                return { className: "bg-green-500 dark:bg-green-900 ", label: "Easy" };
+            case "Medium":
+                return { className: "bg-yellow-500 dark:bg-yellow-900", label: "Medium" };
+            case "Hard":
+                return { className: "bg-red-500 dark:bg-red-900", label: "Hard" };
+            case "HARDCORE":
+                return { className: "bg-purple-500 dark:bg-purple-900", label: "Hardcore" };
+            default:
+                return { className: "bg-slate-800", label: "Unknown" };
+        }
+    };
+
     return (
         <div className="history-component max-h-[400px] overflow-y-auto">
             {games.map((game) => (
@@ -38,9 +53,14 @@ const HistoryComponent = async ({ limit, userId }: Props) => {
                                     )}
                                     <div className="flex ml-2 items-center justify-between w-full">
                                         <div>
-                                            <p className="flex text-md font-medium leading-tight hover:text-blue-600">
-                                                {game.topic}
-                                            </p>
+                                            <div className="flex items-center gap-x-1">
+                                                <p className="flex text-md font-medium leading-tight hover:text-blue-600">
+                                                    {game.topic}
+                                                </p>
+                                                <div className={`flex items-center px-1 py-1 text-xs text-white rounded-lg ${getLevelInfo(game.level).className}`}>
+                                                    {getLevelInfo(game.level).label}
+                                                </div>
+                                            </div>
                                             <p className="text-sm text-gray-600">
                                                 {game.gameType === "mcq" ? "Multiple Choice" : "Open-Ended"}
                                             </p>

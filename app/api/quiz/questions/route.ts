@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         // }
 
         const body = await req.json();
-        const { amount, topic, type } = quizCreationSchema.parse(body);
+        const { amount, topic, type, level } = quizCreationSchema.parse(body);
 
         // Define fixed data for testing
         const testOpenEndedQuestions = [
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
             questions = await strict_output(
                 "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
                 new Array(amount).fill(
-                    `You are to generate a random hard open-ended questions about ${topic}`
+                    `You are to generate a random ${level} level open-ended questions about ${topic}`
                 ),
                 {
                     question: "question",
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
             questions = await strict_output(
                 "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, options count is 4 with the answer, options must be unique, store all answers and questions and options in a JSON array",
                 new Array(amount).fill(
-                    `You are to generate a random hard mcq question about ${topic}`
+                    `You are to generate a random ${level} level mcq question about ${topic}`
                 ),
                 {
                     question: "question",

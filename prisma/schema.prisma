@@ -80,6 +80,7 @@ model Chapter {
   position     Int
   isPublished  Boolean           @default(false)
   subscription SubscriptionType? @default(null)
+  quiz         Boolean           @default(false)
 
   muxData MuxData?
 
@@ -88,11 +89,29 @@ model Chapter {
 
   userProgress UserProgress[]
   comments     Comments[]
+  quizSetting  QuizSetting[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+}
+
+model QuizSetting {
+  id        String  @id @default(uuid())
+  userId    String
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  topic    String
+  gameType GameType @default(mcq)
+  level    QuestionLevel @default(HARDCORE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
 }
 
 model Comments {
@@ -195,11 +214,12 @@ model SubscriptionPrices {
 }
 
 model Game {
-  id        String     @id @default(cuid())
+  id        String        @id @default(cuid())
   userId    String
   questions Question[]
   topic     String
   gameType  GameType
+  level     QuestionLevel @default(HARDCORE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -235,6 +255,13 @@ model topic_count {
 enum GameType {
   mcq
   open_ended
+}
+
+enum QuestionLevel {
+  Easy
+  Medium
+  Hard
+  HARDCORE
 }
 
 enum subscriptionStatus {

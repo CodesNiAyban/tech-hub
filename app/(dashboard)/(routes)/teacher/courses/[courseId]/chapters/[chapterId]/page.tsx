@@ -8,7 +8,6 @@ import { AccessSettings } from "../../../_components/(course)/(chapters)/(chapte
 import { AddVideo } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(video)/add-video";
 import { Banner } from "@/components/banner";
 import { ChapterActions } from "../../../_components/chapter-actions";
-import { AddQuiz } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(quiz)/add-quiz";
 import { ChapterModule } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(modules)/chapter-modules";
 
 export const maxDuration = 60;
@@ -100,11 +99,6 @@ const ChapterIdPage = async ({
                                 chapterId={params.chapterId}
                             />
                             <AccessSettings
-                                initialData={chapter}
-                                courseId={params.courseId}
-                                chapterId={params.chapterId}
-                            />
-                            <AddQuiz
                                 initialData={chapter}
                                 courseId={params.courseId}
                                 chapterId={params.chapterId}

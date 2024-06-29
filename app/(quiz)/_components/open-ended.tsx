@@ -108,17 +108,40 @@ const OpenEnded = ({ game }: Props) => {
         );
     }
 
+    const getLevelClass = (level: string) => {
+        switch (level) {
+            case "Easy":
+                return "bg-green-500 dark:bg-green-700";
+            case "Medium":
+                return "bg-yellow-500";
+            case "Hard":
+                return "bg-red-500";
+            case "HARDCORE":
+                return "bg-purple-500";
+            default:
+                return "bg-slate-800";
+        }
+    };
+
     return (
         <div className="absolute -translate-x-1/2 -translate-y-1/2 md:w-[80vw] max-w-4xl w-[90vw] top-1/2 left-1/2">
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col">
                     {/* topic */}
-                    <p>
-                        <span className="text-slate-400">Topic</span> &nbsp;
-                        <span className="px-2 py-1 text-white rounded-lg bg-slate-800">
-                            {game.topic}
-                        </span>
-                    </p>
+                    <div className="flex">
+                        <p>
+                            <span className="text-slate-400">Topic</span> &nbsp;
+                            <span className="px-2 py-1 text-white rounded-lg bg-slate-800">
+                                {game.topic}
+                            </span>
+                        </p>
+                        <p className="ml-4">
+                            <span className="text-slate-400">Level</span> &nbsp;
+                            <span className={`px-2 py-1 text-white rounded-lg ${getLevelClass(game.level)}`}>
+                                {game.level}
+                            </span>
+                        </p>
+                    </div>
                     <div className="flex self-start mt-3 text-slate-400">
                         <Timer className="mr-2" />
                         {formatTimeDelta(differenceInSeconds(now, game.createdAt))}

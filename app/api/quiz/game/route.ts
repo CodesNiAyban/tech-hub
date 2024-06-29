@@ -1,4 +1,4 @@
-import { quizCreationSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { endGameSchema, quizCreationSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import db from "@/lib/db";
 import { strict_output } from "@/lib/gpt";
 import { auth } from "@clerk/nextjs/server";
@@ -17,7 +17,7 @@ export async function POST(
         }
 
         const body = await req.json();
-        const { amount, topic, type } = quizCreationSchema.parse(body);
+        const { amount, topic, type, level } = quizCreationSchema.parse(body);
 
         const [game, topicCount, { data }] = await Promise.all([
             await db.game.create({
@@ -25,6 +25,7 @@ export async function POST(
                     gameType: type,
                     userId: userId,
                     topic,
+                    level,
                 },
             }),
             await db.topic_count.upsert({
@@ -47,6 +48,7 @@ export async function POST(
                     amount,
                     topic,
                     type,
+                    level,
                 }
             ),
         ]);
@@ -96,6 +98,59 @@ export async function POST(
                 }),
             });
         }
+
+        return NextResponse.json({ gameId: game.id }, { status: 200 });
+    } catch (error) {
+        console.log("[QUIZ]", error)
+        if (error instanceof ZodError) {
+            return NextResponse.json(
+                { error: error.issues },
+                {
+                    status: 400,
+                }
+            );
+        } else {
+            return new NextResponse("Internal Error 2", { status: 500 })
+        }
+    }
+}
+
+export async function PUT(
+    req: Request,
+) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const body = await req.json();
+        const { gameId } = endGameSchema.parse(body);
+
+        const game = await db.game.findUnique({
+            where: {
+                id: gameId,
+            },
+        });
+        if (!game) {
+            return NextResponse.json(
+                {
+                    message: "Game not found",
+                },
+                {
+                    status: 404,
+                }
+            );
+        }
+        await db.game.update({
+            where: {
+                id: gameId,
+            },
+            data: {
+                updatedAt: new Date(),
+            }
+        });
 
         return NextResponse.json({ gameId: game.id }, { status: 200 });
     } catch (error) {

@@ -73,6 +73,9 @@ export const videoSchema = z.object({
   videoUrl: notOnlyWhitespace("Video URL is required and cannot be whitespace only"),
 });
 
+export const quizAccessSchema = z.object({
+  quiz: z.boolean(),
+});
 
 export const quizCreationSchema = z.object({
   topic: z
@@ -85,6 +88,7 @@ export const quizCreationSchema = z.object({
     }),
   type: z.enum(["mcq", "open_ended"]),
   amount: z.number().min(1).max(10),
+  level: z.enum(["Easy", "Medium", "Hard","HARDCORE"]),
 });
 
 

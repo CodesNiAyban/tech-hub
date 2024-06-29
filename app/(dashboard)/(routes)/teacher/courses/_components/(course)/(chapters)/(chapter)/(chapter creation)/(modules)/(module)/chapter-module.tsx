@@ -38,7 +38,7 @@ export const EditChapterModule = ({
                         <>Chapter Module <span className="text-destructive text-xs flex ml-1">(Optional)</span></>
                     )}
                     <EditModuleDialog
-                        title={"Add a pdf file"}
+                        title={initialData.pdfUrl? "Change Module" : "Add a pdf file"}
                         formLabel={"New Chapter Module"}
                         description={"Add a new pdf file for this Chapter. Click 'Save' when you're finished."}
                         initialData={initialData}

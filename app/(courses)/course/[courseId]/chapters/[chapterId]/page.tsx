@@ -172,9 +172,11 @@ const ChapterIdPage = async ({
                                     nextChapterId={nextChapter?.id}
                                     isCompleted={!!userProgress?.isCompleted}
                                 />
-                                <Button>
-                                    Take the Quiz😱
-                                </Button>
+                                {chapter.quiz &&
+                                    <Button>
+                                        Take the Quiz😱
+                                    </Button>
+                                }
                             </div>
                         )}
                     </div>

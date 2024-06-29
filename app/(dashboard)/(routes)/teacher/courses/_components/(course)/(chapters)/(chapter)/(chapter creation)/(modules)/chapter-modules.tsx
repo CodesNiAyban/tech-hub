@@ -14,7 +14,7 @@ import { EditChapterModule } from "./(module)/chapter-module"
 interface TitleFormProps {
     initialData: Chapter;
     courseId: string;
-    chapterId: string ;
+    chapterId: string;
 }
 
 export const ChapterModule = ({
@@ -31,7 +31,7 @@ export const ChapterModule = ({
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">
                         <IconBadge icon={File} size={"default"} variant={"default"} />
-                        Resources and Modules
+                        Add a Module
                     </div>
                 </CardTitle>
             </CardHeader>
