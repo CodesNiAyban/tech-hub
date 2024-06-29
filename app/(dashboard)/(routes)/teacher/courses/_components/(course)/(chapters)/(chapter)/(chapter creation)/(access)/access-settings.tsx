@@ -11,7 +11,7 @@ import { Eye, LayoutDashboard } from "lucide-react"
 import { useState } from "react"
 import { ChapterAccess } from "./chapter-access"
 import { Chapter } from "@prisma/client"
-import { EditChapterQuizForm } from "../(quiz)/set-chapter-quiz-form"
+import { EditChapterQuizForm } from "./(quiz)/set-chapter-quiz-form"
 
 interface AccessFormProps {
     initialData: Chapter

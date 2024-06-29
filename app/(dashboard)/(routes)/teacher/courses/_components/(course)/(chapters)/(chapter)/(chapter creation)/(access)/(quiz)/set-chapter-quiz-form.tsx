@@ -24,7 +24,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { z } from "zod"
-import { quizAccessSchema } from "../../../../../_utils/form-validation"
+import { quizAccessSchema } from "../../../../../../_utils/form-validation"
 import { CreateQuiz } from "./create-quiz-setting-card"; // Import the CreateQuiz component
 
 const queryClient = new QueryClient()

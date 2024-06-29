@@ -21,7 +21,7 @@ import * as z from "zod"
 import { useMutation } from "@tanstack/react-query";
 import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { quizCreationSchema } from "../../../../../_utils/form-validation";
+import { quizCreationSchema } from "../../../../../../_utils/form-validation";
 
 export const maxDuration = 60;
 
