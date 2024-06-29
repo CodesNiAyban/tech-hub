@@ -23,7 +23,6 @@ export async function POST(
             await db.game.create({
                 data: {
                     gameType: type,
-                    timeStarted: new Date(),
                     userId: userId,
                     topic,
                 },

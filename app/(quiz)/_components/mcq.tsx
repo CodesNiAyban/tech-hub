@@ -31,7 +31,7 @@ const MCQ = ({ game }: Props) => {
         wrong_answers: 0,
     });
     const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
-    const [now, setNow] = useState(new Date());
+    const [now, setNow] = useState(game.createdAt);
 
     const currentQuestion = game.questions[questionIndex];
 
@@ -49,16 +49,6 @@ const MCQ = ({ game }: Props) => {
                 userInput: options[selectedChoice as number],
             };
             const response = await axios.post(`/api/quiz/check-answer`, payload);
-            return response.data;
-        },
-    });
-
-    const { mutate: endGame } = useMutation({
-        mutationFn: async () => {
-            const payload: z.infer<typeof endGameSchema> = {
-                gameId: game.id,
-            };
-            const response = await axios.post(`/api/quiz/end-game`, payload);
             return response.data;
         },
     });
@@ -91,7 +81,6 @@ const MCQ = ({ game }: Props) => {
                     toast.error("Incorrect");
                 }
                 if (questionIndex === game.questions.length - 1) {
-                    endGame();
                     setHasEnded(true);
                     return;
                 }
@@ -103,7 +92,7 @@ const MCQ = ({ game }: Props) => {
                 toast.error("An error occurred while checking the answer.");
             },
         });
-    }, [checkAnswer, questionIndex, game.questions.length, endGame, isChecking, selectedChoice]);
+    }, [checkAnswer, questionIndex, game.questions.length, isChecking, selectedChoice]);
 
     useEffect(() => {
         setSelectedChoice(null); // Reset the selected choice whenever the question index changes
@@ -144,7 +133,7 @@ const MCQ = ({ game }: Props) => {
             <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
                     You Completed in{" "}
-                    {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
+                    {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
                 </div>
                 <Link
                     href={`/quiz/statistics/${game.id}`}
@@ -170,7 +159,7 @@ const MCQ = ({ game }: Props) => {
                     </p>
                     <div className="flex self-start mt-3 text-slate-400">
                         <Timer className="mr-2" />
-                        {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
+                        {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
                     </div>
                 </div>
                 <MCQCounter

@@ -17,6 +17,16 @@ const AIQuizPage = async () => {
         return redirect("/sign-in");
     }
 
+    const userSubscription = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId,
+        },
+    });
+
+    if ((userSubscription && userSubscription.subscription === "null") || !userSubscription) {
+        return redirect("/pricing");
+    }
+
     const topics = await db.topic_count.findMany({});
     const formattedTopics = topics.map((topic) => {
         return {

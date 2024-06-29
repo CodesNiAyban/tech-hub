@@ -22,7 +22,17 @@ const Statistics = async ({ params: { gameId } }: Props) => {
     if (!userId) {
         return redirect("/sign-in");
     }
-    
+
+    const userSubscription = await db.stripeCustomer.findUnique({
+        where: {
+            userId: userId,
+        },
+    });
+
+    if ((userSubscription && userSubscription.subscription === "null") || !userSubscription ) {
+        return redirect("/");
+    }
+
     const game = await db.game.findUnique({
         where: { id: gameId },
         include: { questions: true },
@@ -66,8 +76,8 @@ const Statistics = async ({ params: { gameId } }: Props) => {
                     <ResultsCard accuracy={accuracy} />
                     <AccuracyCard accuracy={accuracy} />
                     <TimeTakenCard
-                        timeEnded={new Date(game.timeEnded ?? 0)}
-                        timeStarted={new Date(game.timeStarted ?? 0)}
+                        timeEnded={new Date()}
+                        timeStarted={game.createdAt}
                     />
                 </div>
                 <QuestionsList questions={game.questions} />

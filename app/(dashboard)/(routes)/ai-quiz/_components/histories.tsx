@@ -19,7 +19,7 @@ const HistoryComponent = async ({ limit, userId }: Props) => {
             userId: userId!,
         },
         orderBy: {
-            timeStarted: "desc",
+            createdAt: "desc",
         },
     });
 
@@ -47,7 +47,7 @@ const HistoryComponent = async ({ limit, userId }: Props) => {
                                         </div>
                                         <p className="flex items-center px-2 py-1 text-xs text-white rounded-lg w-fit bg-slate-800">
                                             <Clock className="w-4 h-4 mr-1" />
-                                            {formatDistanceToNow(new Date(game.timeEnded ?? 0), { addSuffix: true })}
+                                            {formatDistanceToNow(game.updatedAt, { addSuffix: true })}
                                         </p>
                                     </div>
                                 </div>

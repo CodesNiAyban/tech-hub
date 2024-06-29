@@ -32,15 +32,6 @@ const OpenEnded = ({ game }: Props) => {
     const currentQuestion = useMemo(() => {
         return game.questions[questionIndex];
     }, [questionIndex, game.questions]);
-    const { mutate: endGame } = useMutation({
-        mutationFn: async () => {
-            const payload: z.infer<typeof endGameSchema> = {
-                gameId: game.id,
-            };
-            const response = await axios.post(`/api/endGame`, payload);
-            return response.data;
-        },
-    });
     const [now, setNow] = useState(new Date());
     const { mutate: checkAnswer, isPending: isChecking } = useMutation({
         mutationFn: async () => {
@@ -75,7 +66,6 @@ const OpenEnded = ({ game }: Props) => {
                     return (prev + percentageSimilar) / (questionIndex + 1);
                 });
                 if (questionIndex === game.questions.length - 1) {
-                    endGame();
                     setHasEnded(true);
                     return;
                 }
@@ -86,7 +76,7 @@ const OpenEnded = ({ game }: Props) => {
                 toast.error("Something went wrong");
             },
         });
-    }, [checkAnswer, questionIndex, endGame, game.questions.length]);
+    }, [checkAnswer, questionIndex, game.questions.length]);
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             const key = event.key;
@@ -105,7 +95,7 @@ const OpenEnded = ({ game }: Props) => {
             <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
                     You Completed in{" "}
-                    {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
+                    {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
                 </div>
                 <Link
                     href={`/quiz/statistics/${game.id}`}
@@ -131,7 +121,7 @@ const OpenEnded = ({ game }: Props) => {
                     </p>
                     <div className="flex self-start mt-3 text-slate-400">
                         <Timer className="mr-2" />
-                        {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
+                        {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
                     </div>
                 </div>
                 <OpenEndedPercentage percentage={averagePercentage} />

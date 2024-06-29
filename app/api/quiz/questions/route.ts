@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         const { amount, topic, type } = quizCreationSchema.parse(body);
-        
+
         // Define fixed data for testing
         const testOpenEndedQuestions = [
             { question: "What is the impact of climate change?", answer: "Increased global temperatures and extreme weather events" },
@@ -51,37 +51,36 @@ export async function POST(req: Request) {
         let questions;
         if (type === "open_ended") {
             // Use fixed test data for open-ended questions
-            questions = testOpenEndedQuestions.slice(0, amount);
-            
+            // questions = testOpenEndedQuestions.slice(0, amount);
             // Comment out the actual API call
-            // questions = await strict_output(
-            //     "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
-            //     new Array(amount).fill(
-            //         `You are to generate a random hard open-ended questions about ${topic}`
-            //     ),
-            //     {
-            //         question: "question",
-            //         answer: "answer with max length of 15 words",
-            //     }
-            // );
+            questions = await strict_output(
+                "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
+                new Array(amount).fill(
+                    `You are to generate a random hard open-ended questions about ${topic}`
+                ),
+                {
+                    question: "question",
+                    answer: "answer with max length of 15 words",
+                }
+            );
         } else if (type === "mcq") {
             // Use fixed test data for MCQ questions
-            questions = testMCQQuestions.slice(0, amount);
-
+            // questions = testMCQQuestions.slice(0, amount);
             // Comment out the actual API call
-            // questions = await strict_output(
-            //     "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, store all answers and questions and options in a JSON array",
-            //     new Array(amount).fill(
-            //         `You are to generate a random hard mcq question about ${topic}`
-            //     ),
-            //     {
-            //         question: "question",
-            //         answer: "answer with max length of 15 words",
-            //         option1: "option1 with max length of 15 words",
-            //         option2: "option2 with max length of 15 words",
-            //         option3: "option3 with max length of 15 words",
-            //     }
-            // );
+
+            questions = await strict_output(
+                "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, options count is 4 with the answer, options must be unique, store all answers and questions and options in a JSON array",
+                new Array(amount).fill(
+                    `You are to generate a random hard mcq question about ${topic}`
+                ),
+                {
+                    question: "question",
+                    answer: "answer with max length of 15 words",
+                    option1: "option1 with max length of 15 words",
+                    option2: "option2 with max length of 15 words",
+                    option3: "option3 with max length of 15 words",
+                }
+            );
         }
 
         return NextResponse.json(

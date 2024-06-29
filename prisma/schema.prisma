@@ -195,13 +195,11 @@ model SubscriptionPrices {
 }
 
 model Game {
-  id          String     @id @default(cuid())
-  userId      String
-  questions   Question[]
-  timeStarted DateTime
-  topic       String
-  timeEnded   DateTime?
-  gameType    GameType
+  id        String     @id @default(cuid())
+  userId    String
+  questions Question[]
+  topic     String
+  gameType  GameType
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
