@@ -18,6 +18,7 @@ import { Chapter } from "@prisma/client";
 import CommentSection from "./_components/comment-section";
 import { ChapterQuiz } from "./_components/quiz-button";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { HistoryDialog } from "./_components/history-dialog";
 
 export const maxDuration = 60;
 
@@ -32,7 +33,7 @@ const ChapterIdPage = async ({
         return redirect("/");
     }
 
-    const [chapterCourse, isEnrolled, chapterData, userResponse, comments, quiz] = await Promise.all([
+    const [chapterCourse, isEnrolled, quizzes, chapterData, userResponse, comments, quiz] = await Promise.all([
         db.course.findUnique({
             where: {
                 id: params.courseId
@@ -42,6 +43,15 @@ const ChapterIdPage = async ({
             where: {
                 userId: userId,
                 courseId: params.courseId
+            },
+        }),
+        await db.chapterQuiz.findMany({
+            where: {
+                userId: userId!,
+                chapterId: params.chapterId
+            },
+            orderBy: {
+                createdAt: "desc",
             },
         }),
         getChapter({
@@ -177,28 +187,38 @@ const ChapterIdPage = async ({
                             </div>
                         ) : (
                             <div className="flex items-center justify-center gap-x-2">
+                                {chapter.quiz &&
+                                    <>
+                                        {quizzes.length > 0 &&
+                                            <HistoryDialog
+                                                userId={userId}
+                                                courseId={params.courseId}
+                                                chapterId={params.chapterId}
+                                                limit={100}
+                                            />
+                                        }
+                                        <QueryProvider>
+                                            <ChapterQuiz
+                                                chapterId={params.chapterId}
+                                                courseId={params.courseId}
+                                                courseTitle={chapterCourse!.title}
+                                                chapterTitle={chapter.title}
+                                                courseDescription={chapterCourse!.description!}
+                                                chapterDescription={chapter.description!}
+                                                amount={quiz!.amount!}
+                                                topic={quiz!.topic!}
+                                                gameType={quiz!.gameType!}
+                                                level={quiz!.level!}
+                                            />
+                                        </QueryProvider>
+                                    </>
+                                }
                                 <CourseProgressButton
                                     chapterId={params.chapterId}
                                     courseId={params.courseId}
                                     nextChapterId={nextChapter?.id}
                                     isCompleted={!!userProgress?.isCompleted}
                                 />
-                                {/* {chapter.quiz && */}
-                                    <QueryProvider>
-                                        <ChapterQuiz
-                                            chapterId={params.chapterId}
-                                            courseId={params.courseId}
-                                            courseTitle={chapterCourse!.title}
-                                            chapterTitle={chapter.title}
-                                            courseDescription={chapterCourse!.description!}
-                                            chapterDescription={chapter.description!}
-                                            amount={quiz!.amount!}
-                                            topic={quiz!.topic!}
-                                            gameType={quiz!.gameType!}
-                                            level={quiz!.level!}
-                                        />
-                                    </QueryProvider>
-                                {/* } */}
                             </div>
                         )}
                     </div>

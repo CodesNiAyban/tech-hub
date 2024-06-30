@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { quizCreationSchema } from "../../teacher/courses/_components/_utils/form-validation";
-import LoadingQuestions from "./loading-questions";
+import LoadingQuestions from "../../../../../components/loading-questions";
 
 export const maxDuration = 60;
 
