@@ -1,28 +1,27 @@
 "use client";
-import { Button } from "@/components/ui/button"
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
-} from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { zodResolver } from "@hookform/resolvers/zod"
-import axios, { AxiosError } from "axios"
-import { BookOpen, CopyCheck } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
-import * as z from "zod"
-import { useMutation } from "@tanstack/react-query";
-import { quizCreationSchema } from "../../teacher/courses/_components/_utils/form-validation";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
-import LoadingQuestions from "./loading-questions";
+} from "@/components/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { BookOpen, CopyCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import * as z from "zod";
+import { quizCreationSchema } from "../../teacher/courses/_components/_utils/form-validation";
+import LoadingQuestions from "./loading-questions";
 
 export const maxDuration = 60;
 
@@ -45,6 +44,7 @@ export const CreateQuiz = ({ topic }: CreateQuizProps) => {
             return response.data;
         },
     });
+
     const createForm = useForm<z.infer<typeof quizCreationSchema>>({
         resolver: zodResolver(quizCreationSchema),
         defaultValues: {

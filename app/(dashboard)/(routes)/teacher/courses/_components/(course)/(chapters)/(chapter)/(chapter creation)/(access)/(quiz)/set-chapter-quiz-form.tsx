@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { z } from "zod"
 import { quizAccessSchema } from "../../../../../../_utils/form-validation"
-import { CreateQuiz } from "./create-quiz-setting-card"; // Import the CreateQuiz component
+import { CreateQuiz } from "./create-quiz-setting-card";
 
 const queryClient = new QueryClient()
 
@@ -84,9 +84,16 @@ export function EditChapterQuizForm({
 
   const handleSwitchChange = (checked: boolean) => {
     form.setValue('quiz', checked);
-    form.handleSubmit(onSubmit)();
+    if (!checked) form.handleSubmit(onSubmit)();
     setShowDialog(checked);
   }
+
+  const handleDialogOpenChange = (isOpen: boolean) => {
+    setShowDialog(isOpen);
+    if (!isOpen && !initialData.quiz) {
+      form.setValue('quiz', false);
+    }
+  };
 
   return (
     <div className="mt-4">
@@ -139,13 +146,15 @@ export function EditChapterQuizForm({
         </form>
       </Form>
 
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      <Dialog open={showDialog} onOpenChange={handleDialogOpenChange}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Quiz Settings</DialogTitle>
-          </DialogHeader>
           <QueryClientProvider client={queryClient}>
-            <CreateQuiz />
+            <CreateQuiz
+              topic={initialData.title}
+              courseId={courseId}
+              chapterId={chapterId}
+              onSuccess={() => setShowDialog(false)}
+            />
           </QueryClientProvider>
         </DialogContent>
       </Dialog>

@@ -85,7 +85,7 @@ const CourseIdPage = async ({
                             Course Setup
                         </h1>
                         <span className="text-sm root:text-slate-700">
-                            Complete all fields {completionText}
+                            Complete Required fields to be able to publish {completionText}
                         </span>
                     </div>
                     <CourseActions

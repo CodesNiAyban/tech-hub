@@ -91,26 +91,61 @@ model Chapter {
   comments     Comments[]
   quizSetting  QuizSetting[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ChapterQuiz ChapterQuiz[]
 
   @@index([courseId])
 }
 
-model QuizSetting {
-  id        String  @id @default(uuid())
+model ChapterQuiz {
+  id        String            @id @default(cuid())
   userId    String
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-
-  topic    String
-  gameType GameType @default(mcq)
-  level    QuestionLevel @default(HARDCORE)
+  chapter   Chapter           @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  questions ChapterQuestion[]
+  topic     String
+  gameType  GameType
+  level     QuestionLevel     @default(HARDCORE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+model ChapterQuestion {
+  id                String   @id @default(cuid())
+  question          String
+  answer            String
+  gameId            String
+  options           Json? // for mcq questions
+  percentageCorrect Float? // for open_ended questions
+  isCorrect         Boolean? // for mcq questions
+  questionType      GameType
+  userAnswer        String?
+
+  game ChapterQuiz @relation(fields: [gameId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([gameId])
+}
+
+model QuizSetting {
+  id        String  @id @default(uuid())
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  topic    String
+  gameType GameType      @default(mcq)
+  level    QuestionLevel @default(HARDCORE)
+  amount   Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([chapterId])
 }
 

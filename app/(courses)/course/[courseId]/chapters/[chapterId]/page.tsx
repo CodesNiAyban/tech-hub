@@ -16,6 +16,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Chapter } from "@prisma/client";
 import CommentSection from "./_components/comment-section";
+import { ChapterQuiz } from "./_components/quiz-button";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 export const maxDuration = 60;
 
@@ -30,7 +32,12 @@ const ChapterIdPage = async ({
         return redirect("/");
     }
 
-    const [isEnrolled, chapterData, userResponse, comments] = await Promise.all([
+    const [chapterCourse, isEnrolled, chapterData, userResponse, comments, quiz] = await Promise.all([
+        db.course.findUnique({
+            where: {
+                id: params.courseId
+            },
+        }),
         db.enrollees.findFirst({
             where: {
                 userId: userId,
@@ -53,6 +60,11 @@ const ChapterIdPage = async ({
             orderBy: {
                 createdAt: "asc"
             }
+        }),
+        db.quizSetting.findFirst({
+            where: {
+                chapterId: params.chapterId
+            },
         }),
     ]);
 
@@ -79,6 +91,7 @@ const ChapterIdPage = async ({
             userId: userId,
         },
     });
+
     const isLocked = (chapter: Chapter) => {
         let unlock = false;
 
@@ -127,8 +140,6 @@ const ChapterIdPage = async ({
     const currentUser = users.find(user => user.id === userId);
     const completeOnEnd = !isLocked(chapter);
 
-
-
     return (
         <div>
             {userProgress?.isCompleted && (
@@ -172,11 +183,22 @@ const ChapterIdPage = async ({
                                     nextChapterId={nextChapter?.id}
                                     isCompleted={!!userProgress?.isCompleted}
                                 />
-                                {chapter.quiz &&
-                                    <Button>
-                                        Take the Quiz😱
-                                    </Button>
-                                }
+                                {/* {chapter.quiz && */}
+                                    <QueryProvider>
+                                        <ChapterQuiz
+                                            chapterId={params.chapterId}
+                                            courseId={params.courseId}
+                                            courseTitle={chapterCourse!.title}
+                                            chapterTitle={chapter.title}
+                                            courseDescription={chapterCourse!.description!}
+                                            chapterDescription={chapter.description!}
+                                            amount={quiz!.amount!}
+                                            topic={quiz!.topic!}
+                                            gameType={quiz!.gameType!}
+                                            level={quiz!.level!}
+                                        />
+                                    </QueryProvider>
+                                {/* } */}
                             </div>
                         )}
                     </div>
