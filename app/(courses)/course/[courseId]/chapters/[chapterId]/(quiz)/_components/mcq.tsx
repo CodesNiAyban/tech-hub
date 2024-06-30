@@ -21,9 +21,11 @@ import MCQCounter from "./mcq-counter";
 
 type Props = {
     game: ChapterQuiz & { questions: Pick<Question, "id" | "options" | "question">[] };
+    chapterId: string;
+    courseId: string;
 };
 
-const MCQ = ({ game }: Props) => {
+const MCQ = ({ game, chapterId, courseId }: Props) => {
     const [questionIndex, setQuestionIndex] = useState(0);
     const [hasEnded, setHasEnded] = useState(false);
     const [stats, setStats] = useState({
@@ -48,7 +50,7 @@ const MCQ = ({ game }: Props) => {
                 questionId: currentQuestion.id,
                 userInput: options[selectedChoice as number],
             };
-            const response = await axios.post(`/api/quiz/check-answer`, payload);
+            const response = await axios.post(`/api/courses/${courseId}/chapters/${chapterId}/quiz/check-answer`, payload);
             return response.data;
         },
     });
@@ -58,7 +60,7 @@ const MCQ = ({ game }: Props) => {
             const payload: z.infer<typeof endGameSchema> = {
                 gameId: game.id,
             };
-            const response = await axios.put(`/api/quiz/game`, payload);
+            const response = await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/quiz/game`, payload);
             return response.data;
         },
     });
@@ -136,19 +138,24 @@ const MCQ = ({ game }: Props) => {
 
     if (hasEnded) {
         return (
-            <div className="flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
-                    You Completed in{" "}
-                    {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
-                </div>
-                <Link
-                    href={`/quiz/statistics/${game.id}`}
-                    className={cn(buttonVariants({ size: "lg" }), "mt-2")}
-                >
-                    View Statistics
-                    <BarChart className="w-4 h-4 ml-2" />
-                </Link>
+            <div className="flex  items-center justify-center min-h-screen">
+                <Card className="flex flex-col items-center justify-center p-10">
+
+                    <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
+                        You Completed in{" "}
+                        {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
+                    </div>
+                    <Link
+                        href={`/course/${courseId}/chapters/${chapterId}/quiz/statistics/${game.id}`}
+                        className={cn(buttonVariants({ size: "lg" }), "mt-2")}
+                    >
+                        View Statistics
+                        <BarChart className="w-4 h-4 ml-2" />
+                    </Link>
+
+                </Card>
             </div>
+
         );
     }
 

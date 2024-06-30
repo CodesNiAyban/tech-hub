@@ -32,7 +32,11 @@ const MCQPage = async ({ params }: { params: { courseId: string, chapterId: stri
         return redirect(`/course/${params.courseId}/chapters/${params.chapterId}`);
     }
 
-    return <QueryProvider><OpenEnded game={game} /></QueryProvider>;
+    return (
+        <QueryProvider>
+            <OpenEnded game={game} courseId={params.courseId} chapterId={params.chapterId} />
+        </QueryProvider>
+    )
 }
 
 export default MCQPage;

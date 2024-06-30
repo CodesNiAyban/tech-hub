@@ -22,9 +22,11 @@ import OpenEndedPercentage from "./open-ended-percentage";
 
 type Props = {
     game: Game & { questions: Pick<Question, "id" | "question" | "answer">[] };
+    courseId: string;
+    chapterId: string;
 };
 
-const OpenEnded = ({ game }: Props) => {
+const OpenEnded = ({ game, courseId, chapterId }: Props) => {
     const [hasEnded, setHasEnded] = useState(false);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [blankAnswer, setBlankAnswer] = useState("");
@@ -45,10 +47,11 @@ const OpenEnded = ({ game }: Props) => {
                 questionId: currentQuestion.id,
                 userInput: filledAnswer,
             };
-            const response = await axios.post(`/api/quiz/check-answer`, payload);
+            const response = await axios.post(`/api/courses/${courseId}/chapters/${chapterId}/quiz/check-answer`, payload);
             return response.data;
         },
     });
+
     useEffect(() => {
         if (!hasEnded) {
             const interval = setInterval(() => {
@@ -58,6 +61,16 @@ const OpenEnded = ({ game }: Props) => {
         }
     }, [hasEnded]);
 
+    const { mutate: endGame } = useMutation({
+        mutationFn: async () => {
+            const payload: z.infer<typeof endGameSchema> = {
+                gameId: game.id,
+            };
+            const response = await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/quiz/game`, payload);
+            return response.data;
+        },
+    });
+
     const handleNext = useCallback(() => {
         checkAnswer(undefined, {
             onSuccess: ({ percentageSimilar }) => {
@@ -66,6 +79,7 @@ const OpenEnded = ({ game }: Props) => {
                     return (prev + percentageSimilar) / (questionIndex + 1);
                 });
                 if (questionIndex === game.questions.length - 1) {
+                    endGame();
                     setHasEnded(true);
                     return;
                 }
@@ -76,7 +90,8 @@ const OpenEnded = ({ game }: Props) => {
                 toast.error("Something went wrong");
             },
         });
-    }, [checkAnswer, questionIndex, game.questions.length]);
+    }, [checkAnswer, questionIndex, game.questions.length, endGame]);
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             const key = event.key;
@@ -92,18 +107,20 @@ const OpenEnded = ({ game }: Props) => {
 
     if (hasEnded) {
         return (
-            <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
-                    You Completed in{" "}
-                    {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="flex flex-col items-center justify-center">
+                    <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
+                        You Completed in{" "}
+                        {formatTimeDelta(differenceInSeconds(now, game.createdAt))}
+                    </div>
+                    <Link
+                        href={`/course/${courseId}/chapters/${chapterId}/quiz/statistics/${game.id}`}
+                        className={cn(buttonVariants({ size: "lg" }), "mt-2")}
+                    >
+                        View Statistics
+                        <BarChart className="w-4 h-4 ml-2" />
+                    </Link>
                 </div>
-                <Link
-                    href={`/quiz/statistics/${game.id}`}
-                    className={cn(buttonVariants({ size: "lg" }), "mt-2")}
-                >
-                    View Statistics
-                    <BarChart className="w-4 h-4 ml-2" />
-                </Link>
             </div>
         );
     }

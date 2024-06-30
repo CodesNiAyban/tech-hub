@@ -34,7 +34,7 @@ const MCQPage = async ({ params }: { params: { courseId: string, chapterId: stri
     return (
         <div className="w-full h-full items-center justify-center">
             <QueryProvider>
-                <MCQ game={game} />
+                <MCQ game={game} courseId={params.courseId} chapterId={params.chapterId} />
             </QueryProvider>
         </div>
     )

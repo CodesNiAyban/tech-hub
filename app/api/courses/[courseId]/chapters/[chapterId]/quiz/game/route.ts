@@ -1,4 +1,4 @@
-import { chapterQuizSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
+import { chapterQuizSchema, endGameSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import db from "@/lib/db";
 import axios from "axios";
 import { NextResponse } from "next/server";
@@ -105,6 +105,59 @@ export async function POST(
             return NextResponse.json({ error: error.issues }, { status: 400 });
         } else {
             return new NextResponse("Internal Error", { status: 500 });
+        }
+    }
+}
+
+export async function PUT(
+    req: Request,
+) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const body = await req.json();
+        const { gameId } = endGameSchema.parse(body);
+
+        const game = await db.chapterQuiz.findUnique({
+            where: {
+                id: gameId,
+            },
+        });
+        if (!game) {
+            return NextResponse.json(
+                {
+                    message: "Quiz not found",
+                },
+                {
+                    status: 404,
+                }
+            );
+        }
+        await db.chapterQuiz.update({
+            where: {
+                id: gameId,
+            },
+            data: {
+                updatedAt: new Date(),
+            }
+        });
+
+        return NextResponse.json({ gameId: game.id }, { status: 200 });
+    } catch (error) {
+        console.log("[CHAPTER_END_QUIZ]", error)
+        if (error instanceof ZodError) {
+            return NextResponse.json(
+                { error: error.issues },
+                {
+                    status: 400,
+                }
+            );
+        } else {
+            return new NextResponse("Internal Error", { status: 500 })
         }
     }
 }

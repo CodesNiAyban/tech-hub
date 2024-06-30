@@ -1,7 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { LucideLayoutDashboard } from "lucide-react";
+import { ArrowBigLeft, LucideLayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
 import { redirect } from "next/navigation";
@@ -14,10 +14,12 @@ import LevelCard from "../_components/level-card";
 type Props = {
     params: {
         gameId: string;
+        courseId: string;
+        chapterId: string;
     };
 };
 
-const Statistics = async ({ params: { gameId } }: Props) => {
+const Statistics = async ({ params: { gameId, courseId, chapterId } }: Props) => {
     const { userId } = auth();
 
     if (!userId) {
@@ -31,15 +33,15 @@ const Statistics = async ({ params: { gameId } }: Props) => {
     });
 
     if ((userSubscription && userSubscription.subscription === "null") || !userSubscription) {
-        return redirect("/");
+        return redirect("/pricing");
     }
 
-    const game = await db.game.findUnique({
+    const game = await db.chapterQuiz.findUnique({
         where: { id: gameId },
         include: { questions: true },
     });
     if (!game) {
-        return redirect("/");
+        return redirect(`/course/${courseId}/chapters/${chapterId}`);
     }
 
     let accuracy: number = 0;
@@ -66,9 +68,9 @@ const Statistics = async ({ params: { gameId } }: Props) => {
                 <div className="flex items-center justify-between space-y-2">
                     <h2 className="text-3xl font-bold tracking-tight">Summary</h2>
                     <div className="flex items-center space-x-2">
-                        <Link href="/ai-quiz" className={buttonVariants()}>
-                            <LucideLayoutDashboard className="mr-2" />
-                            Back to Dashboard
+                        <Link href={`/course/${courseId}/chapters/${chapterId}`} className={buttonVariants()}>
+                            <ArrowBigLeft className="mr-2" />
+                            Back to Chapter
                         </Link>
                     </div>
                 </div>

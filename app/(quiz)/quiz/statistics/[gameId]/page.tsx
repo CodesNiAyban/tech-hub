@@ -31,15 +31,16 @@ const Statistics = async ({ params: { gameId } }: Props) => {
     });
 
     if ((userSubscription && userSubscription.subscription === "null") || !userSubscription) {
-        return redirect("/");
+        return redirect("/pricing");
     }
 
     const game = await db.game.findUnique({
         where: { id: gameId },
         include: { questions: true },
     });
+
     if (!game) {
-        return redirect("/");
+        return redirect("/ai-quiz");
     }
 
     let accuracy: number = 0;
