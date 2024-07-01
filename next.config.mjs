@@ -12,6 +12,16 @@ const nextConfig = {
                 hostname: 'img.clerk.com',
                 pathname: '**',
             },
+            {
+                protocol: 'https',
+                hostname: 'miro.medium.com',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'upload.wikimedia.org',
+                pathname: '**',
+            },
         ],
     },
     typescript: {
