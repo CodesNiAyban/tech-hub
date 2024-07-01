@@ -43,14 +43,17 @@ export const categoriesSchema = z.object({
 
 export const priceSchema = z.object({
   price: z
-    .coerce
-    .number()
+    .union([z.string(), z.number()])
+    .refine((val) => !isNaN(Number(val)), {
+      message: "Price must be a valid number",
+      path: ["price"],
+    })
+    .transform((val) => Number(val))
     .refine((val) => val >= 0, {
       message: "Price must be non-negative",
       path: ["price"],
     }),
 });
-
 export const attachmentSchema = z.object({
   url: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
 });
@@ -88,7 +91,7 @@ export const quizCreationSchema = z.object({
     }),
   type: z.enum(["mcq", "open_ended"]),
   amount: z.number().min(1).max(10),
-  level: z.enum(["Easy", "Medium", "Hard","HARDCORE"]),
+  level: z.enum(["Easy", "Medium", "Hard", "HARDCORE"]),
 });
 
 

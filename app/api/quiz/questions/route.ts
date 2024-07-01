@@ -69,7 +69,7 @@ export async function POST(req: Request) {
             // Comment out the actual API call
 
             questions = await strict_output(
-                "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, options count is 4 with the answer, options must be unique, store all answers and questions and options in a JSON array",
+                "You are a helpful AI that is able to generate multiple choice questions questions and answers, the length of each answer should not be more than 15 words, options count is 4 with the answer, options must be unique, store all answers and questions and options in a JSON array",
                 new Array(amount).fill(
                     `You are to generate a random ${level} difficulty multiple choice questions about ${topic}`
                 ),
