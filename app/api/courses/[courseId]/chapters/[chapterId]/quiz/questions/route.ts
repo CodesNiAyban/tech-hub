@@ -61,38 +61,38 @@ export async function POST(req: Request) {
         let questions;
         if (type === "open_ended") {
             // Use fixed test data for open-ended questions
-            questions = testOpenEndedQuestions.slice(0, amount);
+            // questions = testOpenEndedQuestions.slice(0, amount);
             // Comment out the actual API call
 
-            // questions = await strict_output(
-            //     "You are a helpful AI that is able to generate a pair of question and answers, you are about to generate questions and answers for a chapter in a course, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
-            //     new Array(amount).fill(
-            //         `You are to generate a ${level} difficulty open-ended questions about ${topic} for the chapter ${chapterTitle} in the course ${courseTitle} with the description ${courseDescription} and ${chapterDescription}`
-            //     ),
-            //     {
-            //         question: "question",
-            //         answer: "answer with max length of 15 words",
-            //     }
-            // );
+            questions = await strict_output(
+                "You are a helpful AI that is able to generate a pair of question and answers, you are about to generate questions and answers for a chapter in a course, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
+                new Array(amount).fill(
+                    `You are to generate a ${level} difficulty open-ended questions about ${topic} for the chapter ${chapterTitle} in the course ${courseTitle} with the description ${courseDescription} and ${chapterDescription}`
+                ),
+                {
+                    question: "question",
+                    answer: "answer with max length of 15 words",
+                }
+            );
 
         } else if (type === "mcq") {
             // Use fixed test data for MCQ questions
-            questions = testMCQQuestions.slice(0, amount);
+            // questions = testMCQQuestions.slice(0, amount);
             // Comment out the actual API call
 
-            // questions = await strict_output(
-            //     "You are a helpful AI that is able to generate a pair of question and answers, you are about to generate questions and answers for a chapter in a course, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
-            //     new Array(amount).fill(
-            //         `You are to generate a ${level} difficulty open-ended questions about ${topic} for the chapter ${chapterTitle} in the course ${courseTitle} with the description ${courseDescription} and ${chapterDescription}`
-            //     ),
-            //     {
-            //         question: "question",
-            //         answer: "answer with max length of 15 words",
-            //         option1: "option1 with max length of 15 words",
-            //         option2: "option2 with max length of 15 words",
-            //         option3: "option3 with max length of 15 words",
-            //     }
-            // );
+            questions = await strict_output(
+                "You are a helpful AI that is able to generate a pair of question and answers, you are about to generate questions and answers for a chapter in a course, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
+                new Array(amount).fill(
+                    `You are to generate a ${level} difficulty open-ended questions about ${topic} for the chapter ${chapterTitle} in the course ${courseTitle} with the description ${courseDescription} and ${chapterDescription}`
+                ),
+                {
+                    question: "question",
+                    answer: "answer with max length of 15 words",
+                    option1: "option1 with max length of 15 words",
+                    option2: "option2 with max length of 15 words",
+                    option3: "option3 with max length of 15 words",
+                }
+            );
 
         }
 
