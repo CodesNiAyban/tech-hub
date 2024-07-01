@@ -96,6 +96,10 @@ export async function POST(req: Request) {
 
         }
 
+        if (!questions) {
+            return NextResponse.json({ error: "No questions found/Invalid generated questions" }, { status: 400 });
+        }
+
         return NextResponse.json(
             {
                 questions: questions,

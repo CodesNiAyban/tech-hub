@@ -56,7 +56,7 @@ export async function POST(req: Request) {
             questions = await strict_output(
                 "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
                 new Array(amount).fill(
-                    `You are to generate a random ${level} level open-ended questions about ${topic}`
+                    `You are to generate a random ${level} difficulty open-ended/identification questions about ${topic}`
                 ),
                 {
                     question: "question",
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
             questions = await strict_output(
                 "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, options count is 4 with the answer, options must be unique, store all answers and questions and options in a JSON array",
                 new Array(amount).fill(
-                    `You are to generate a random ${level} level mcq question about ${topic}`
+                    `You are to generate a random ${level} difficulty multiple choice questions about ${topic}`
                 ),
                 {
                     question: "question",
@@ -81,6 +81,12 @@ export async function POST(req: Request) {
                     option3: "option3 with max length of 15 words",
                 }
             );
+
+
+        }
+
+        if (!questions) {
+            return NextResponse.json({ error: "No questions found/Invalid generated questions" }, { status: 400 });
         }
 
         return NextResponse.json(
