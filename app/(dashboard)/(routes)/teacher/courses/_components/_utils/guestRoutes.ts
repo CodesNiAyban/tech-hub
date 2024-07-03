@@ -1,4 +1,4 @@
-import { BaggageClaim, Brain, Compass, Home, Settings } from "lucide-react";
+import { BaggageClaim, Brain, Compass, Home, Mail, Settings } from "lucide-react";
 
 export const guestRoutes = [
     {
@@ -20,6 +20,11 @@ export const guestRoutes = [
         icon: BaggageClaim,
         label: "Pricing",
         href: "/pricing",
+    },
+    {
+        icon: Mail,
+        label: "Announcements",
+        href: "/mail",
     },
     {
         icon: Settings,

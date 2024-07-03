@@ -66,10 +66,31 @@ export function Mail({
         }}
         className="h-full max-h-[800px] items-stretch"
       >
+        {/* <ResizablePanel
+          defaultSize={defaultLayout[0]}
+          collapsedSize={navCollapsedSize}
+          collapsible={true}
+          minSize={15}
+          maxSize={20}
+          onCollapse={() => {
+            setIsCollapsed(true)
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(true)}`
+          }}
+          onExpand={() => {
+            setIsCollapsed(false)
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(false)}`
+          }}
+          className={cn(
+            isCollapsed &&
+            "min-w-[50px] transition-all duration-300 ease-in-out"
+          )}
+        >
+        </ResizablePanel>
+        <ResizableHandle withHandle /> */}
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <Tabs defaultValue="all">
             <div className="flex items-center px-4 py-2">
-              <h1 className="text-xl font-bold">Inbox</h1>
+              <h1 className="text-xl font-bold">Announcements</h1>
               <TabsList className="ml-auto">
                 <TabsTrigger
                   value="all"
