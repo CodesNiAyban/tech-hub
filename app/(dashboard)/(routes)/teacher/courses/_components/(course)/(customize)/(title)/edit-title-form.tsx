@@ -99,6 +99,44 @@ export const EditTitleForm = ({
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="font-medium flex items-center justify-between">
+                                        {formLabel}
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            disabled={isSubmitting} // Disable input field while submitting
+                                            placeholder="e.g Advanced Web Development"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="font-medium flex items-center justify-between">
+                                        {formLabel}
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            disabled={isSubmitting} // Disable input field while submitting
+                                            placeholder="e.g Advanced Web Development"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />  
                     </div>
                 </div>
                 <Button type="submit" disabled={isSubmitting}> {/* Disable button while submitting */}

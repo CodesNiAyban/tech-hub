@@ -1,6 +1,5 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
 import { auth as clerkAuth } from "@clerk/nextjs/server"; // Renamed the imported auth
+import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
 
